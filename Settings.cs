@@ -1,0 +1,21 @@
+using System;
+using System.IO;
+using Microsoft.Win32;
+public sealed class AppSettings {
+ public static AppSettings Current=new AppSettings();
+ public int View=6,RefreshMs=500;public bool ThreadNumbers,HideStoppedFans=true,CloseToTray=true;
+ public static string FilePath {get{return Path.Combine(Log.Root,"settings.ini");}}
+ public static void Load(){
+  Current=new AppSettings();
+  try{if(File.Exists(FilePath)){foreach(var line in File.ReadAllLines(FilePath)){var p=line.Split(new[]{'='},2);if(p.Length!=2)continue;int n;switch(p[0]){case "View":if(int.TryParse(p[1],out n)&&n>=0&&n<=6)Current.View=n;break;case "RefreshMs":if(int.TryParse(p[1],out n)&&(n==250||n==500||n==1000))Current.RefreshMs=n;break;case "ThreadNumbers":Current.ThreadNumbers=p[1]=="1";break;case "HideStoppedFans":Current.HideStoppedFans=p[1]!="0";break;case "CloseToTray":Current.CloseToTray=p[1]!="0";break;}}}
+   else {var old=File.ReadAllLines(Path.Combine(Log.Root,"ansicht.txt"));int v;if(old.Length>0&&int.TryParse(old[0],out v)&&v>=0&&v<=6)Current.View=v;Current.ThreadNumbers=old.Length>1&&old[1]=="1";}
+  }catch(IOException){}
+ }
+ public static void Save(){var s=Current;File.WriteAllLines(FilePath,new[]{"View="+s.View,"RefreshMs="+s.RefreshMs,"ThreadNumbers="+(s.ThreadNumbers?1:0),"HideStoppedFans="+(s.HideStoppedFans?1:0),"CloseToTray="+(s.CloseToTray?1:0)});}
+}
+public static class AutoStart {
+ const string Key=@"Software\Microsoft\Windows\CurrentVersion\Run",Name="BLUB AIO Display";
+ public static string Command {get{return "\""+Path.Combine(Log.Root,"BLUB-Display.exe")+"\" --minimized";}}
+ public static bool Enabled {get{using(var k=Registry.CurrentUser.OpenSubKey(Key))return k!=null&&string.Equals(k.GetValue(Name) as string,Command,StringComparison.OrdinalIgnoreCase);}}
+ public static void Set(bool enabled){using(var k=Registry.CurrentUser.CreateSubKey(Key)){if(enabled)k.SetValue(Name,Command,RegistryValueKind.String);else k.DeleteValue(Name,false);}}
+}

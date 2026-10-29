@@ -1,0 +1,12 @@
+settings.ini
+ansicht.txt
+fan-rpm.tsv*
+sensors.txt
+status.txt
+panel.log
+error.txt
+live-preview.png
+work/
+*.tmp
+*.zip
+background.png

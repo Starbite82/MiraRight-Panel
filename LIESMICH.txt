@@ -1,0 +1,60 @@
+AIO Display — Standalone
+
+Start: BLUB-Display.exe doppelklicken. Laeuft die App bereits, oeffnet sich das
+Einstellungsfenster der laufenden Instanz. Eine zweite Instanz startet nicht.
+
+Autostart: fuer dieses Windows-Benutzerkonto aktiviert, immer minimiert im
+Infobereich. Der Eintrag wird bei der Windows-Anmeldung ausgefuehrt.
+Die Option 'Mit Windows starten (minimiert)' schaltet ihn im Programm um.
+Ein anderer Programmordner erfordert erneutes Aktivieren der Option.
+
+Infobereich: Doppelklick oeffnet die Einstellungen. Rechtsklick bietet
+Einstellungen und Beenden. Beim Schliessen laeuft das Display standardmaessig
+weiter; das laesst sich in den Einstellungen abschalten. 'Beenden' beendet
+Display-App und Fan-Control-Lesebruecke vollstaendig.
+
+Einstellungen werden sofort in settings.ini gespeichert:
+- Displayansicht: Dashboard, erhaltene CPU-Detailansicht, Vergleich, A bis D
+- Threadnummern anzeigen
+- Luefter mit 0 RPM ausblenden
+- Aktualisierung mit 1, 2 oder 4 Bildern pro Sekunde
+- Autostart minimiert und Verhalten beim Schliessen
+Die bisherige ansicht.txt wird beim ersten Start uebernommen.
+
+Afterburner und Fan Control muessen fuer die Livewerte laufen. Bei spaeterem
+Start dieser Programme wartet die App; ausgefallene USB-Verbindungen und die
+Leseverbindung zu Fan Control werden automatisch wiederhergestellt.
+TRCC muss geschlossen bleiben. Es werden keine Luefter-, Pumpen-, Takt- oder
+Spannungseinstellungen geaendert, keine Treiber ersetzt und keine Firmware
+geschrieben.
+
+Display: 320 x 320, VID 87AD / PID 70DB, PM 32 / SUB 1. RGB565 Big Endian,
+180 Grad gedreht. Dashboard: Temperatur und Last fuer CPU/GPU oben,
+RAM belegt/gesamt, 32 Threadbalken links unten und laufende Luefter rechts unten.
+Gesamt-RAM ist der nutzbare physische Speicher laut Windows.
+Afterburner liefert CPU/GPU/RAM; Fan Control liefert RPM und Luefternamen
+ueber seine lokale GetAllSensors-Lese-API. GPU-RPM kommt ersatzweise aus
+Afterburner. Fehlende/veraltete Werte werden nicht als aktuelle Werte gezeigt.
+
+Die Fan-Control-Bruecke nutzt die vorhandenen Bibliotheken der installierten
+Fan-Control-Version und die bestehende PowerShell-7-Laufzeit mit .NET 10.
+Sie startet ohne sichtbares Fenster und endet mit der Display-App.
+
+Dateien: status.txt und live-preview.png zeigen den aktuellen Zustand.
+panel.log enthaelt Verbindungen/Fehler und wird bei 1 MB begrenzt.
+Quellcode, build.ps1 und die erhaltene fruehere Detailversion liegen bei.
+Build der Hauptanwendung mit dem in Windows enthaltenen .NET-C#-Compiler.
+
+Optionale Kommandozeile:
+--minimized           direkt im Infobereich starten
+--stop                laufende Instanz ordentlich beenden
+--preview             nur Vorschau ohne USB-Uebertragung
+--render              aktuelle Ansicht als PNG rendern
+--diagnose            Sensorliste und USB-Modellabfrage
+--enable-autostart    minimierten Benutzer-Autostart einschalten
+--disable-autostart   eigenen Autostart-Eintrag entfernen
+
+Protokollreferenzen:
+https://github.com/Lexonight1/thermalright-trcc-linux/blob/main/src/trcc/adapters/device/bulk_lcd.py
+https://github.com/Lexonight1/thermalright-trcc-linux/blob/main/src/trcc/core/protocol.py
+Afterburner-Format: lokal installiertes offizielles MAHMSharedMemory.h im SDK.
