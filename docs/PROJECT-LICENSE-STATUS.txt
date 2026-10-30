@@ -1,0 +1,9 @@
+PROJECT LICENSE STATUS — DECISION PENDING
+
+No new license grant for the project's own code has been applied.
+The proposed GPL-3.0 treatment of the Windows display app and MIT licensing
+of the independently developed sensor host/contracts require owner approval.
+The ZIP is a preparation/audit build, not a completed publication candidate.
+Third-party components keep their original MPL/LGPL/MIT/Apache/BSD licenses.
+Sources and notices are supplied; this file is not a substitute for choosing
+and granting the project's own license. Personal imprint data is deferred.

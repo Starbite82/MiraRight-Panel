@@ -57,4 +57,22 @@ foreach($runtime in @('microsoft.netcore.app.runtime.win-x64','microsoft.windows
  $entries.Add($runtime+'/'+$runtimeVersion+' | runtime license and notices: licenses/'+$runtime+'-'+$runtimeVersion)
 }
 Copy-Item -LiteralPath (Join-Path $root 'docs/licenses/MPL-2.0.txt') -Destination $notice
+$sourceManifest=Get-Content -LiteralPath (Join-Path $root 'docs/licenses/source-manifest.json') -Raw|ConvertFrom-Json
+foreach($component in $sourceManifest.components){
+ $target=Join-Path $notice $component.Name
+ New-Item -ItemType Directory -Force $target|Out-Null
+ foreach($relative in $component.NoticeFiles){
+  $file=Join-Path $root ('docs/licenses/upstream/'+$component.Name+'/'+$relative)
+  $dest=Join-Path $target $relative
+  New-Item -ItemType Directory -Force (Split-Path $dest)|Out-Null
+  Copy-Item -LiteralPath $file -Destination $dest
+ }
+}
+$entries.Add('PawnIO.Modules 0.1.6 embedded in LHM: LGPL-2.1; matching source is included in sources/.')
+$entries.Add('Additional LHM notices, including PawnIO.Modules and BSD notices: licenses/LibreHardwareMonitorLib/THIRD-PARTY-NOTICES.txt')
+$entries.Add('DiskInfoToolkit CrystalDiskInfo MIT notice: licenses/DiskInfoToolkit/THIRD-PARTY-NOTICES')
+$entries.Add('Corresponding MPL/LGPL sources, versions and checksums: sources/SOURCE-MANIFEST.json')
+Copy-Item -LiteralPath (Join-Path $root 'docs/EXTERNAL-INTEGRATIONS.txt') -Destination $PackageDirectory
+Copy-Item -LiteralPath (Join-Path $root 'docs/CODE-PROVENANCE.txt') -Destination $PackageDirectory
+Copy-Item -LiteralPath (Join-Path $root 'docs/PROJECT-LICENSE-STATUS.txt') -Destination (Join-Path $PackageDirectory 'LICENSE-PROFILE.txt')
 $entries|Set-Content -LiteralPath (Join-Path $PackageDirectory 'THIRD-PARTY-COMPONENTS.txt') -Encoding utf8

@@ -37,3 +37,12 @@ https://www.gesetze-im-internet.de/ddg/__5.html
 https://www.gesetze-bayern.de/Content/Document/MStV-18
 
 Impressum: § 18 MStV betrifft Angebote außerhalb ausschließlich persönlicher/familiärer Zwecke; § 5 DDG zusätzliche Angaben in seinem geschäftsmäßigen Anwendungsbereich. Kostenlosigkeit bedeutet nicht automatisch Befreiung. Anforderungen an heruntergeladene Offline-Software und die jeweilige Online-Veröffentlichungsseite sind nach dem tatsächlichen Angebot getrennt zu beurteilen.
+
+Fortgesetzte Prüfung / Paketbereinigung:
+- Zusätzlich wurden LHM-interne PawnIO.Modules 0.1.6 (LGPL 2.1) sowie der CrystalDiskInfo-MIT-Anteil von DiskInfoToolkit gefunden. Die vollständigen Originalhinweise werden nun mitgeliefert.
+- Passende, per Commit und SHA256 fixierte MPL-/LGPL-Quellen werden als Quellarchive direkt ins Paket aufgenommen. Ein ergänzendes Archiv enthält den eigenen bevorzugten Quellcode, Tests und Buildskripte am konkreten Git-Stand. Quellen/Binärstand dürfen bei der Paketierung nicht auseinanderlaufen.
+- Nicht benötigte fremde Installer und vorkompilierte Compilerpakete werden aus den Quellarchiven ausgespart; Module, Buildskripte und das Compiler-Quellpaket bleiben enthalten.
+- Fan Control und Afterburner bleiben getrennt zu beschaffende optionale Programme. Ihre Dateien werden nicht verteilt. Die öffentliche Metadaten-/Schnittstellennutzung wurde von einer Codeübernahme getrennt dokumentiert; die proprietären Programme erhalten durch unsere Lizenz keine zusätzlichen Nutzungsrechte.
+- Nicht automatisch geklärt sind Patente, Marken, Rechte beliebiger künftiger Plugins oder abweichende Nutzungsbedingungen anderer Programmversionen. Das sind keine durch eine Lizenzdatei zusicherbaren Freigaben.
+- Die eigene Projektlizenz ist weiterhin NICHT geändert. Der Anbieter hat zunächst weitere Erläuterungen zur GPL 3 angefordert. Die vorgeschlagene GPL-Behandlung ist eine konservative Option, keine Behauptung, die ganze Anwendung müsse zwingend GPL sein.
+- Neue Veröffentlichung und Impressum bleiben ausdrücklich getrennte spätere Schritte.

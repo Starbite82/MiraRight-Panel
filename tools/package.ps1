@@ -16,6 +16,19 @@ foreach($name in @('LIESMICH.txt','settings.example.ini')){Copy-Item -LiteralPat
 Copy-Item -LiteralPath (Join-Path $root 'settings.example.ini') -Destination (Join-Path $package 'settings.ini')
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'AIO-Display-Vorschau.cmd') -Destination $package
 & (Join-Path $PSScriptRoot 'third-party-notices.ps1') -PackageDirectory $package
+& (Join-Path $PSScriptRoot 'source-bundle.ps1') -PackageDirectory $package
+$forbidden=@(Get-ChildItem -LiteralPath $package -Recurse -File|Where-Object {$_.Name -match '^(FanControl(\.IPC)?|MSIAfterburner|Afterburner|USBLCDNEW|TRCC)\.(dll|exe)($file in Get-ChildItem -LiteralPath $package -Recurse -File){$hash=Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256;'{0}  {1}' -f $hash.Hash.ToLowerInvariant(),$file.FullName.Substring($package.Length+1)}
+$hashes|Set-Content -LiteralPath (Join-Path $package 'SHA256SUMS.txt') -Encoding utf8
+if(-not $OutputDirectory){$OutputDirectory=Split-Path $root};New-Item -ItemType Directory -Force $OutputDirectory|Out-Null
+$zip=Join-Path $OutputDirectory ('AIO-Display-v'+$Version+'-windows-x64.zip')
+Compress-Archive -LiteralPath $package -DestinationPath $zip -Force
+$hash=Get-FileHash -LiteralPath $zip -Algorithm SHA256
+('{0}  {1}' -f $hash.Hash.ToLowerInvariant(),[IO.Path]::GetFileName($zip))|Set-Content -LiteralPath ($zip+'.sha256') -Encoding ascii
+& (Join-Path $PSScriptRoot 'check-package.ps1') -PackageDirectory $package
+$package|Set-Content -LiteralPath (Join-Path $root 'work/last-package-path.txt')
+Get-Item -LiteralPath $zip
+})
+if($forbidden.Count){throw 'Proprietary vendor binary in package'}
 $hashes=foreach($file in Get-ChildItem -LiteralPath $package -Recurse -File){$hash=Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256;'{0}  {1}' -f $hash.Hash.ToLowerInvariant(),$file.FullName.Substring($package.Length+1)}
 $hashes|Set-Content -LiteralPath (Join-Path $package 'SHA256SUMS.txt') -Encoding utf8
 if(-not $OutputDirectory){$OutputDirectory=Split-Path $root};New-Item -ItemType Directory -Force $OutputDirectory|Out-Null

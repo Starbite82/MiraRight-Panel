@@ -1,0 +1,25 @@
+EXTERNAL PROGRAMS / SEPARATE TERMS
+
+Fan Control is optional and is not part of this distribution. No FanControl.exe,
+FanControl.IPC.dll, proprietary implementation or vendor installer is included.
+The adapter invokes public client methods on the user's installed IPC assembly;
+it does not inspect method bodies, decompile or redistribute that assembly.
+Fan Control's own license governs its installation and use; its published terms
+restrict use to personal/non-commercial contexts unless separately permitted.
+This app does not grant commercial-use or redistribution rights for Fan Control.
+For a commercial setup use independent LHM sensors, or obtain suitable permission
+for Fan Control. Missing Fan Control does not prevent CPU/GPU/RAM operation.
+https://github.com/Rem0o/FanControl.Releases/blob/master/LICENSE
+
+MSI Afterburner is optional. Its application, SDK headers, sample source, vendor
+DLLs and installers are not redistributed. The independently written reader
+consumes the shared-memory layout documented in the installed vendor SDK.
+No executable code was taken from Afterburner or reverse engineered. The SDK's
+installer license prohibits unauthorized vendor-binary redistribution; it is
+not a license for our independently written reader. Users obtain Afterburner
+separately and follow its terms.
+
+TRCC and its binaries/themes are not included. The app uses the existing WinUSB
+interface and does not redistribute proprietary firmware or install a driver.
+The USB reference provenance and project-license decision are described separately
+in CODE-PROVENANCE.txt and LICENSE-PROFILE.txt.
