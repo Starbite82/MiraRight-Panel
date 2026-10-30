@@ -1,5 +1,15 @@
 # Änderungen
 
+## 1.1.1 — Lizenzbereinigung
+
+- GPL-3.0-only für die Windows-App; MIT für unabhängigen SensorHost und Contracts.
+- Vollständige Lizenztexte, Geltungsbereiche und SPDX-Kennzeichnungen.
+- Explizite .NET-Laufzeit- und Drittanbieterhinweise.
+- Passende Projekt-/MPL-/LGPL-Quellen und Buildskripte im Paket.
+- Zusätzliche PawnIO-/CrystalDiskInfo-Hinweise, Herkunfts- und Integrationsdokumentation.
+- Info-/Impressumsdialog vorbereitet; persönliche Anbieterangaben bleiben offen.
+
+
 ## 1.1.0 — 2026-10-30
 
 - Eigener C#-Sensorprozess ersetzt die PowerShell-Brücken.

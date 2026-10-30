@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (c) 2026 AIO Display contributors
+
 namespace AioDisplay.App;
 
 using System.Drawing;
@@ -12,7 +15,7 @@ public static class AboutContent
     public static string Version => typeof(AboutContent).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion.Split('+')[0] ?? "unbekannt";
     public static string Info => $"AIO Display {Version}\n\n{Development}\n{Technology}\n\nEigenständige Windows-Anwendung mit separatem C#-Sensorprozess und direkter WinUSB-Displayausgabe.\n\nProjekt: Starbite82/AIO-Display\nhttps://github.com/Starbite82/AIO-Display\n\nDie Entwicklung erfolgt iterativ mit versionierten Quellen, automatisierten Tests und dokumentierten Hardwareprüfungen. Unterstützte Geräte und Einrichtung stehen in der Anleitung.\n\nBedienung: LIESMICH.txt im Programmordner.";
     public static string ReadImprint(string directory) => ReadOptional(directory, "IMPRINT.txt", MissingImprint);
-    public static string ReadLicenses(string directory) => ReadOptional(directory, "THIRD-PARTY-COMPONENTS.txt", "Drittanbieterhinweise sind in diesem Entwicklungsordner noch nicht vorhanden. Sie werden beim Paketieren erzeugt.") + "\n\n" + ReadOptional(directory, "LICENSE-PROFILE.txt", "Die eigene Projektlizenz ist noch nicht festgelegt. Die Entscheidung über die GPL-Behandlung der USB-Referenz steht aus.");
+    public static string ReadLicenses(string directory) => ReadOptional(directory, "THIRD-PARTY-COMPONENTS.txt", "Drittanbieterhinweise sind in diesem Entwicklungsordner noch nicht vorhanden. Sie werden beim Paketieren erzeugt.") + "\n\n" + ReadOptional(directory, "LICENSE-PROFILE.txt", "App: GPL-3.0-only. Separater Sensorprozess und Datenvertrag: MIT. Drittanbieter behalten ihre eigenen Lizenzen; vollständige Texte und Quellen liegen dem Paket bei.");
     private static string ReadOptional(string directory, string name, string fallback)
     {
         try

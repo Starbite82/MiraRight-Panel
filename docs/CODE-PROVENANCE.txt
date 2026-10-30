@@ -9,8 +9,10 @@ code adaptation and the license grant are separate questions.
 
 The exact upstream revision viewed during initial development was not recorded.
 The present audit therefore makes no claim of a fully documented clean-room process.
-A GPL-compatible licensing treatment is proposed to the owner conservatively.
-No project license is changed until that decision is made.
+On 2026-10-30 the owner approved GPL version 3 for the display app.
+The app is now GPL-3.0-only, with attribution and corresponding source.
+The independent sensor executable and data contracts are MIT; their own code
+does not contain the USB transport or a project reference to the GPL app.
 
 Reference: TRCC Linux Contributors, Lexonight1/thermalright-trcc-linux.
 Audited snapshot: 58b8c9d82747778d981581254dd4455046d0d424 (GPL-3.0-or-later

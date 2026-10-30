@@ -1,4 +1,4 @@
-AIO Display 1.1.0 – Anleitung
+AIO Display 1.1.1 – Anleitung
 
 1. VORAUSSETZUNGEN
 Windows x64 mit Unterstützung für die mitgelieferte .NET-10-Laufzeit.
@@ -93,3 +93,13 @@ Fan Control v284 und das oben genannte LCD. Andere Hardware wird dynamisch
 erkannt, benötigt aber weitere physische Kompatibilitätstests.
 SHA256SUMS.txt enthält Dateiprüfsummen. Drittanbieterhinweise liegen in
 THIRD-PARTY-COMPONENTS.txt, licenses/ und den Runtime-Verzeichnissen.
+
+10. LIZENZEN UND QUELLEN
+Die App steht unter GPL-3.0-only, der eigenständige Sensorprozess und der
+gemeinsame Datenvertrag für ihren eigenen Code unter MIT. Vollständige
+Lizenztexte liegen in LICENSES/; die Abgrenzung steht in LICENSE-MAP.txt.
+Die GPL-App darf genutzt, verändert und weitergegeben werden. Bei Weitergabe
+sind die GPL-Bedingungen einschließlich Zugang zum zugehörigen Quellcode
+zu beachten. Passende Projekt-/Bibliotheksquellen und Buildskripte liegen
+im Ordner sources/. Drittanbieter behalten ihre ursprünglichen Lizenzen.
+Das Impressum mit persönlichen Anbieterangaben wird gesondert ergänzt.

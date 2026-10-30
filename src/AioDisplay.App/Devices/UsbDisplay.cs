@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (c) 2026 AIO Display contributors
+
 namespace AioDisplay.App;
 
 using System;
@@ -8,6 +11,9 @@ using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using Microsoft.Win32.SafeHandles;
 
+// USB protocol reference: TRCC Linux Contributors (GPL-3.0-or-later).
+// Windows implementation / PM32 SUB1 profile; see CODE-PROVENANCE.txt.
+// Application distribution under GPL-3.0-only approved 2026-10-30.
 public sealed class UsbDisplay : IDisposable
 {
     [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)] static extern SafeFileHandle CreateFile(string path, uint access, uint share, IntPtr sa, uint creation, uint flags, IntPtr template);

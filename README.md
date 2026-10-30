@@ -1,4 +1,4 @@
-# AIO Display 1.1.0
+# AIO Display 1.1.1
 
 Windows application for the confirmed Thermalright 320 × 320 LCD (87AD:70DB / PM32 SUB1). The existing dashboard, detail view, colors, percentages, thread bars, fan labels and smoothing are retained.
 
@@ -52,6 +52,14 @@ A clean Windows install, other vendors, suspend/resume and physical USB disconne
 
 See [migration](docs/NATIVE-MIGRATION.md), [previous stability test](docs/STABILITY-2026-10-30.md) and [previous hardware adaptation](docs/HARDWARE-2026-10-30.md). Historical source/binaries in Archiv-* are retained as archives and are neither built nor packaged.
 
-Bundled third-party metadata and license notices are generated from restored packages. The LHM source link and MPL-2.0 text are included; .NET runtime notices remain in their publish folders.
+Bundled third-party metadata, original license texts and runtime notices are included under licenses/. Matching MPL/LGPL sources and the current project sources/build scripts are included under sources/, with pinned upstream versions and SHA256 checksums.
 
 Final migration test evidence: [NATIVE-VALIDATION-2026-10-30.md](docs/NATIVE-VALIDATION-2026-10-30.md).
+
+## Lizenzen
+
+Die Windows-App steht unter **GPL-3.0-only**. Der eigenständige Sensorprozess und der gemeinsame Datenvertrag stehen für ihren eigenen Code unter **MIT**. Vollständige Texte und Geltungsbereiche: [LICENSE-MAP.txt](LICENSE-MAP.txt), [GPL 3](LICENSE), [MIT](LICENSES/MIT.txt). Drittanbieter behalten ihre ursprünglichen Lizenzen.
+
+Das Download-Paket enthält die passenden Projekt- und MPL-/LGPL-Quellen, Buildskripte, Herkunftsnachweise und .NET-Drittanbieterhinweise. Fan Control und MSI Afterburner werden nicht mitgeliefert; deren eigene Bedingungen bleiben gültig. Die GPL-Behandlung der USB-Referenz wird in [CODE-PROVENANCE.txt](docs/CODE-PROVENANCE.txt) dokumentiert.
+
+Das Impressum mit freigegebenen Anbieterangaben ist ein gesonderter, noch ausstehender Schritt. Diese Paketbereinigung ersetzt keine umfassende juristische Prüfung anderer Sachverhalte.

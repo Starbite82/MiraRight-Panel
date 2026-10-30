@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 AIO Display contributors
+
 namespace AioDisplay.Contracts;
 
 using System.Text.Json;

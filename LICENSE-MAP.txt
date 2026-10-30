@@ -1,0 +1,32 @@
+AIO DISPLAY — LICENSE SCOPE
+
+Unless an exception below applies, the project's own application code, assets,
+tests and build/packaging scripts are licensed under GPL-3.0-only. See LICENSE.
+
+GPL-3.0-only:
+  src/AioDisplay.App/ — Windows UI, rendering, smoothing and WinUSB output
+  assets/, tests/, tools/ — own assets, regression tests and build scripts
+  historical own application sources in Archiv-*
+
+MIT exceptions for independently developed components:
+  src/AioDisplay.SensorHost/ — separate sensor executable; LICENSE in that directory
+  src/AioDisplay.Contracts/ — shared data model/JSON protocol; LICENSE in that directory
+The sensor host has no reference to or dependency on AioDisplay.App. The app
+references Contracts and exchanges sensor data with a separate executable via
+stdin/stdout JSON. The independent sensor host can be built and run on its own.
+These exceptions do not relicense code in the GPL app or upstream components.
+
+Third-party exceptions:
+  docs/licenses/upstream/, docs/licenses/usb-reference/, docs/licenses/Mono-LICENSE.txt
+  and third-party license texts retain the original notices and licenses.
+  Bundled LHM and dependencies retain MPL/LGPL/MIT/Apache/BSD terms as specified
+  in THIRD-PARTY-COMPONENTS.txt and licenses/.
+  Referenced TRCC Linux sources: GPL-3.0-or-later; our application is released
+  under version 3 only. Upstream contributors retain their original rights.
+
+The root GPL license does not apply to Microsoft runtimes or unrelated external
+programs, nor does the MIT exception grant any rights in Fan Control/Afterburner.
+Their implementations, installers and SDKs are not redistributed.
+
+Corresponding project and upstream library/module sources with pinned versions
+are in sources/. See sources/README-SOURCES.txt and SOURCE-MANIFEST.json.

@@ -75,4 +75,10 @@ $entries.Add('Corresponding MPL/LGPL sources, versions and checksums: sources/SO
 Copy-Item -LiteralPath (Join-Path $root 'docs/EXTERNAL-INTEGRATIONS.txt') -Destination $PackageDirectory
 Copy-Item -LiteralPath (Join-Path $root 'docs/CODE-PROVENANCE.txt') -Destination $PackageDirectory
 Copy-Item -LiteralPath (Join-Path $root 'docs/PROJECT-LICENSE-STATUS.txt') -Destination (Join-Path $PackageDirectory 'LICENSE-PROFILE.txt')
+Copy-Item -LiteralPath (Join-Path $root 'LICENSE') -Destination (Join-Path $PackageDirectory 'LICENSE')
+Copy-Item -LiteralPath (Join-Path $root 'LICENSE-MAP.txt') -Destination $PackageDirectory
+Copy-Item -LiteralPath (Join-Path $root 'LICENSES') -Destination $PackageDirectory -Recurse
+Copy-Item -LiteralPath (Join-Path $root 'src/AioDisplay.SensorHost/LICENSE') -Destination (Join-Path $PackageDirectory 'sensors/LICENSE')
+Copy-Item -LiteralPath (Join-Path $root 'src/AioDisplay.Contracts/LICENSE') -Destination (Join-Path $notice 'AioDisplay.Contracts-MIT.txt')
+$entries.Add('Own app: GPL-3.0-only; separate sensor host and Contracts: MIT. Full texts and scope: LICENSES/ and LICENSE-MAP.txt.')
 $entries|Set-Content -LiteralPath (Join-Path $PackageDirectory 'THIRD-PARTY-COMPONENTS.txt') -Encoding utf8

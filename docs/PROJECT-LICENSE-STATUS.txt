@@ -1,9 +1,18 @@
-PROJECT LICENSE STATUS — DECISION PENDING
+AIO DISPLAY — PROJECT LICENSES
 
-No new license grant for the project's own code has been applied.
-The proposed GPL-3.0 treatment of the Windows display app and MIT licensing
-of the independently developed sensor host/contracts require owner approval.
-The ZIP is a preparation/audit build, not a completed publication candidate.
-Third-party components keep their original MPL/LGPL/MIT/Apache/BSD licenses.
-Sources and notices are supplied; this file is not a substitute for choosing
-and granting the project's own license. Personal imprint data is deferred.
+App / BLUB-Display.exe: GPL-3.0-only.
+Separate AioDisplay.SensorHost.exe: MIT, for its own code.
+AioDisplay.Contracts: MIT, for its own code.
+License choice expressly approved by the project owner on 2026-10-30.
+
+Full texts: LICENSES/GPL-3.0-only.txt and LICENSES/MIT.txt.
+Scope and exceptions: LICENSE-MAP.txt.
+Third-party components keep their original licenses; see licenses/ and
+THIRD-PARTY-COMPONENTS.txt. No external vendor program is relicensed.
+
+Matching preferred sources, build scripts and upstream MPL/LGPL sources
+are supplied in sources/. The app's GPL source is offered under the GPL,
+including the rights to use, modify and redistribute it under those terms.
+
+This license implementation does not establish all possible patent, trademark
+or provider-law requirements. Personal imprint data is intentionally deferred.
