@@ -1,0 +1,20 @@
+name: Build and test
+on: [push, pull_request]
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Build and regression tests
+        shell: pwsh
+        run: ./tests/run.ps1
+      - name: Portable Windows package
+        shell: pwsh
+        run: ./tools/package.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AIO-Display-Native-windows-x64
+          path: ../AIO-Display-Native-v*-windows-x64.zip
