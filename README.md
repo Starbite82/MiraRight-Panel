@@ -58,7 +58,7 @@ Final migration test evidence: [NATIVE-VALIDATION-2026-10-30.md](docs/NATIVE-VAL
 
 ## Lizenzen
 
-Die Windows-App steht unter **GPL-3.0-only**. Der eigenständige Sensorprozess und der gemeinsame Datenvertrag stehen für ihren eigenen Code unter **MIT**. Vollständige Texte und Geltungsbereiche: [LICENSE-MAP.txt](LICENSE-MAP.txt), [GPL 3](LICENSE), [MIT](LICENSES/MIT.txt). Drittanbieter behalten ihre ursprünglichen Lizenzen.
+Die Windows-App steht unter **GPL-3.0-only**. Der eigenständige Sensorprozess und der gemeinsame Datenvertrag stehen für ihren eigenen Code unter **MIT**. Vollständige Texte und Geltungsbereiche: [LICENSE-MAP.txt](LICENSE-MAP.txt), [GPL 3](LICENSE), [MIT](project-licenses/MIT.txt). Drittanbieter behalten ihre ursprünglichen Lizenzen.
 
 Das Download-Paket enthält die passenden Projekt- und MPL-/LGPL-Quellen, Buildskripte, Herkunftsnachweise und .NET-Drittanbieterhinweise. Fan Control und MSI Afterburner werden nicht mitgeliefert; deren eigene Bedingungen bleiben gültig. Die GPL-Behandlung der USB-Referenz wird in [CODE-PROVENANCE.txt](docs/CODE-PROVENANCE.txt) dokumentiert.
 

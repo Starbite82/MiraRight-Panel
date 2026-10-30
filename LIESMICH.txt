@@ -97,7 +97,7 @@ THIRD-PARTY-COMPONENTS.txt, licenses/ und den Runtime-Verzeichnissen.
 10. LIZENZEN UND QUELLEN
 Die App steht unter GPL-3.0-only, der eigenständige Sensorprozess und der
 gemeinsame Datenvertrag für ihren eigenen Code unter MIT. Vollständige
-Lizenztexte liegen in LICENSES/; die Abgrenzung steht in LICENSE-MAP.txt.
+Lizenztexte liegen in project-licenses/; die Abgrenzung steht in LICENSE-MAP.txt.
 Die GPL-App darf genutzt, verändert und weitergegeben werden. Bei Weitergabe
 sind die GPL-Bedingungen einschließlich Zugang zum zugehörigen Quellcode
 zu beachten. Passende Projekt-/Bibliotheksquellen und Buildskripte liegen

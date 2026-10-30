@@ -5,7 +5,7 @@ Separate AioDisplay.SensorHost.exe: MIT, for its own code.
 AioDisplay.Contracts: MIT, for its own code.
 License choice expressly approved by the project owner on 2026-10-30.
 
-Full texts: LICENSES/GPL-3.0-only.txt and LICENSES/MIT.txt.
+Full texts: project-licenses/GPL-3.0-only.txt and project-licenses/MIT.txt.
 Scope and exceptions: LICENSE-MAP.txt.
 Third-party components keep their original licenses; see licenses/ and
 THIRD-PARTY-COMPONENTS.txt. No external vendor program is relicensed.

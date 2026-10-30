@@ -1,7 +1,7 @@
 param([Parameter(Mandatory=$true)][string]$PackageDirectory)
 $ErrorActionPreference='Stop'
 $required=@(
- 'LICENSE','LICENSE-MAP.txt','LICENSES/GPL-3.0-only.txt','LICENSES/MIT.txt','sensors/LICENSE','licenses/AioDisplay.Contracts-MIT.txt',
+ 'LICENSE','LICENSE-MAP.txt','project-licenses/GPL-3.0-only.txt','project-licenses/MIT.txt','sensors/LICENSE','licenses/AioDisplay.Contracts-MIT.txt',
  'THIRD-PARTY-COMPONENTS.txt','EXTERNAL-INTEGRATIONS.txt','CODE-PROVENANCE.txt','LICENSE-PROFILE.txt',
  'licenses/MPL-2.0.txt','licenses/LibreHardwareMonitorLib/LICENSE',
  'licenses/LibreHardwareMonitorLib/THIRD-PARTY-NOTICES.txt',
@@ -34,15 +34,15 @@ foreach($line in Get-Content -LiteralPath (Join-Path $PackageDirectory 'SHA256SU
 $profile=Get-Content -LiteralPath (Join-Path $PackageDirectory 'LICENSE-PROFILE.txt') -Raw
 $licensePending=$profile -match 'DECISION PENDING'
 if($licensePending -or $profile -notmatch 'GPL-3.0-only' -or $profile -notmatch 'MIT'){throw 'Project license grant/scope missing'}
-$gpl=Get-Content -LiteralPath (Join-Path $PackageDirectory 'LICENSES/GPL-3.0-only.txt') -Raw
+$gpl=Get-Content -LiteralPath (Join-Path $PackageDirectory 'project-licenses/GPL-3.0-only.txt') -Raw
 if($gpl -notmatch 'GNU GENERAL PUBLIC LICENSE' -or $gpl -notmatch 'Version 3'){throw 'GPL text missing'}
-$mit=Get-Content -LiteralPath (Join-Path $PackageDirectory 'LICENSES/MIT.txt') -Raw
+$mit=Get-Content -LiteralPath (Join-Path $PackageDirectory 'project-licenses/MIT.txt') -Raw
 if($mit -notmatch 'Permission is hereby granted' -or $mit -notmatch 'AIO Display contributors'){throw 'MIT grant missing'}
-if((Get-FileHash -LiteralPath (Join-Path $PackageDirectory 'sensors/LICENSE')).Hash -ne (Get-FileHash -LiteralPath (Join-Path $PackageDirectory 'LICENSES/MIT.txt')).Hash){throw 'Sensor license differs'}
+if((Get-FileHash -LiteralPath (Join-Path $PackageDirectory 'sensors/LICENSE')).Hash -ne (Get-FileHash -LiteralPath (Join-Path $PackageDirectory 'project-licenses/MIT.txt')).Hash){throw 'Sensor license differs'}
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $ownZip=[IO.Compression.ZipFile]::OpenRead((Join-Path $PackageDirectory 'sources/AIO-Display-source.zip'))
 try{
- foreach($path in @('AIO-Display/LICENSE','AIO-Display/LICENSE-MAP.txt','AIO-Display/LICENSES/MIT.txt','AIO-Display/src/AioDisplay.SensorHost/LICENSE','AIO-Display/src/AioDisplay.Contracts/LICENSE')){
+ foreach($path in @('AIO-Display/LICENSE','AIO-Display/LICENSE-MAP.txt','AIO-Display/project-licenses/MIT.txt','AIO-Display/src/AioDisplay.SensorHost/LICENSE','AIO-Display/src/AioDisplay.Contracts/LICENSE')){
   if(-not $ownZip.GetEntry($path)){throw ('Source license missing: '+$path)}
  }
 }finally{$ownZip.Dispose()}
