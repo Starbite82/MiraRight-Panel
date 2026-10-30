@@ -1,4 +1,4 @@
-param([string]$Dotnet='dotnet',[string]$Version='1.1.0-beta.1')
+param([string]$Dotnet='dotnet',[string]$Version='1.1.0-beta.1',[string]$OutputDirectory='')
 $ErrorActionPreference='Stop';$root=Split-Path $PSScriptRoot
 $stage=Join-Path $root ('work/publish-'+[Guid]::NewGuid().ToString('N'));New-Item -ItemType Directory -Force $stage|Out-Null
 $app=Join-Path $stage 'app';$hostStage=Join-Path $stage 'host';$package=Join-Path $stage 'AIO-Display'
@@ -17,7 +17,8 @@ Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'AIO-Display-Vorschau.cmd') -Des
 & (Join-Path $PSScriptRoot 'third-party-notices.ps1') -PackageDirectory $package
 $hashes=foreach($file in Get-ChildItem -LiteralPath $package -Recurse -File){$hash=Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256;'{0}  {1}' -f $hash.Hash.ToLowerInvariant(),$file.FullName.Substring($package.Length+1)}
 $hashes|Set-Content -LiteralPath (Join-Path $package 'SHA256SUMS.txt') -Encoding utf8
-$zip=Join-Path (Split-Path $root) ('AIO-Display-Native-v'+$Version+'-windows-x64.zip')
+if(-not $OutputDirectory){$OutputDirectory=Split-Path $root};New-Item -ItemType Directory -Force $OutputDirectory|Out-Null
+$zip=Join-Path $OutputDirectory ('AIO-Display-Native-v'+$Version+'-windows-x64.zip')
 Compress-Archive -LiteralPath $package -DestinationPath $zip -Force
 $hash=Get-FileHash -LiteralPath $zip -Algorithm SHA256
 ('{0}  {1}' -f $hash.Hash.ToLowerInvariant(),[IO.Path]::GetFileName($zip))|Set-Content -LiteralPath ($zip+'.sha256') -Encoding ascii

@@ -24,7 +24,19 @@ public static class Program
             if (args.Contains("--stop")) { Signal(StopSignal); return; }
             if (!previewMode && args.Contains("--enable-autostart")) { AutoStart.Set(true); return; }
             if (!previewMode && args.Contains("--disable-autostart")) { AutoStart.Set(false); return; }
-            if (args.Contains("--render")) { using (var image = PanelRenderer.RenderView(SensorHub.Read(), PanelRenderer.TotalMemoryGiB(), AppSettings.Current.View, AppSettings.Current.ThreadNumbers)) image.Save(Path.Combine(Log.Root, "live-preview.png"), ImageFormat.Png); return; }
+            if (args.Contains("--render"))
+            {
+                try
+                {
+                    SensorHub.EnsureRunning();
+                    var timeout = Stopwatch.StartNew();
+                    while (!SensorHub.Read().Fresh && timeout.Elapsed < TimeSpan.FromSeconds(20)) Thread.Sleep(50);
+                    using var image = PanelRenderer.RenderView(SensorHub.Read(), PanelRenderer.TotalMemoryGiB(), AppSettings.Current.View, AppSettings.Current.ThreadNumbers);
+                    image.Save(Path.Combine(Log.Root, "live-preview.png"), ImageFormat.Png);
+                }
+                finally { SensorHub.Stop(); }
+                return;
+            }
             if (args.Contains("--diagnose"))
             {
                 var s = SensorHub.Read(); File.WriteAllLines(Path.Combine(Log.Root, "sensors.txt"), new[] { s.Status + " " + Log.LastSensorError }.Concat(s.Entries.Select(r => string.Format("{0:X4} GPU={1} {2} = {3} {4}", r.Id, r.Gpu, r.Name, r.Value, r.Unit))));

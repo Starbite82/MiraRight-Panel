@@ -9,3 +9,5 @@ Projects: AioDisplay.App (existing WinForms UI/rendering/USB), AioDisplay.Contra
 The host receives configuration once via stdin and emits complete versioned JSON snapshots via stdout. No PowerShell, sensor snapshot files or independent file-writer/watchdog races. UI owns/restarts its child, checks valid protocol frames as its heartbeat, and discards stale/invalid readings. Unavailable sensors do not cause restart loops. Fan Control polling is isolated from the fast LHM sampler.
 
 The native app uses separate preview mode signals so it cannot stop or signal the stable instance. Test builds do not register autostart. Hardware deployment happens only after validation.
+
+Cold self-contained startup has a 20-second initial grace period until the first valid frame. Once streaming, a silent producer is restarted after five seconds. Stale readings are hidden independently after two seconds.

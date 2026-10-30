@@ -48,7 +48,8 @@ public sealed class SensorProcessClient : IDisposable
             if (child != null && !child.HasExited)
             {
                 bool unchanged = configuration == signature;
-                if (unchanged && (now - attempted < TimeSpan.FromSeconds(8) || now - healthy < TimeSpan.FromSeconds(5))) return;
+                bool starting = healthy == DateTime.MinValue && now - attempted < TimeSpan.FromSeconds(20);
+                if (unchanged && (starting || now - healthy < TimeSpan.FromSeconds(5))) return;
                 log("Sensor host restart: " + (unchanged ? "no valid snapshots" : "configuration changed"));
                 StopLocked();
                 attempted = DateTime.MinValue;

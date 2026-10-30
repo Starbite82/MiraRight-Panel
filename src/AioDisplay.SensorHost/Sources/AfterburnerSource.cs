@@ -5,6 +5,9 @@ using System.Text;
 using System.IO.MemoryMappedFiles;
 public static class AfterburnerSource
 {
+    private static readonly Encoding Ansi = WindowsEncoding();
+    [System.Runtime.InteropServices.DllImport("kernel32.dll")] private static extern uint GetACP();
+    private static Encoding WindowsEncoding() { Encoding.RegisterProvider(CodePagesEncodingProvider.Instance); return Encoding.GetEncoding((int)GetACP()); }
     public static SensorSnapshot Read()
     {
         var result = new SensorSnapshot();
@@ -22,7 +25,8 @@ public static class AfterburnerSource
                 for (int i = 0; i < count; i++)
                 {
                     long offset = header + (long)i * size; byte[] b = new byte[520]; view.ReadArray(offset, b, 0, b.Length);
-                    result.Entries.Add(new Reading { Name = String(b, 0), Unit = String(b, 260), Value = view.ReadSingle(offset + 1300), Gpu = view.ReadUInt32(offset + 1316), Id = view.ReadUInt32(offset + 1320) });
+                    var reading = new Reading { Name = String(b, 0), Unit = String(b, 260), Value = view.ReadSingle(offset + 1300), Gpu = view.ReadUInt32(offset + 1316), Id = view.ReadUInt32(offset + 1320) };
+                    if (reading.Valid) result.Entries.Add(reading);
                 }
                 result.VramTotalMb = ReadVramTotal(view);
                 if (view.ReadUInt32(0) != 0x4D41484D) throw new Exception("Afterburner wurde beendet.");
@@ -38,8 +42,8 @@ public static class AfterburnerSource
         long start = (long)header + (long)count * stride;
         if (gpuCount == 0 || gpuStride < 1304 || start < 32 || start + gpuStride > view.Capacity) return null;
         uint kib = view.ReadUInt32(start + 1300); if (kib > 0) return kib / 1024.0;
-        var nameBytes = new byte[260]; view.ReadArray(start + 520, nameBytes, 0, 260); string name = Encoding.Default.GetString(nameBytes).Trim((char)0); return GpuMemory.TotalMb(name);
+        var nameBytes = new byte[260]; view.ReadArray(start + 520, nameBytes, 0, 260); string name = Ansi.GetString(nameBytes).Trim((char)0); return GpuMemory.TotalMb(name);
     }
 
-    static string String(byte[] b, int offset) { int n = 0; while (n < 260 && b[offset + n] != 0) n++; return Encoding.Default.GetString(b, offset, n); }
+    static string String(byte[] b, int offset) { int n = 0; while (n < 260 && b[offset + n] != 0) n++; return Ansi.GetString(b, offset, n); }
 }
