@@ -9,6 +9,7 @@ public sealed class Reading {
 }
 public sealed class AfterburnerSnapshot {
  public Dictionary<string,double> BarValues=new Dictionary<string,double>();
+ public int ReportedThreadCount;
  public List<Reading> Entries=new List<Reading>();public string Status;public bool Fresh;public double? VramTotalMb;public string Source="MSI Afterburner",CpuTemperatureSource="MSI Afterburner",GpuName="";public long SampleTicks,SampleSequence;
  public Reading Find(uint id,string exact){
   var r=Entries.Find(x=>x.Id==id&&x.Name.Equals(exact,StringComparison.OrdinalIgnoreCase));

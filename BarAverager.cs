@@ -12,7 +12,7 @@ public sealed class BarAverager {
   if(window!=milliseconds||source!=snapshot.Source){Reset();window=milliseconds;source=snapshot.Source;}
   bool newSample=snapshot.SampleTicks!=lastTicks||snapshot.SampleSequence!=lastSequence;
   var active=new HashSet<string>();
-  for(int i=1;i<=32;i++)Add(snapshot,"thread:"+i,PanelRenderer.Thread(snapshot,i),newSample,now,active);
+  for(int i=1;i<=PanelRenderer.ThreadCount(snapshot);i++)Add(snapshot,"thread:"+i,PanelRenderer.Thread(snapshot,i),newSample,now,active);
   Add(snapshot,"ram",snapshot.Find(0x91,"RAM usage"),newSample,now,active);
   Add(snapshot,"vram",snapshot.Entries.Find(r=>r.Id==0x31&&r.Gpu==0),newSample,now,active);
   foreach(var key in new List<string>(history.Keys))if(!active.Contains(key))history.Remove(key);

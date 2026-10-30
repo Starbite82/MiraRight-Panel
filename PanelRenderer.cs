@@ -28,6 +28,12 @@ public static class PanelRenderer {
   }
  }
  static double BarValue(AfterburnerSnapshot s,string key,double raw){double value;return s.BarValues.TryGetValue(key,out value)?value:raw;}
+ public static int ThreadCount(AfterburnerSnapshot s){
+  int count=s.ReportedThreadCount;
+  foreach(var r in s.Entries){int n;if(r.Id==0x90&&r.Name.StartsWith("CPU",StringComparison.OrdinalIgnoreCase)&&r.Name.EndsWith(" usage",StringComparison.OrdinalIgnoreCase)&&int.TryParse(r.Name.Substring(3,r.Name.Length-9),out n))count=Math.Max(count,n);}
+  return Math.Max(1,Math.Min(4096,count>0?count:Environment.ProcessorCount));
+ }
+ public static int PageStart(int count,int size,long ticks){return count<=size?0:(int)((Math.Max(0,ticks)/TimeSpan.TicksPerSecond/5)%((count+size-1)/size))*size;}
  public static Reading Thread(AfterburnerSnapshot s,int index){return s.Entries.Find(r=>r.Id==0x90&&r.Name.Equals("CPU"+index+" usage",StringComparison.OrdinalIgnoreCase));}
  public static string MemoryText(AfterburnerSnapshot s,double total){var used=s.Find(0x91,"RAM usage");return (s.Fresh&&used!=null&&used.Valid?(used.Value/1024.0).ToString("0.0"):"--")+" / "+(!double.IsNaN(total)?total.ToString("0.0"):"--")+" GB";}
  public static string VramText(AfterburnerSnapshot s){var used=s.Entries.Find(r=>r.Id==0x31&&r.Gpu==0);return (s.Fresh&&used!=null&&used.Valid?(used.Value/1024.0).ToString("0.0"):"--")+" / "+(s.VramTotalMb.HasValue?(s.VramTotalMb.Value/1024.0).ToString("0.0"):"--")+" GB";}
@@ -43,15 +49,17 @@ public static class PanelRenderer {
    LoadText(g,s,0x30,"GPU usage",168,76,15,Purple);
    Rect(g,Tile,0,107,320,45);Text(g,"RAM",5,117,12,Muted);
    Text(g,MemoryText(s,total),67,114,20,White,250);
-   for(int i=1;i<=32;i++){
-    int x=((i-1)%8)*40,y=160+((i-1)/8)*40;
+   int totalThreads=ThreadCount(s),start=PageStart(totalThreads,32,s.SampleTicks),visible=Math.Min(32,totalThreads-start);
+   int cols=Math.Min(8,visible),rows=(visible+cols-1)/cols;
+   for(int j=0;j<visible;j++){
+    int i=start+j+1,x=(j%cols)*(320/cols),y=160+(j/cols)*(160/rows);
     var r=Thread(s,i);bool valid=s.Fresh&&r!=null&&r.Valid;double load=valid?Math.Max(0,Math.Min(100,r.Value)):0;
     double barLoad=valid?BarValue(s,"thread:"+i,load):0;
     var color=barLoad>=90?Color.FromArgb(255,173,91):Cyan;
-    Rect(g,Tile,x,y,38,38);Text(g,i.ToString(),x+2,y+1,7,Muted);
+    int tileW=320/cols-2,tileH=160/rows-2;Rect(g,Tile,x,y,tileW,tileH);Text(g,i.ToString(),x+2,y+1,7,Muted);
     Text(g,valid?load.ToString("0")+"%":"--",x+2,y+12,9,valid?White:Muted,35);
-    Rect(g,Track,x+2,y+30,34,6);
-    if(barLoad>0)Rect(g,color,x+2,y+30,Math.Max(1,(int)Math.Round(34*barLoad/100)),6);
+    Rect(g,Track,x+2,y+tileH-8,tileW-4,6);
+    if(barLoad>0)Rect(g,color,x+2,y+tileH-8,Math.Max(1,(int)Math.Round((tileW-4)*barLoad/100)),6);
    }
    if(!s.Fresh){Rect(g,Color.FromArgb(9,15,25),0,76,320,27);Text(g,"SENSOREN: KEINE LIVEWERTE",5,80,9,Color.Orange);}
   }return bmp;
@@ -88,16 +96,18 @@ public static class PanelRenderer {
   }return bmp;
  }
  static void DrawBars(Graphics g,AfterburnerSnapshot s,Rectangle area,int style,bool numbers){
-  int columns=style==1?8:style==3?32:16,rows=32/columns;
+  int total=ThreadCount(s),start=PageStart(total,32,s.SampleTicks),count=Math.Min(32,total-start);
+  if(total>32){Text(g,(start+1)+"–"+(start+count)+" / "+total,area.X,area.Y,7,Muted,area.Width);area.Y+=15;area.Height-=15;}
+  int columns=style==1?Math.Min(count,count<=16?4:8):style==3?count:Math.Min(count,16),rows=(count+columns-1)/columns;
   float cellW=area.Width/(float)columns,cellH=area.Height/(float)rows;
-  for(int i=0;i<32;i++){
+  for(int i=0;i<count;i++){
    int x=area.X+(int)Math.Round(i%columns*cellW),top=area.Y+(int)Math.Round(i/columns*cellH);
    int nextX=area.X+(int)Math.Round((i%columns+1)*cellW);
    int width=Math.Max(1,nextX-x-(style==1?3:2));
    int numberSpace=numbers?(cellW>=17?13:9):0;
    int height=Math.Max(1,(int)cellH-5-numberSpace),bottom=top+height;
-   var r=Thread(s,i+1);bool valid=s.Fresh&&r!=null&&r.Valid;
-   double load=valid?Math.Max(0,Math.Min(100,BarValue(s,"thread:"+(i+1),r.Value))):0;
+   var r=Thread(s,start+i+1);bool valid=s.Fresh&&r!=null&&r.Valid;
+   double load=valid?Math.Max(0,Math.Min(100,BarValue(s,"thread:"+(start+i+1),r.Value))):0;
    Rect(g,Track,x,top,width,height);
    int filled=load<=0?0:Math.Max(1,(int)Math.Round(height*load/100));
    if(style==2){
@@ -107,7 +117,7 @@ public static class PanelRenderer {
    if(!valid)Rect(g,Muted,x,bottom-1,width,1);
    if(numbers){
     float font=cellW>=17?6:cellW>=9?4.5f:3.0f;
-    using(var f=new Font("Segoe UI",font,FontStyle.Regular,GraphicsUnit.Point))using(var brush=new SolidBrush(Muted))g.DrawString((i+1).ToString(),f,brush,x-1,bottom+1);
+    using(var f=new Font("Segoe UI",font,FontStyle.Regular,GraphicsUnit.Point))using(var brush=new SolidBrush(Muted))g.DrawString((start+i+1).ToString(),f,brush,x-1,bottom+1);
    }
   }
  }
@@ -140,11 +150,12 @@ public static class PanelRenderer {
    Rect(g,Tile,0,160,158,160);Rect(g,Tile,162,160,158,160);
    DrawBars(g,s,new Rectangle(3,163,152,154),1,numbers);
    Text(g,"RPM",166,161,8,Muted);
-   if(fans.Count==0)Text(g,"Fan Control: --",166,187,8,Muted,150);
    if(AppSettings.Current.HideStoppedFans)fans=fans.FindAll(fan=>fan.Rpm.HasValue&&fan.Rpm.Value>0);
-   int count=Math.Min(fans.Count,11);
+   if(fans.Count==0)Text(g,"Keine RPM",166,187,8,Muted,150);
+   int fanStart=PageStart(fans.Count,8,s.SampleTicks),count=Math.Min(fans.Count-fanStart,8);
+   if(fans.Count>8)Text(g,(fanStart+1)+"–"+(fanStart+count)+" / "+fans.Count,216,161,7,Muted,100);
    for(int i=0;i<count;i++){
-    var fan=fans[i];float rowHeight=140f/Math.Max(1,count);
+    var fan=fans[fanStart+i];float rowHeight=140f/Math.Max(1,count);
     float labelSize=Math.Max(7,Math.Min(14,rowHeight*0.43f));
     float valueSize=Math.Max(8,Math.Min(16,rowHeight*0.51f));
     int y=(int)(178+i*rowHeight+(rowHeight-valueSize*1.5f)/2);

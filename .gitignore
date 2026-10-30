@@ -13,3 +13,4 @@ background.png
 lhm-sensors.tsv*
 fan-cpu.tsv*
 snapshot-errors.log
+hardware-catalog.tsv*

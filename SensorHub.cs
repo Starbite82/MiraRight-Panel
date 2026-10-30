@@ -15,8 +15,7 @@ public static class SensorHub {
   }
   if((DateTime.UtcNow-lastAttempt).TotalSeconds<3)return;lastAttempt=DateTime.UtcNow;
   if(bridge!=null){try{Log.Write("LHM helper exited: "+bridge.ExitCode);}catch{}bridge.Dispose();bridge=null;}
-  string runtime=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),@".cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\pwsh.exe");
-  string system=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),@"PowerShell\7\pwsh.exe");if(File.Exists(system))runtime=system;
+  string runtime=RuntimeLocator.PowerShell();
   interval=AppSettings.Current.SensorMs;
   try{
    bridge=new Process{StartInfo=new ProcessStartInfo{FileName=runtime,Arguments="-NoLogo -NoProfile -File \""+Path.Combine(Log.Root,"LibreHardwareBridge.ps1")+"\" -ParentId "+Process.GetCurrentProcess().Id+" -IntervalMs "+interval,UseShellExecute=false,CreateNoWindow=true,WindowStyle=ProcessWindowStyle.Hidden,RedirectStandardError=true}};
@@ -31,7 +30,8 @@ public static class SensorHub {
   try{
    var lines=SnapshotFiles.ReadLines(Path.Combine(Log.Root,"lhm-sensors.tsv"));if(lines.Length<2)return s;
    var header=lines[0].Split('\t');long ticks,sequence;double total;
-   if(header.Length!=4||!long.TryParse(header[0],out ticks)||!long.TryParse(header[1],out sequence)||Math.Abs((DateTime.UtcNow-new DateTime(ticks,DateTimeKind.Utc)).TotalSeconds)>2)return s;
+   if(header.Length<4||!long.TryParse(header[0],out ticks)||!long.TryParse(header[1],out sequence)||Math.Abs((DateTime.UtcNow-new DateTime(ticks,DateTimeKind.Utc)).TotalSeconds)>2)return s;
+   if(header.Length>4){int n;if(int.TryParse(header[4],out n)&&n>0&&n<=4096)s.ReportedThreadCount=n;}
    s.SampleTicks=ticks;s.SampleSequence=sequence;s.GpuName=header[2];if(double.TryParse(header[3],NumberStyles.Float,CultureInfo.InvariantCulture,out total)&&total>0&&!double.IsNaN(total)&&!double.IsInfinity(total))s.VramTotalMb=total;
    for(int i=1;i<lines.Length;i++){
     var p=lines[i].Split('\t');uint id,gpu;float value;if(p.Length!=5||!uint.TryParse(p[0],out id)||!uint.TryParse(p[1],out gpu)||!float.TryParse(p[4],NumberStyles.Float,CultureInfo.InvariantCulture,out value))continue;

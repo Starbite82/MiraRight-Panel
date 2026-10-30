@@ -27,7 +27,7 @@ public static class Check {
   try{
    s.Entries.Add(new Reading{Id=0x11,Gpu=0,Name="GPU1 fan tachometer",Value=700});
    System.IO.File.WriteAllLines(fanPath,new[]{DateTime.UtcNow.Ticks.ToString(),"/lpc/nct6687dr/fan/0\tCPU Fan\t555","ADLX/gpu/fan\tGPU\t"});
-   var fans=FanData.Read(s);if(fans.Count!=2||fans[0].Rpm!=555||fans[1].Rpm!=700)throw new Exception("Fan RPM mapping/fallback");
+   var fans=FanData.Read(s);if(fans.Count!=2||fans[0].Rpm!=555||fans[1].Rpm.HasValue)throw new Exception("Fan RPM mapping / no cross-GPU fallback");
    using(var dashboard=PanelRenderer.RenderDashboard(s,48,false,fans)){if(dashboard.Width!=320||dashboard.Height!=320)throw new Exception("Dashboard size");}
    System.IO.File.WriteAllLines(fanPath,new[]{DateTime.UtcNow.AddSeconds(-10).Ticks.ToString(),"/lpc/nct6687dr/fan/0\tCPU Fan\t555"});
    if(FanData.Read(s)[0].Rpm.HasValue)throw new Exception("Stale fan RPM");

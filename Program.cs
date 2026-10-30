@@ -64,7 +64,9 @@ public sealed class PanelWindow:Form {
   var smoothing=new ComboBox{Bounds=new Rectangle(512,307,163,28),DropDownStyle=ComboBoxStyle.DropDownList};smoothing.Items.AddRange(new object[]{"Aus","Leicht · 0,25 s","Mittel · 0,5 s","Ruhig · 1 s","Stark · 2 s"});int[] windows={0,250,500,1000,2000};smoothing.SelectedIndex=Array.IndexOf(windows,AppSettings.Current.BarWindowMs);Controls.Add(smoothing);
   var auto=Check("Mit Windows starten (minimiert)",353,AutoStart.Enabled);
   var close=Check("Beim Schließen weiterlaufen",384,AppSettings.Current.CloseToTray);
-  var note=new Label{Text="Einstellungen werden sofort gespeichert.\nLHM-Messrate separat einstellbar.\nCPU-Temperatur und RPM: Fan Control.",Bounds=new Rectangle(365,427,310,67),ForeColor=Color.LightSteelBlue,Font=new Font("Segoe UI",9)};Controls.Add(note);
+  var note=new Label{Text="Einstellungen werden sofort gespeichert.\nLHM-Messrate separat einstellbar.\nHardware-Erkennung unter „Hardware & Pfade“.",Bounds=new Rectangle(365,427,310,67),ForeColor=Color.LightSteelBlue,Font=new Font("Segoe UI",9)};Controls.Add(note);
+  var hardware=new Button{Text="Hardware & Pfade…",Bounds=new Rectangle(20,513,320,30)};
+  hardware.Click+=(a,b)=>{using(var dialog=new HardwareWindow())if(dialog.ShowDialog(this)==DialogResult.OK){SensorHub.Stop();FanData.Stop();}};Controls.Add(hardware);
   var hide=new Button{Text="In den Infobereich",Bounds=new Rectangle(365,513,166,30)};hide.Click+=(a,b)=>HideToTray();Controls.Add(hide);
   var exit=new Button{Text="Beenden",Bounds=new Rectangle(543,513,132,30)};exit.Click+=(a,b)=>ExitNow();Controls.Add(exit);
   Action save=()=>{try{AppSettings.Save();}catch(Exception e){note.Text="Speichern nicht möglich: "+e.Message;}};

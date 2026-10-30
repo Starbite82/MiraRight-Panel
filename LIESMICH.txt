@@ -1,98 +1,71 @@
-AIO Display — Standalone
+AIO Display – Windows x64
 
-Start: BLUB-Display.exe doppelklicken. Laeuft die App bereits, oeffnet sich das
-Einstellungsfenster der laufenden Instanz. Eine zweite Instanz startet nicht.
+START
+Das ZIP vollständig in einen beschreibbaren, dauerhaften Ordner entpacken.
+BLUB-Display.exe doppelklicken. TRCC vorher vollständig beenden.
+Ein weiterer Doppelklick öffnet die Einstellungen der laufenden Instanz.
 
-Autostart: fuer dieses Windows-Benutzerkonto aktiviert, immer minimiert im
-Infobereich. Der Eintrag wird bei der Windows-Anmeldung ausgefuehrt.
-Die Option 'Mit Windows starten (minimiert)' schaltet ihn im Programm um.
-Ein anderer Programmordner erfordert erneutes Aktivieren der Option.
+VORAUSSETZUNGEN
+Unterstütztes Thermalright-LCD: 320 x 320, USB 87AD:70DB, PM 32 / SUB 1.
+Der vorhandene WinUSB-Treiber muss eingerichtet sein.
+Windows x64 mit .NET Framework 4.x.
+PowerShell 7 (pwsh.exe); mit Fan Control v284 / LHM 0.9.6 wird die
+PowerShell-7.6-Laufzeit mit .NET 10 benötigt. Keine Bibliotheken sind im ZIP.
+LibreHardwareMonitorLib.dll samt ihren Abhängigkeiten wird aus einer
+vorhandenen Fan-Control- oder LibreHardwareMonitor-Installation geladen.
+Fan Control muss für seine Lüfterwerte und Temperatur-Ersatzwerte laufen.
+MSI Afterburner ist eine alternative Quelle; sein Hardwaremonitor muss
+Shared Memory bereitstellen. Die GPU-Auswahl gilt für LibreHardwareMonitor.
 
-Infobereich: Doppelklick oeffnet die Einstellungen. Rechtsklick bietet
-Einstellungen und Beenden. Beim Schliessen laeuft das Display standardmaessig
-weiter; das laesst sich in den Einstellungen abschalten. 'Beenden' beendet
-Display-App und Fan-Control-Lesebruecke vollstaendig.
+ANDERER PC / HARDWARE & PFADE
+CPU-Sensoren und Threadanzahl werden automatisch erkannt. Bis 32 Balken
+erscheinen gleichzeitig; mehr wechseln alle 5 Sekunden in Seiten.
+Die Detailansicht bleibt erhalten. RAM-Kapazität kommt von Windows.
+Die GPU mit dem größten gemeldeten Grafikspeicher wird automatisch gewählt.
+Unter Hardware & Pfade kann eine erkannte GPU ausdrücklich gewählt werden.
+Wenn diese später fehlt, wird wieder automatisch ausgewählt.
+Mehr als 8 Lüfter wechseln alle 5 Sekunden in Seiten. Die Option für
+stehende Lüfter blendet fehlende und 0-RPM-Werte aus.
+Lüfternamen stammen aus der aktiven Fan-Control-Konfiguration.
 
-Einstellungen werden sofort in settings.ini gespeichert:
-- Displayansicht: Dashboard, erhaltene CPU-Detailansicht, Vergleich, A bis D
-- Threadnummern anzeigen
-- Luefter mit 0 RPM ausblenden
-- Aktualisierung mit 1, 2, 4, 8 oder 10 Bildern pro Sekunde
-- Autostart minimiert und Verhalten beim Schliessen
-Die bisherige ansicht.txt wird beim ersten Start uebernommen.
+Die Ordnersuche berücksichtigt laufende Programme und Standardpfade.
+Portable Installationen: den Fan-Control-/LHM-Ordner und gegebenenfalls
+pwsh.exe unter Hardware & Pfade auswählen. Leeres Feld = automatisch.
+Nach Übernehmen werden Sensorhelfer neu gestartet. Neue GPU-Liste danach
+beim erneuten Öffnen des Dialogs sichtbar. Einstellungen bleiben erhalten.
+Fehlende Sensoren erscheinen als --. Nicht jede Hardware liefert alle Werte.
+Andere CPUs/GPUs sind von der Erkennung vorgesehen; physisch geprüft wurde
+der Ryzen 9 9950X3D mit Radeon RX 9070 XT plus integrierter AMD-GPU.
+Andere LCD-Modelle benötigen gegebenenfalls ein anderes USB-Protokoll.
 
-Die Sensorquelle ist jetzt umschaltbar: LibreHardwareMonitor direkt oder
-MSI Afterburner. Fan Control liefert weiterhin Luefternamen und Drehzahlen. Bei spaeterem
-Start dieser Programme wartet die App; ausgefallene USB-Verbindungen und die
-Leseverbindung zu Fan Control werden automatisch wiederhergestellt.
-TRCC muss geschlossen bleiben. Es werden keine Luefter-, Pumpen-, Takt- oder
-Spannungseinstellungen geaendert, keine Treiber ersetzt und keine Firmware
-geschrieben.
+BEDIENUNG
+Autostart startet die Anwendung minimiert bei der Windows-Anmeldung.
+Das Schließen kann in den Infobereich minimieren. Beenden beendet sie ganz.
+Rechtsklick auf das Symbol im Infobereich öffnet das Menü.
+Displayrate: bis 60 USB-Übertragungen/s; reale LCD-Bildrate nicht gemessen.
+Sensorrate: 1 bis 10 Messungen/s. Fan Control liefert etwa einmal/s.
+Balkenglättung mittelt nur Balken; Zahlen behalten aktuelle Messwerte.
+RAM/VRAM werden bei 80/85/90 Prozent gelb/orange/rot.
 
-Display: 320 x 320, VID 87AD / PID 70DB, PM 32 / SUB 1. RGB565 Big Endian,
-180 Grad gedreht. Dashboard: Temperatur und Last fuer CPU/GPU oben,
-RAM belegt/gesamt, 32 Threadbalken links unten und laufende Luefter rechts unten.
-Gesamt-RAM ist der nutzbare physische Speicher laut Windows.
-Afterburner liefert CPU/GPU/RAM; Fan Control liefert RPM und Luefternamen
-ueber seine lokale GetAllSensors-Lese-API. GPU-RPM kommt ersatzweise aus
-Afterburner. Fehlende/veraltete Werte werden nicht als aktuelle Werte gezeigt.
+UPDATE
+Die Anwendung beenden, dann alle Programmdateien ersetzen.
+Die eigene settings.ini behalten. settings.example.ini ist nur ein Beispiel.
+Bei einem Ordnerwechsel den Autostart im neuen Ordner aus- und einschalten.
 
-Die Fan-Control-Bruecke nutzt die vorhandenen Bibliotheken der installierten
-Fan-Control-Version und die bestehende PowerShell-7-Laufzeit mit .NET 10.
-Sie startet ohne sichtbares Fenster und endet mit der Display-App.
+OPTIONALE AUFRUFE
+BLUB-Display.exe --minimized
+BLUB-Display.exe --stop
+BLUB-Display.exe --preview
+BLUB-Display.exe --enable-autostart
+BLUB-Display.exe --disable-autostart
 
-Dateien: status.txt und live-preview.png zeigen den aktuellen Zustand.
-panel.log enthaelt Verbindungen/Fehler und wird bei 1 MB begrenzt.
-Quellcode, build.ps1 und die erhaltene fruehere Detailversion liegen bei.
-Build der Hauptanwendung mit dem in Windows enthaltenen .NET-C#-Compiler.
+FEHLERSUCHE
+panel.log enthält Verbindungen, Sensorfehler und Neustarts.
+snapshot-errors.log enthält wiederholte Schreibprobleme.
+Keine Werte: Sensorquelle, Pfade und laufendes Fan Control prüfen.
+Kein Display: TRCC beenden und WinUSB-Treiber prüfen.
+Die Anwendung ändert keine Lüfterkurven oder Treiber.
 
-Optionale Kommandozeile:
---minimized           direkt im Infobereich starten
---stop                laufende Instanz ordentlich beenden
---preview             nur Vorschau ohne USB-Uebertragung
---render              aktuelle Ansicht als PNG rendern
---diagnose            Sensorliste und USB-Modellabfrage
---enable-autostart    minimierten Benutzer-Autostart einschalten
---disable-autostart   eigenen Autostart-Eintrag entfernen
-
-Protokollreferenzen:
-https://github.com/Lexonight1/thermalright-trcc-linux/blob/main/src/trcc/adapters/device/bulk_lcd.py
-https://github.com/Lexonight1/thermalright-trcc-linux/blob/main/src/trcc/core/protocol.py
-Afterburner-Format: lokal installiertes offizielles MAHMSharedMemory.h im SDK.
-
-VRAM: Belegung aus dem passenden Afterburner-GPU-Sensor; Gesamtkapazitaet
-aus dessen GPU-Deskriptor, bei fehlender Angabe aus Windows DXGI fuer exakt
-denselben Grafikadapternamen. Die vom Treiber gemeldete Kapazitaet kann wegen
-reserviertem Speicher von der beworbenen Kartengroesse abweichen.
-Afterburner und Fan Control liefern hier aktuell etwa einmal pro Sekunde neue
-Messwerte. Eine hoehere Bildrate erzeugt keine zusaetzlichen Messungen.
-
-LibreHardwareMonitor-Modus:
-Direkte CPU-Gesamtlast, 32 Threadlasten, GPU-Temperatur/-Last, RAM und VRAM.
-Eigene LHM-Messrate von 1 bis 10 Hz in den Einstellungen; standardmaessig
-hier auf 10 Hz gestellt und mit 10,01 Hz nachgemessen. Die Bildrate bleibt
-separat einstellbar. Afterburner ist im LHM-Modus optional.
-Die aktuelle Installation liefert die CPU-Temperatur direkt als 0 Grad.
-Dieser ungueltige Wert wird ausgeblendet und, falls frisch verfuegbar, durch
-die CPU-Temperatur aus Fan Control ersetzt. Die Quelle steht im Status.
-LHM nutzt die vorhandene Bibliothek aus Fan Control, ohne weitere
-Treiberinstallation und ohne Aenderungen an Luefterkurven.
-Die Dateien lhm-sensors.tsv und fan-cpu.tsv sind lokale Live-Daten.
-
-Messrate und Bildrate sind getrennt: LHM 1/2/4/8/10 Hz, USB-Bildstrom
-1/2/4/8/10/30/60 Bilder pro Sekunde. Die tatsaechliche LCD-Bildrate ist
-damit nicht gemessen. Im aktuellen Test: rund 60,4 Transfers/s bei 10,03
-direkten Messungen/s. Prozentzeichen bleiben bei CPU/GPU-Last fest stehen.
-
-Balkenglaettung: standardmaessig gleitender Mittelwert ueber 0,5 Sekunden
-(ca. fuenf Messwerte bei 10 Hz). Im Menue Aus/0,25/0,5/1/2 Sekunden.
-Nur Balken werden gemittelt; Zahlen bleiben aktuell. Wiederholte Bilder
-zaehlen nicht als neue Messung. Fehlende Daten werden nicht weitergemittelt.
-
-Fehlerbehebung Sensorhaenger:
-Messdateien werden jetzt mit Windows File.Replace atomar veroeffentlicht.
-Gleichzeitige Leser erlauben das Ersetzen; kurze Zugriffskonflikte werden
-wiederholt und beenden keinen Sensorprozess. Ein Watchdog prueft wirklich
-frisch gelesene Messungen statt kurzzeitig fehlender Dateizeitstempel.
-Prozessstarts/-fehler stehen in panel.log, anhaltende Schreibkonflikte in
-snapshot-errors.log. Deine Bildrate, Messrate und Glaettung bleiben erhalten.
+Das Release-ZIP enthält eine neutrale settings.ini mit dem geprüften Profil
+(30 USB-Bilder/s, 10-Hz-Sensoren, 500-ms-Balkenglättung). Bei Updates die
+eigene settings.ini behalten. SHA256SUMS.txt enthält die Datei-Prüfsummen.

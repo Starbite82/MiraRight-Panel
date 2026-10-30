@@ -5,7 +5,7 @@ public static class SettingsCheck {
   try{
    File.WriteAllLines(file,new[]{"BarWindowMs=1000","SensorProvider=1","View=6","RefreshMs=250","ThreadNumbers=1","HideStoppedFans=0","CloseToTray=1"});AppSettings.Load();
    if(AppSettings.Current.BarWindowMs!=1000||AppSettings.Current.SensorProvider!=1||AppSettings.Current.View!=6||AppSettings.Current.RefreshMs!=250||!AppSettings.Current.ThreadNumbers||AppSettings.Current.HideStoppedFans||!AppSettings.Current.CloseToTray)throw new Exception("Settings parse");
-   AppSettings.Save();AppSettings.Load();if(AppSettings.Current.HideStoppedFans)throw new Exception("Settings roundtrip");
+   AppSettings.Current.FanControlPath=@"D:\Portable\Fan Control";AppSettings.Current.GpuIdentifier="/gpu-nvidia/1";AppSettings.Save();AppSettings.Load();if(AppSettings.Current.FanControlPath!=@"D:\Portable\Fan Control"||AppSettings.Current.GpuIdentifier!="/gpu-nvidia/1")throw new Exception("Hardware path roundtrip");if(AppSettings.Current.HideStoppedFans)throw new Exception("Settings roundtrip");
    foreach(int hzPeriod in new[]{16,33,100,125,250,500,1000}){File.WriteAllLines(file,new[]{"RefreshMs="+hzPeriod});AppSettings.Load();if(AppSettings.Current.RefreshMs!=hzPeriod)throw new Exception("Refresh interval "+hzPeriod);}
    File.WriteAllLines(file,new[]{"View=999","RefreshMs=5"});AppSettings.Load();if(AppSettings.Current.View!=6||AppSettings.Current.RefreshMs!=500)throw new Exception("Settings bounds");
    if(!AutoStart.Command.EndsWith(" --minimized")||AutoStart.Command[0]!='\"')throw new Exception("Autostart command");
