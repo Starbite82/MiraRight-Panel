@@ -38,6 +38,8 @@ public sealed class PanelWindow : Form
         auto.Enabled = !preview;
         var close = Check("Beim Schließen weiterlaufen", 384, AppSettings.Current.CloseToTray);
         var note = new Label { Text = "Einstellungen werden sofort gespeichert.\nLHM-Messrate separat einstellbar.\nHardware-Erkennung unter „Hardware & Pfade“.", Bounds = new Rectangle(365, 427, 310, 67), ForeColor = Color.LightSteelBlue, Font = new Font("Segoe UI", 9) }; Controls.Add(note);
+        var about = new Button { Text = "Info & Impressum", Bounds = new Rectangle(20, 477, 320, 30) };
+        about.Click += (sender, e) => { using var dialog = new AboutWindow(); dialog.ShowDialog(this); }; Controls.Add(about);
         var hardware = new Button { Text = "Hardware & Pfade…", Bounds = new Rectangle(20, 513, 320, 30) };
         hardware.Click += (a, b) => { using (var dialog = new HardwareWindow()) if (dialog.ShowDialog(this) == DialogResult.OK) { SensorHub.Stop(); } }; Controls.Add(hardware);
         var hide = new Button { Text = "In den Infobereich", Bounds = new Rectangle(365, 513, 166, 30) }; hide.Click += (a, b) => HideToTray(); Controls.Add(hide);
@@ -51,7 +53,7 @@ public sealed class PanelWindow : Form
         rate.SelectedIndexChanged += (a, b) => { AppSettings.Current.RefreshMs = rates[rate.SelectedIndex]; if (timer != null) timer.Change(0, Math.Max(100, AppSettings.Current.RefreshMs)); save(); };
         auto.CheckedChanged += (a, b) => { try { AutoStart.Set(auto.Checked); } catch (Exception e) { note.Text = "Autostart nicht geändert: " + e.Message; } save(); };
         close.CheckedChanged += (a, b) => { AppSettings.Current.CloseToTray = close.Checked; save(); };
-        var menu = new ContextMenuStrip(); menu.Items.Add("Einstellungen öffnen", null, (a, b) => OpenSettings()); menu.Items.Add("Beenden", null, (a, b) => ExitNow());
+        var menu = new ContextMenuStrip(); menu.Items.Add("Einstellungen öffnen", null, (a, b) => OpenSettings()); menu.Items.Add("Info & Impressum", null, (a, b) => { using var dialog = new AboutWindow(); dialog.ShowDialog(this); }); menu.Items.Add("Beenden", null, (a, b) => ExitNow());
         tray = new NotifyIcon { Icon = AppBrand.Icon, Text = "AIO Display", Visible = true, ContextMenuStrip = menu }; tray.DoubleClick += (a, b) => OpenSettings();
         UiTheme.Apply(this, menu);
         Resize += (a, b) => { if (WindowState == FormWindowState.Minimized) HideToTray(); };

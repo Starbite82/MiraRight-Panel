@@ -13,7 +13,7 @@ internal static class TestRunner
             if (args.FirstOrDefault() == "--live") { IntegrationChecks.Live(args[2], int.Parse(args[3])); return 0; }
             if (args.FirstOrDefault() == "--lifecycle") { IntegrationChecks.Lifecycle(args[2], args[3]); return 0; }
             if (args.FirstOrDefault() == "--parent-harness") { IntegrationChecks.ParentHarness(args[2]); return 0; }
-            foreach (var type in new[] { typeof(Check), typeof(SettingsCheck), typeof(BarAveragerCheck), typeof(HardwareCheck), typeof(SnapshotFilesCheck) }) type.GetMethod("Main", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic).Invoke(null, null);
+            foreach (var type in new[] { typeof(Check), typeof(SettingsCheck), typeof(BarAveragerCheck), typeof(HardwareCheck), typeof(SnapshotFilesCheck), typeof(AboutChecks) }) type.GetMethod("Main", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic).Invoke(null, null);
             ProtocolChecks(); Console.WriteLine("ALL REGRESSION TESTS PASSED"); return 0;
         }
         catch (Exception e) { Console.Error.WriteLine(e is TargetInvocationException ? e.InnerException : e); return 1; }

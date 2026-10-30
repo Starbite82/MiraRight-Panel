@@ -1,4 +1,4 @@
-param([string]$Dotnet='dotnet',[string]$Version='1.1.0',[string]$OutputDirectory='')
+param([string]$Dotnet='dotnet',[string]$Version='1.1.1-dev',[string]$OutputDirectory='')
 $ErrorActionPreference='Stop';$root=Split-Path $PSScriptRoot
 $stage=Join-Path $root ('work/publish-'+[Guid]::NewGuid().ToString('N'));New-Item -ItemType Directory -Force $stage|Out-Null
 $app=Join-Path $stage 'app';$hostStage=Join-Path $stage 'host';$package=Join-Path $stage 'AIO-Display'
@@ -11,6 +11,7 @@ New-Item -ItemType Directory -Force $package|Out-Null
 Copy-Item -Path (Join-Path $app '*') -Destination $package -Recurse
 $sensors=Join-Path $package 'sensors';New-Item -ItemType Directory -Force $sensors|Out-Null
 Copy-Item -Path (Join-Path $hostStage '*') -Destination $sensors -Recurse
+if(Test-Path -LiteralPath (Join-Path $root 'IMPRINT.txt')){Copy-Item -LiteralPath (Join-Path $root 'IMPRINT.txt') -Destination $package}
 foreach($name in @('LIESMICH.txt','settings.example.ini')){Copy-Item -LiteralPath (Join-Path $root $name) -Destination (Join-Path $package $name)}
 Copy-Item -LiteralPath (Join-Path $root 'settings.example.ini') -Destination (Join-Path $package 'settings.ini')
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'AIO-Display-Vorschau.cmd') -Destination $package

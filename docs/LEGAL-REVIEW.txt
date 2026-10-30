@@ -1,0 +1,39 @@
+Technische Lizenz- und Anbieterprüfung – 30.10.2026
+Stand: Entwurf; keine umfassende rechtliche Freigabe.
+
+Veröffentlichtes Release 1.1.0:
+- Keine eigene Projekt-LICENSE festgelegt. Das ist eine offene Rechte-/Nutzungsentscheidung, kein Beweis eines Verstoßes beim eigenen Code.
+- .NET-Lizenztexte und Runtime-Drittanbieterhinweise fehlten im ZIP. Die bisherige Aussage, dotnet publish liefere sie automatisch mit, war für dieses Paket falsch.
+- MPL-2.0-Text und LHM-Quelllink enthalten; weitere MPL-Pakete benötigen ebenfalls eindeutige Hinweise auf ihre zugehörigen Quellen.
+- Mono.Posix.NETStandard 1.0.0 im Paket; ursprünglicher licenseUrl verweist über Microsoft auf die Mono-Lizenz. Die bisherige Zusammenfassung zeigte für dieses ältere Metadatenformat keinen Lizenzwert an.
+- FanControl.IPC.dll wird nicht mitgeliefert; die installierte Bibliothek wird optional geladen. Die Fan-Control-Lizenz sieht Beschränkungen insbesondere für kommerzielle Nutzung und Weitergabe vor; die Integration ist damit nicht pauschal rechtlich freigegeben.
+- USB-Protokoll wurde anhand von thermalright-trcc-linux nachvollzogen. Dieses Referenzprojekt steht unter GPL-3.0. Es ist noch zu klären, ob nur Schnittstellenwissen verwendet oder geschützter Code adaptiert wurde. Gleiche Protokollkonstanten allein beweisen keine Codeübernahme; eine Übersetzung wäre umgekehrt kein automatischer Lizenz-Ausweg.
+- Afterburner-Anbindung liest das SDK-beschriebene Datenformat; SDK und Afterburner selbst werden nicht mitgeliefert. Keine umfassende Vertrags-/Patentprüfung durchgeführt.
+
+Vorbereitete Korrekturen auf feat/info-imprint-license-audit:
+- .NET- und WindowsDesktop-Runtime-Lizenzdateien explizit aus den festgelegten Runtime-Paketen kopieren.
+- .NET-THIRD-PARTY-NOTICES explizit beilegen.
+- MPL-Quellnachweise mit Repository-Commit für LHM, BlackSharp, DiskInfoToolkit und RAMSPDToolkit.
+- Mono-Lizenzwert über das ursprüngliche licenseUrl-Feld erfassen und dessen verlinkten Lizenztext aufnehmen. Das ersetzt keine vollständige Versions-/Quellherkunftsprüfung.
+- Info-/Impressumsdialog, erreichbar in Einstellungen und Infobereich. KI-Unterstützung und .NET/Windows Forms sachlich benannt.
+- Anbieterangaben nicht erfunden oder aus anderen Datenquellen übernommen. Ohne freigegebenes IMPRINT.txt wird ausdrücklich auf fehlende Anbieterangaben hingewiesen. Das ist kein fertiges Impressum.
+- Regressionstests und Prüfung der ergänzten Lizenzdateien bestanden; laufende Installation und Release 1.1.0 nicht ersetzt.
+
+Offen vor einer umfassenden Freigabe zur Weitergabe:
+- USB-Codeherkunft und gegebenenfalls GPL-Pflichten bzw. eigenständige Neuimplementierung oder andere Rechte klären.
+- Projektlizenz danach bewusst wählen.
+- Fan-Control-/SDK-Bedingungen für den beabsichtigten Nutzungskontext prüfen.
+- Anbieterpflichten passend zur tatsächlichen Veröffentlichung einordnen; Name/Anschrift/Kontakt erst nach ausdrücklicher Freigabe aufnehmen.
+
+Primärquellen:
+https://www.mozilla.org/en-US/MPL/2.0/
+https://www.mozilla.org/en-US/MPL/2.0/FAQ/
+https://raw.githubusercontent.com/dotnet/runtime/v10.0.13/LICENSE.TXT
+https://github.com/mono/mono/blob/main/LICENSE
+https://raw.githubusercontent.com/Lexonight1/thermalright-trcc-linux/main/LICENSE
+https://raw.githubusercontent.com/Rem0o/FanControl.Releases/master/LICENSE
+https://www.gesetze-im-internet.de/urhg/__69a.html
+https://www.gesetze-im-internet.de/ddg/__5.html
+https://www.gesetze-bayern.de/Content/Document/MStV-18
+
+Impressum: § 18 MStV betrifft Angebote außerhalb ausschließlich persönlicher/familiärer Zwecke; § 5 DDG zusätzliche Angaben in seinem geschäftsmäßigen Anwendungsbereich. Kostenlosigkeit bedeutet nicht automatisch Befreiung. Anforderungen an heruntergeladene Offline-Software und die jeweilige Online-Veröffentlichungsseite sind nach dem tatsächlichen Angebot getrennt zu beurteilen.
