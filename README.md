@@ -49,3 +49,5 @@ A clean Windows install, other vendors, suspend/resume and physical USB disconne
 See [migration](docs/NATIVE-MIGRATION.md), [previous stability test](docs/STABILITY-2026-10-30.md) and [previous hardware adaptation](docs/HARDWARE-2026-10-30.md). Historical source/binaries in Archiv-* are retained as archives and are neither built nor packaged.
 
 Bundled third-party metadata and license notices are generated from restored packages. The LHM source link and MPL-2.0 text are included; .NET runtime notices remain in their publish folders.
+
+Final migration test evidence: [NATIVE-VALIDATION-2026-10-30.md](docs/NATIVE-VALIDATION-2026-10-30.md).
