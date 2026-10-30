@@ -13,7 +13,11 @@ $required=@(
  'sources/SOURCE-MANIFEST.json','sources/README-SOURCES.txt','sources/AIO-Display-source.zip'
 )
 foreach($relative in $required){if(-not (Test-Path -LiteralPath (Join-Path $PackageDirectory $relative))){throw ('Missing legal/package file: '+$relative)}}
-foreach($record in @(Get-Content -LiteralPath (Join-Path $PackageDirectory 'sources/SOURCE-MANIFEST.json') -Raw|ConvertFrom-Json)){
+$records=@(Get-Content -LiteralPath (Join-Path $PackageDirectory 'sources/SOURCE-MANIFEST.json') -Raw|ConvertFrom-Json)
+$components=@('AIO Display','LibreHardwareMonitorLib','BlackSharp.Core','DiskInfoToolkit','RAMSPDToolkit-NDD','PawnIO.Modules')
+if($records.Count -ne $components.Count){throw 'Incomplete corresponding source manifest'}
+foreach($name in $components){if(@($records|Where-Object {$_.Component -eq $name}).Count -ne 1){throw ('Missing or duplicated source: '+$name)}}
+foreach($record in $records){
  $path=Join-Path (Join-Path $PackageDirectory 'sources') $record.IncludedSourceArchive
  if((Get-FileHash -LiteralPath $path).Hash -ne $record.IncludedSha256){throw ('Source checksum mismatch: '+$record.Component)}
 }
@@ -27,4 +31,4 @@ foreach($line in Get-Content -LiteralPath (Join-Path $PackageDirectory 'SHA256SU
  $entries++
 }
 $licensePending=(Get-Content -LiteralPath (Join-Path $PackageDirectory 'LICENSE-PROFILE.txt') -Raw) -match 'DECISION PENDING'
-[ordered]@{PackageFilesVerified=$entries;SourceArchivesVerified=6;RequiredNoticeFilesPresent=$required.Count;VendorBinariesIncluded=$false;ProjectLicenseDecisionPending=$licensePending;ImprintDeferred=$true}|ConvertTo-Json
+[ordered]@{PackageFilesVerified=$entries;SourceArchivesVerified=$records.Count;RequiredNoticeFilesPresent=$required.Count;VendorBinariesIncluded=$false;ProjectLicenseDecisionPending=$licensePending;ImprintDeferred=$true}|ConvertTo-Json
