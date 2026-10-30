@@ -19,7 +19,7 @@ public static class FanData {
  public static void Stop(){try{if(bridge!=null&&!bridge.HasExited)bridge.Kill();}catch{}if(bridge!=null)bridge.Dispose();}
  public static List<FanReading> Read(AfterburnerSnapshot s){
   var rows=new List<FanReading>();
-  try{var lines=File.ReadAllLines(Path.Combine(Log.Root,"fan-rpm.tsv"));long ticks;bool fresh=lines.Length>0&&long.TryParse(lines[0],out ticks)&&Math.Abs((DateTime.UtcNow-new DateTime(ticks,DateTimeKind.Utc)).TotalSeconds)<5;
+  try{var lines=SnapshotFiles.ReadLines(Path.Combine(Log.Root,"fan-rpm.tsv"));long ticks;bool fresh=lines.Length>0&&long.TryParse(lines[0],out ticks)&&Math.Abs((DateTime.UtcNow-new DateTime(ticks,DateTimeKind.Utc)).TotalSeconds)<5;
    foreach(var line in lines.Skip(1)){var p=line.Split('\t');if(p.Length!=3)continue;double v;double? rpm=fresh&&double.TryParse(p[2],NumberStyles.Float,CultureInfo.InvariantCulture,out v)&&!double.IsNaN(v)&&!double.IsInfinity(v)&&v>=0&&v<100000?(double?)v:null;
     if(p[0].StartsWith("ADLX/")){var gpu=s.Entries.Find(r=>r.Id==0x11&&r.Gpu==0);if(!rpm.HasValue&&s.Fresh&&gpu!=null&&gpu.Valid)rpm=gpu.Value;}
     rows.Add(new FanReading{Id=p[0],Name=p[1],Rpm=rpm});

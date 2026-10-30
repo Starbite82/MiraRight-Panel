@@ -17,11 +17,12 @@ Einstellungen werden sofort in settings.ini gespeichert:
 - Displayansicht: Dashboard, erhaltene CPU-Detailansicht, Vergleich, A bis D
 - Threadnummern anzeigen
 - Luefter mit 0 RPM ausblenden
-- Aktualisierung mit 1, 2 oder 4 Bildern pro Sekunde
+- Aktualisierung mit 1, 2, 4, 8 oder 10 Bildern pro Sekunde
 - Autostart minimiert und Verhalten beim Schliessen
 Die bisherige ansicht.txt wird beim ersten Start uebernommen.
 
-Afterburner und Fan Control muessen fuer die Livewerte laufen. Bei spaeterem
+Die Sensorquelle ist jetzt umschaltbar: LibreHardwareMonitor direkt oder
+MSI Afterburner. Fan Control liefert weiterhin Luefternamen und Drehzahlen. Bei spaeterem
 Start dieser Programme wartet die App; ausgefallene USB-Verbindungen und die
 Leseverbindung zu Fan Control werden automatisch wiederhergestellt.
 TRCC muss geschlossen bleiben. Es werden keine Luefter-, Pumpen-, Takt- oder
@@ -58,3 +59,40 @@ Protokollreferenzen:
 https://github.com/Lexonight1/thermalright-trcc-linux/blob/main/src/trcc/adapters/device/bulk_lcd.py
 https://github.com/Lexonight1/thermalright-trcc-linux/blob/main/src/trcc/core/protocol.py
 Afterburner-Format: lokal installiertes offizielles MAHMSharedMemory.h im SDK.
+
+VRAM: Belegung aus dem passenden Afterburner-GPU-Sensor; Gesamtkapazitaet
+aus dessen GPU-Deskriptor, bei fehlender Angabe aus Windows DXGI fuer exakt
+denselben Grafikadapternamen. Die vom Treiber gemeldete Kapazitaet kann wegen
+reserviertem Speicher von der beworbenen Kartengroesse abweichen.
+Afterburner und Fan Control liefern hier aktuell etwa einmal pro Sekunde neue
+Messwerte. Eine hoehere Bildrate erzeugt keine zusaetzlichen Messungen.
+
+LibreHardwareMonitor-Modus:
+Direkte CPU-Gesamtlast, 32 Threadlasten, GPU-Temperatur/-Last, RAM und VRAM.
+Eigene LHM-Messrate von 1 bis 10 Hz in den Einstellungen; standardmaessig
+hier auf 10 Hz gestellt und mit 10,01 Hz nachgemessen. Die Bildrate bleibt
+separat einstellbar. Afterburner ist im LHM-Modus optional.
+Die aktuelle Installation liefert die CPU-Temperatur direkt als 0 Grad.
+Dieser ungueltige Wert wird ausgeblendet und, falls frisch verfuegbar, durch
+die CPU-Temperatur aus Fan Control ersetzt. Die Quelle steht im Status.
+LHM nutzt die vorhandene Bibliothek aus Fan Control, ohne weitere
+Treiberinstallation und ohne Aenderungen an Luefterkurven.
+Die Dateien lhm-sensors.tsv und fan-cpu.tsv sind lokale Live-Daten.
+
+Messrate und Bildrate sind getrennt: LHM 1/2/4/8/10 Hz, USB-Bildstrom
+1/2/4/8/10/30/60 Bilder pro Sekunde. Die tatsaechliche LCD-Bildrate ist
+damit nicht gemessen. Im aktuellen Test: rund 60,4 Transfers/s bei 10,03
+direkten Messungen/s. Prozentzeichen bleiben bei CPU/GPU-Last fest stehen.
+
+Balkenglaettung: standardmaessig gleitender Mittelwert ueber 0,5 Sekunden
+(ca. fuenf Messwerte bei 10 Hz). Im Menue Aus/0,25/0,5/1/2 Sekunden.
+Nur Balken werden gemittelt; Zahlen bleiben aktuell. Wiederholte Bilder
+zaehlen nicht als neue Messung. Fehlende Daten werden nicht weitergemittelt.
+
+Fehlerbehebung Sensorhaenger:
+Messdateien werden jetzt mit Windows File.Replace atomar veroeffentlicht.
+Gleichzeitige Leser erlauben das Ersetzen; kurze Zugriffskonflikte werden
+wiederholt und beenden keinen Sensorprozess. Ein Watchdog prueft wirklich
+frisch gelesene Messungen statt kurzzeitig fehlender Dateizeitstempel.
+Prozessstarts/-fehler stehen in panel.log, anhaltende Schreibkonflikte in
+snapshot-errors.log. Deine Bildrate, Messrate und Glaettung bleiben erhalten.

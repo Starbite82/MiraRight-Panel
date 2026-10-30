@@ -32,6 +32,20 @@ public static class Check {
    System.IO.File.WriteAllLines(fanPath,new[]{DateTime.UtcNow.AddSeconds(-10).Ticks.ToString(),"/lpc/nct6687dr/fan/0\tCPU Fan\t555"});
    if(FanData.Read(s)[0].Rpm.HasValue)throw new Exception("Stale fan RPM");
   }finally{if(original!=null)System.IO.File.WriteAllText(fanPath,original);else System.IO.File.Delete(fanPath);}
+  using(var map=System.IO.MemoryMappedFiles.MemoryMappedFile.CreateNew(null,4096))using(var view=map.CreateViewAccessor()){
+   view.Write(8,(uint)32);view.Write(12,(uint)1);view.Write(16,(uint)1324);view.Write(24,(uint)1);view.Write(28,(uint)1304);view.Write(2656,(uint)16777216);
+   if(AfterburnerSnapshot.ReadVramTotal(view)!=16384)throw new Exception("GPU descriptor VRAM capacity");
+   view.Write(2656,(uint)0);if(AfterburnerSnapshot.ReadVramTotal(view).HasValue)throw new Exception("Unknown VRAM capacity");
+  }
+  s.VramTotalMb=16384;s.Entries.Add(new Reading{Id=0x31,Gpu=1,Name="GPU2 memory usage",Value=12345});s.Entries.Add(new Reading{Id=0x31,Gpu=0,Name="GPU1 memory usage",Value=8192});
+  string expectedVram=(8.0).ToString("0.0")+" / "+(16.0).ToString("0.0")+" GB";if(PanelRenderer.VramText(s)!=expectedVram)throw new Exception("VRAM GPU mapping/units");
+  s.Fresh=false;if(!PanelRenderer.VramText(s).StartsWith("-- /"))throw new Exception("Stale VRAM");
+  var stable=new AfterburnerSnapshot{Fresh=true,VramTotalMb=16384};var cpuLoad=new Reading{Id=0x90,Gpu=uint.MaxValue,Name="CPU usage",Value=9};var gpuLoad=new Reading{Id=0x30,Gpu=0,Name="GPU usage",Value=9};stable.Entries.Add(cpuLoad);stable.Entries.Add(gpuLoad);
+  using(var nine=PanelRenderer.RenderDashboard(stable,48,false,new System.Collections.Generic.List<FanReading>())){
+   foreach(int value in new[]{10,100}){cpuLoad.Value=value;gpuLoad.Value=value;using(var changed=PanelRenderer.RenderDashboard(stable,48,false,new System.Collections.Generic.List<FanReading>())){
+    foreach(int startX in new[]{40,202})for(int x=startX;x<startX+15;x++)for(int y=56;y<79;y++)if(nine.GetPixel(x,y)!=changed.GetPixel(x,y))throw new Exception("Percentage glyph moved");
+   }}
+  }
   Console.WriteLine("PASS: RGB565, rotation, CPU aggregate, invalid values, 32 thread mappings, RAM used/total, native resolution, stale values");
  }
 }
