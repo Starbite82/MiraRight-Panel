@@ -1,47 +1,95 @@
-AIO Display Native — Teststand 1.1.0-beta.1
+AIO Display 1.1.0 – Anleitung
 
-Das ZIP vollständig in einen beschreibbaren Ordner entpacken.
-BLUB-Display.exe ist die Anwendung; sensors/AioDisplay.SensorHost.exe ist
-der eigene C#-Sensorprozess. Beide Laufzeiten und LibreHardwareMonitor
-sind enthalten. Es wird kein PowerShell benötigt oder gestartet.
+1. VORAUSSETZUNGEN
+Windows x64 mit Unterstützung für die mitgelieferte .NET-10-Laufzeit.
+Bestätigtes Thermalright-LCD: 320 x 320, USB 87AD:70DB, PM32 / SUB1.
+Der vorhandene WinUSB-Treiber muss eingerichtet sein. Andere Display-
+protokolle werden derzeit nicht unterstützt.
+PowerShell, eine separate .NET-Installation und eine LHM-Installation sind
+für dieses ZIP nicht erforderlich. Laufzeiten und Sensorbibliothek liegen bei.
 
-STABILEN STAND BEIBEHALTEN
-AIO-Display-Vorschau.cmd startet nur die Live-Vorschau, ohne LCD-Zugriff.
-Sie kann neben der stabilen Anwendung laufen und ändert keinen Autostart.
-Vorschau beenden: Menü Beenden oder BLUB-Display.exe --preview --stop.
-Die stabile Anwendung und ihre settings.ini werden nicht ersetzt.
+2. ERSTER START
+Das ZIP vollständig in einen beschreibbaren, dauerhaften Ordner entpacken.
+TRCC und eine eventuell laufende ältere AIO-Display-Version vollständig
+beenden. BLUB-Display.exe doppelklicken.
+Nach kurzer Initialisierung erscheinen Livewerte. Ein weiterer Doppelklick
+öffnet die Einstellungen der bereits laufenden Instanz.
+Die Datei im Unterordner sensors ist der eigene Sensorprozess. Diesen
+Unterordner und die mitgelieferten DLLs nicht entfernen.
 
-NORMALER BETRIEB
-Für das echte LCD muss die bisherige Anwendung vorher beendet werden.
-TRCC ebenfalls beenden. BLUB-Display.exe starten.
-Die Displayanzeige mit allen Ansichten bleibt erhalten.
-Der vorhandene WinUSB-Treiber und das bestätigte LCD 87AD:70DB / PM32 SUB1
-(320 x 320) werden weiterhin vorausgesetzt. Andere LCD-Protokolle fehlen.
-
-SENSOREN
+3. SENSOREN EINRICHTEN
 CPU, GPU und RAM: mitgelieferte LibreHardwareMonitor-Bibliothek.
-Fan Control optional: muss für seine RPM-Werte und gegebenenfalls den
-CPU-Temperatur-Ersatzwert laufen. Die installierte FanControl.IPC.dll wird
-nur gelesen; getestet mit Fan Control v284. Portable Installationen lassen
-sich unter Hardware & Pfade wählen. Fan Control wird nicht mitgeliefert.
-MSI Afterburner bleibt eine alternative Quelle und muss seinen Hardware-
-monitor über Shared Memory bereitstellen.
+Die GPU mit dem größten gemeldeten Grafikspeicher wird automatisch gewählt.
+Unter Hardware & Pfade kann eine andere erkannte GPU ausgewählt werden.
+Fehlt die ausgewählte GPU später, greift wieder die automatische Auswahl.
 
-EINSTELLUNGEN
-Die eigene settings.ini kann übernommen werden. Anzeige und Raten bleiben
-kompatibel. Alte PowerShell-/LHM-Pfade werden ignoriert.
-Die neutrale mitgelieferte Einstellung nutzt 30 USB-Übertragungen/s,
-10-Hz-Sensorrate und 500-ms-Balkenglättung.
-Laufzeitmeldungen und Sensorprozessfehler stehen in panel.log.
-Fehlende oder veraltete Werte erscheinen als --.
+Fan Control ist optional. Es liefert seine Lüfter-RPM, deren Namen aus der
+aktiven Konfiguration und bei fehlender direkter Messung einen CPU-
+Temperatur-Ersatzwert. Dafür muss Fan Control laufen; getestet mit v284.
+Fan Control wird nicht mitgeliefert. Portable Installationen lassen sich
+unter Hardware & Pfade auswählen. Leeres Ordnerfeld = automatische Suche.
+Lüfterkurven und Treiber werden von AIO Display nicht verändert.
 
-TESTGRENZEN
-Andere Hardware wird dynamisch erkannt. Physisch geprüft wurden hier
-Ryzen 9 9950X3D, RX 9070 XT, integrierte AMD-GPU und Fan Control v284.
-Die maximale USB-Übertragungsrate sagt nichts über die physische LCD-
-Bildfrequenz aus. Saubere Fremd-PC-Installation und weitere Geräte müssen
-zusätzlich geprüft werden. Der aktuelle stabile Stand bleibt bis zum
-kontrollierten Austausch weiter aktiv.
+MSI Afterburner bleibt eine alternative Sensorquelle. Sein Hardwaremonitor
+muss Shared Memory bereitstellen. Die ausdrückliche GPU-Auswahl gilt für LHM.
+Nach Änderungen unter Hardware & Pfade werden die Sensoren neu gestartet.
+Fehlende oder veraltete Messwerte erscheinen als --.
 
+4. ANZEIGE UND EINSTELLUNGEN
+CPU/RAM links oben, GPU/VRAM rechts oben, Threadbalken links unten und
+Lüfterdrehzahlen rechts unten. Die Detailansicht und Varianten bleiben
+über Displayansicht auswählbar. Threadnummern sind optional.
+Mehr als 32 Threads bzw. acht Lüfter wechseln alle fünf Sekunden in Seiten.
+Lüfter mit fehlender Drehzahl oder 0 RPM können ausgeblendet werden.
+RAM und VRAM zeigen belegt / gesamt. Die Speicherbalken werden ab 80 Prozent
+gelb, ab 85 orange und ab 90 rot.
+Balkenglättung mittelt die Balken; Zahlen bleiben aktuelle Einzelwerte.
+Die Displayrate und die LHM-Messrate lassen sich getrennt einstellen.
+Standardprofil im ZIP: 30 USB-Übertragungen/s, 10-Hz-Sensorrate und
+500-ms-Balkenglättung. Fan-Control-Werte kommen ungefähr einmal pro Sekunde.
+Bis 60 USB-Übertragungen/s sind ein Zielwert; die physische LCD-Bildrate
+wurde nicht gemessen.
+
+5. AUTOSTART, MINIMIEREN UND BEENDEN
+Mit Windows starten (minimiert) aktiviert den Autostart für diesen Benutzer.
+In den Infobereich blendet das Fenster aus. Doppelklick auf das Symbol
+oder dessen Rechtsklick-Menü öffnet die Einstellungen wieder.
+Beim Schließen weiterlaufen lässt die Anzeige nach dem Fensterschließen
+aktiv. Zum vollständigen Beenden den Knopf bzw. Menüpunkt Beenden verwenden.
+Nach einem Ordnerwechsel den Autostart im neuen Ordner erneut aktivieren.
+
+6. UPDATE UND BACKUP
+Vor einem Update die bisherige Anwendung vollständig beenden.
+Den bisherigen Programmordner samt settings.ini als Backup behalten.
+Das neue ZIP in einen eigenen Ordner entpacken und die bisherige
+settings.ini hineinkopieren, bevor die neue EXE gestartet wird.
+Anzeige und Raten bleiben kompatibel. Alte PowerShell-/LHM-Pfade werden
+ignoriert. Bei Bedarf den Autostart aus der neuen Anwendung aktivieren.
+Rückkehr: neue Version beenden, Backup starten und dessen Autostart aktivieren.
+
+7. VORSCHAU UND OPTIONALE AUFRUFE
+AIO-Display-Vorschau.cmd öffnet eine Live-Vorschau ohne LCD-Zugriff. Sie kann
+neben der normalen Anwendung laufen und ändert keinen Autostart.
+BLUB-Display.exe --minimized            Start im Infobereich
+BLUB-Display.exe --stop                 normale Anwendung beenden
+BLUB-Display.exe --preview --stop       Vorschau beenden
+BLUB-Display.exe --enable-autostart     minimierten Autostart aktivieren
+BLUB-Display.exe --disable-autostart    Autostart deaktivieren
+
+8. FEHLERHILFE
+Keine Displayverbindung: TRCC/alte Version beenden; Modell und vorhandenen
+WinUSB-Treiber prüfen.
+Keine Werte: Sensorquelle und Fan-Control-Ordner prüfen. Nach dem Start
+bis zu 20 Sekunden auf die erste Initialisierung warten.
+Fehlende Drehzahl/Temperatur: Fan Control starten und dort die Sensoren prüfen.
+Sensorprozess fehlt: das komplette ZIP einschließlich sensors entpacken.
+Laufzeitmeldungen, Verbindungsfehler und Sensorneustarts stehen in panel.log.
+Einstellungen und Logs liegen im entpackten Programmordner; dieser muss
+beschreibbar sein.
+
+9. GEPRÜFTER UMFANG
+Physisch geprüft: Ryzen 9 9950X3D, RX 9070 XT plus integrierte AMD-GPU,
+Fan Control v284 und das oben genannte LCD. Andere Hardware wird dynamisch
+erkannt, benötigt aber weitere physische Kompatibilitätstests.
 SHA256SUMS.txt enthält Dateiprüfsummen. Drittanbieterhinweise liegen in
 THIRD-PARTY-COMPONENTS.txt, licenses/ und den Runtime-Verzeichnissen.
