@@ -2,6 +2,7 @@
 
 ## 1.1.1 — Lizenzbereinigung
 
+- Automatische Programmsuche mit sichtbaren Pfaden im Hardware-Menü; keine separate Libre-Installation nötig.
 - GPL-3.0-only für die Windows-App; MIT für unabhängigen SensorHost und Contracts.
 - Vollständige Lizenztexte, Geltungsbereiche und SPDX-Kennzeichnungen.
 - Explizite .NET-Laufzeit- und Drittanbieterhinweise.

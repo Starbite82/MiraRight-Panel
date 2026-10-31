@@ -12,9 +12,11 @@ public sealed class HardwareWindow : Form
 {
     readonly List<string> ids = new List<string>(); readonly ComboBox gpu = new ComboBox();
     TextBox fan;
+    readonly TextBox detected = new TextBox { Multiline = true, ReadOnly = true, BackColor = UiTheme.Surface, ForeColor = UiTheme.Foreground, ScrollBars = ScrollBars.Vertical, Bounds = new Rectangle(18, 292, 604, 135) };
+    readonly Button detect = new Button { Text = "Automatisch suchen", Bounds = new Rectangle(18, 250, 190, 30) };
     public HardwareWindow()
     {
-        Text = "Hardware & Pfade"; Icon = AppBrand.Icon; ClientSize = new Size(640, 310); BackColor = Color.FromArgb(9, 15, 25); ForeColor = UiTheme.Foreground; Font = new Font("Segoe UI", 10); FormBorderStyle = FormBorderStyle.FixedDialog; MaximizeBox = false; MinimizeBox = false; StartPosition = FormStartPosition.CenterParent;
+        Text = "Hardware & Pfade"; Icon = AppBrand.Icon; ClientSize = new Size(640, 490); BackColor = Color.FromArgb(9, 15, 25); ForeColor = UiTheme.Foreground; Font = new Font("Segoe UI", 10); FormBorderStyle = FormBorderStyle.FixedDialog; MaximizeBox = false; MinimizeBox = false; StartPosition = FormStartPosition.CenterParent;
         Controls.Add(new Label { Text = "Leere Pfade = automatisch erkennen. Portable Ordner sind ebenfalls möglich.", Bounds = new Rectangle(18, 15, 604, 40) });
         fan = PathRow("Fan Control (optional, Ordner)", 60, AppSettings.Current.FanControlPath);
         Controls.Add(new Label { Text = "Grafikkarte (LibreHardwareMonitor)", Bounds = new Rectangle(18, 135, 440, 23) });
@@ -24,9 +26,27 @@ public sealed class HardwareWindow : Form
         string selected = AppSettings.Current.GpuIdentifier; if (!ids.Contains(selected)) { ids.Add(selected); gpu.Items.Add(selected + " (zurzeit nicht erkannt)"); }
         gpu.SelectedIndex = ids.IndexOf(selected);
         Controls.Add(new Label { Text = "Übernehmen startet die Sensor-Erkennung neu. Fehlende Werte erscheinen als --.", Bounds = new Rectangle(18, 203, 604, 44), ForeColor = UiTheme.Inactive });
-        var save = new Button { Text = "Übernehmen", Bounds = new Rectangle(347, 265, 135, 30) }; save.Click += (a, b) => Save(); Controls.Add(save);
-        var cancel = new Button { Text = "Abbrechen", Bounds = new Rectangle(492, 265, 130, 30), DialogResult = DialogResult.Cancel }; Controls.Add(cancel); CancelButton = cancel;
+        Controls.Add(detected); Controls.Add(detect); detect.Click += async (a, b) => await Detect(); Shown += async (a, b) => await Detect();
+        var save = new Button { Text = "Übernehmen", Bounds = new Rectangle(347, 445, 135, 30) }; save.Click += (a, b) => Save(); Controls.Add(save);
+        var cancel = new Button { Text = "Abbrechen", Bounds = new Rectangle(492, 445, 130, 30), DialogResult = DialogResult.Cancel }; Controls.Add(cancel); CancelButton = cancel;
         using (var menu = new ContextMenuStrip()) UiTheme.Apply(this, menu);
+    }
+    async System.Threading.Tasks.Task Detect()
+    {
+        detect.Enabled = false; detected.Text = "Programme werden gesucht…";
+        try
+        {
+            var result = await System.Threading.Tasks.Task.Run(() => new[] { SoftwareDiscovery.Find("FanControl.exe", "FanControl.IPC.dll"), SoftwareDiscovery.Find("MSIAfterburner.exe"), SoftwareDiscovery.Find("LibreHardwareMonitor.exe") });
+            if (IsDisposed) return;
+            string bundled = Path.Combine(AppContext.BaseDirectory, "sensors", "LibreHardwareMonitorLib.dll");
+            detected.Text = "Libre-Sensorbibliothek (integriert): " + (File.Exists(bundled) ? bundled : "im Entwicklungsbuild beim Sensorprozess") + Environment.NewLine
+                + "FanControl: " + (result[0] ?? "nicht gefunden – optional / portablen Ordner wählen") + Environment.NewLine
+                + "MSI Afterburner: " + (result[1] ?? "nicht gefunden – optional") + Environment.NewLine
+                + "Libre-Oberfläche (nicht benötigt): " + (result[2] ?? "nicht installiert / nicht gefunden") + Environment.NewLine
+                + "Externe Sensorprogramme müssen laufen. Afterburner wird über Shared Memory gelesen; dafür ist kein Pfad nötig.";
+        }
+        catch (Exception e) { if (!IsDisposed) detected.Text = "Suche nicht vollständig: " + e.Message; }
+        finally { if (!IsDisposed) detect.Enabled = true; }
     }
     TextBox PathRow(string title, int y, string value)
     {

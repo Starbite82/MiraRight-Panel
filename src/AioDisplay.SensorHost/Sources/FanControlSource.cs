@@ -18,12 +18,19 @@ public sealed class FanSample
 public sealed class FanControlSource
 {
     readonly string configuredRoot; Assembly assembly; object sensorClient, controlClient; string root; JsonDocument config; DateTime configAt = DateTime.MinValue;
+    DateTime nextDiscovery; string discoveryError = "";
     public FanControlSource(string folder) { configuredRoot = folder; }
     public FanSample Poll()
     {
         try
         {
-            if (assembly == null) { root = FindRoot(configuredRoot); var context = new FanControlLoadContext(root); assembly = context.LoadFromAssemblyPath(Path.Combine(root, "FanControl.IPC.dll")); }
+            if (assembly == null)
+            {
+                if (DateTime.UtcNow < nextDiscovery) return new FanSample { Error = discoveryError };
+                nextDiscovery = DateTime.UtcNow.AddSeconds(30);
+                try { root = FindRoot(configuredRoot); var context = new FanControlLoadContext(root); assembly = context.LoadFromAssemblyPath(Path.Combine(root, "FanControl.IPC.dll")); }
+                catch (Exception e) { discoveryError = e.Message; throw; }
+            }
             var factory = assembly.GetType("FanControl.IPC.IPCFactory", true);
             sensorClient ??= factory.GetMethod("GetSensorClient").Invoke(null, null);
             if (DateTime.UtcNow - configAt > TimeSpan.FromSeconds(30)) { LoadConfiguration(factory); configAt = DateTime.UtcNow; }
@@ -69,9 +76,7 @@ public sealed class FanControlSource
     public static string FindRoot(string configured)
     {
         if (!string.IsNullOrWhiteSpace(configured)) { if (File.Exists(Path.Combine(configured, "FanControl.IPC.dll"))) return Path.GetFullPath(configured); throw new FileNotFoundException("FanControl.IPC.dll fehlt im gewählten Ordner."); }
-        var candidates = new List<string>(); foreach (var process in Process.GetProcessesByName("FanControl")) { using (process) { try { var file = process.MainModule?.FileName; if (file != null) candidates.Add(Path.GetDirectoryName(file)); } catch { } } }
-        candidates.Add(Path.Combine(AppContext.BaseDirectory, "FanControl")); foreach (var basePath in new[] { Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) }) if (!string.IsNullOrEmpty(basePath)) candidates.Add(Path.Combine(basePath, "FanControl"));
-        return candidates.FirstOrDefault(p => File.Exists(Path.Combine(p, "FanControl.IPC.dll"))) ?? throw new FileNotFoundException("Fan Control nicht gefunden (optional).");
+        return SoftwareDiscovery.Find("FanControl.exe", "FanControl.IPC.dll") ?? throw new FileNotFoundException("Fan Control nicht gefunden (optional).");
     }
     sealed class FanControlLoadContext(string folder) : AssemblyLoadContext("FanControlIPC", false)
     {

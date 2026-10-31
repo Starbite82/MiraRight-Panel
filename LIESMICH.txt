@@ -28,6 +28,11 @@ aktiven Konfiguration und bei fehlender direkter Messung einen CPU-
 Temperatur-Ersatzwert. Dafür muss Fan Control laufen; getestet mit v284.
 Fan Control wird nicht mitgeliefert. Portable Installationen lassen sich
 unter Hardware & Pfade auswählen. Leeres Ordnerfeld = automatische Suche.
+Die Suche berücksichtigt laufende Programme, registrierte Installationen
+und übliche Programmordner. „Automatisch suchen“ zeigt die gefundenen
+Pfade für FanControl, MSI Afterburner und eine optionale Libre-Oberfläche.
+Eine separate Libre-Oberfläche ist nicht nötig; die Sensorbibliothek ist
+unter sensors\LibreHardwareMonitorLib.dll bereits enthalten.
 Lüfterkurven und Treiber werden von AIO Display nicht verändert.
 
 MSI Afterburner bleibt eine alternative Sensorquelle. Sein Hardwaremonitor
