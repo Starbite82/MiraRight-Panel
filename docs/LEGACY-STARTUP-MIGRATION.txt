@@ -1,0 +1,25 @@
+Ablösung des alten Autostart-Pfads
+================================
+
+Auf der bestehenden Installation wurde beim Windows-Anmelden wiederholt
+BLUB-Standalone\BLUB-Display.exe statt AIO-Display\BLUB-Display.exe gestartet.
+Der über Win32_StartupCommand gemeldete Eintrag und die direkt gelesene
+Registry widersprachen sich. Ein tatsächlicher Windows-Neustart wurde nicht
+automatisiert durchgeführt.
+
+tools/install-legacy-launcher.ps1 sichert deshalb zuerst die alte EXE mit
+SHA-256-Nachweis und ersetzt ausschließlich diesen alten Einstiegspunkt
+durch tools/LegacyLauncher.cs. Er startet nur die benachbarte aktuelle
+AIO-Display-Installation und beendet sich. Alte Sensor-/USB-Logik läuft nicht.
+
+Wenn der Windows-Anmeldekontext noch den alten Eintrag für "BLUB AIO Display"
+enthält, aktualisiert der Starter diesen auf die aktuelle EXE mit --minimized.
+Die Weiterleitung bleibt als Absicherung für alte Verknüpfungen erhalten.
+Eine eigene neue Autostart-Aufgabe oder ein Dienst wird nicht angelegt.
+
+Die bisherige EXE und sämtliche anderen Dateien bleiben als Backup verfügbar.
+Der Build der Weiterleitung benötigt den vorhandenen .NET-Framework-4-Compiler.
+Bei einer frischen Installation wird diese Kompatibilitätsmaßnahme nicht benötigt.
+
+Eine mögliche UAC-Bestätigung des optionalen Admin-Sensorprozesses bleibt
+erforderlich. Die Weiterleitung erhöht weder Oberfläche noch sich selbst.
