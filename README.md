@@ -1,4 +1,4 @@
-# AIO Display 1.1.1
+# AIO Display 1.1.3
 
 Windows application for the confirmed Thermalright 320 × 320 LCD (87AD:70DB / PM32 SUB1). The existing dashboard, detail view, colors, percentages, thread bars, fan labels and smoothing are retained.
 
@@ -40,7 +40,9 @@ The package must be extracted into a writable directory. settings.ini remains co
 
 ## Sensors and compatibility
 
-CPU/GPU/RAM values come from bundled LHM. Fan Control is optional, must be running for its RPM and CPU-temperature fallback, and is accessed through the installed FanControl.IPC.dll (not redistributed). Its portable folder may be selected under Hardware & Pfade. Tested IPC: Fan Control v284. Afterburner remains optional and must provide MAHM shared memory.
+CPU/GPU/RAM values come from bundled LHM. Under **Hardware & Sensoren**, optional elevated sensors read CPU temperature and supported motherboard/controller RPM directly without FanControl. Only the worker is elevated through UAC; the UI remains unelevated. Its local pipe is restricted to the current user and verifies both endpoint processes. No service or scheduled task is installed; each worker start may require UAC confirmation. Cancelled elevation is not retried automatically.
+
+**Lüfter benennen** stores independent channel labels in `fan-names.json`, including optional migration from existing FanControl labels. Fan Control remains an optional non-elevated source through its installed FanControl.IPC.dll (not redistributed; tested v284). Portable folder overrides are under **Erweitert**. Afterburner remains optional and must provide MAHM shared memory.
 
 The existing LCD model/protocol restriction and WinUSB driver requirement remain. No drivers or fan curves are installed or changed. More hardware support still requires physical testing.
 

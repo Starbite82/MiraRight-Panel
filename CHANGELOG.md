@@ -1,5 +1,14 @@
 # Änderungen
 
+## 1.1.3 — Direkte Sensoren mit Adminrechten und eigene Lüfternamen
+
+- Optionaler Admin-Sensorprozess; Oberfläche bleibt ohne erhöhte Rechte.
+- Abgesicherter lokaler Datenkanal, keine FanControl-DLL im erhöhten Prozess.
+- Direkte CPU-Temperatur und Mainboard-RPM, soweit vom Board unterstützt.
+- Eigene Lüfternamen, inklusive Übernahme vorhandener FanControl-Namen.
+- GPU-RPM bleiben zusammen mit den direkten Mainboard-RPM sichtbar.
+- UAC-Abbruch löst keine automatischen Wiederholungen der Abfrage aus.
+
 ## 1.1.2 — Lüftersensoren und Hardware-Einstellungen
 
 - Direkte Mainboard-/Controller-RPM über Libre als automatische Ausweichquelle.

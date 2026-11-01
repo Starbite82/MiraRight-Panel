@@ -1,4 +1,4 @@
-AIO Display 1.1.2 – Anleitung
+AIO Display 1.1.3 – Anleitung
 
 1. VORAUSSETZUNGEN
 Windows x64 mit Unterstützung für die mitgelieferte .NET-10-Laufzeit.
@@ -39,6 +39,18 @@ Zugriffsrechten ab; unter Umständen sind erhöhte Rechte erforderlich.
 Ohne verfügbare Board-RPM bleibt nur der direkt erkannte GPU-Lüfter sichtbar.
 FanControl wird automatisch erneut abgefragt, auch wenn es später startet.
 Die manuelle Ordnerauswahl befindet sich unter „Erweitert“.
+Unter Hardware & Sensoren kann „Direkte Sensoren mit Adminrechten“ aktiviert
+werden. Nur der Sensorprozess wird nach Windows-Bestätigung erhöht gestartet.
+Die Oberfläche bleibt normal gestartet. Dieser Modus liest ohne FanControl;
+er installiert keinen Dienst und keine geplante Aufgabe. Beim Programmstart
+und nach einem erneuten Sensorstart kann deshalb eine UAC-Abfrage erscheinen.
+Nach Ablehnen erfolgt kein automatischer neuer Versuch. Erneut versuchen:
+Hardware & Sensoren öffnen und „Übernehmen“ anklicken.
+Unter „Lüfter benennen“ können eigene Namen vergeben werden, auch für
+stehende Lüfter. Leer lassen setzt den ursprünglichen Sensornamen wieder ein.
+Die Zuordnung liegt in fan-names.json im Programmordner. Beim Wechsel aus
+dem FanControl-Modus werden die aktuell verfügbaren Namen übernommen;
+bestehende eigene Namen werden dabei nicht überschrieben.
 Lüfterkurven und Treiber werden von AIO Display nicht verändert.
 
 MSI Afterburner bleibt eine alternative Sensorquelle. Sein Hardwaremonitor

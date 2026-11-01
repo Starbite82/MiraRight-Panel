@@ -35,5 +35,6 @@ public sealed class SensorOptions
     public int IntervalMs { get; set; } = 100;
     public string FanControlPath { get; set; } = ""; public string GpuIdentifier { get; set; } = ""; public int ParentId { get; set; }
     public long ParentStartTicks { get; set; }
+    public bool UseFanControl { get; set; } = true;
     public void Validate() { if (Protocol != SensorSnapshot.CurrentProtocol) throw new InvalidDataException("Unsupported sensor protocol"); if (Provider != 0 && Provider != 1) throw new InvalidDataException("Unknown provider"); if (!new[] { 100, 125, 250, 500, 1000 }.Contains(IntervalMs)) throw new InvalidDataException("Unsupported sensor interval"); }
 }

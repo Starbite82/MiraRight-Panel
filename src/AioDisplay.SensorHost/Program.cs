@@ -13,10 +13,13 @@ internal static class SensorHostProgram
         Console.OutputEncoding = new System.Text.UTF8Encoding(false); using var stop = new CancellationTokenSource();
         Console.CancelKeyPress += (s, e) => { e.Cancel = true; stop.Cancel(); };
         LibreHardwareSource lhm = null;
+        SensorPipeSession pipe = null;
         try
         {
+            if (args.Contains("--pipe")) pipe = new SensorPipeSession(args);
             var input = await Console.In.ReadLineAsync().WaitAsync(TimeSpan.FromSeconds(10)); if (input == null || input.Length > 32768) throw new InvalidDataException("Missing sensor configuration");
             var options = JsonSerializer.Deserialize<SensorOptions>(input, SnapshotProtocol.Json) ?? throw new InvalidDataException("Invalid sensor configuration"); options.Validate();
+            if (pipe != null) { if (options.ParentId != pipe.ParentId || options.ParentStartTicks != pipe.ParentStartTicks) throw new InvalidDataException("Pipe parent mismatch"); options.UseFanControl = false; options.FanControlPath = ""; }
             Process parent = null; if (options.ParentId > 0) { parent = Process.GetProcessById(options.ParentId); if (parent.StartTime.ToUniversalTime().Ticks != options.ParentStartTicks) throw new InvalidDataException("Parent identity changed"); }
             using (parent)
             {
@@ -28,7 +31,7 @@ internal static class SensorHostProgram
                     string lastState = "";
                     while (!stop.IsCancellationRequested)
                     {
-                        var sample = source.Poll();
+                        var sample = options.UseFanControl ? source.Poll() : new FanSample();
                         string fanControlError = sample.Error;
                         bool fromFanControl = FanSelection.HasReadings(sample);
                         if (!fromFanControl) sample = direct.Poll();
@@ -65,7 +68,8 @@ internal static class SensorHostProgram
             return 0;
         }
         catch (OperationCanceledException) { return 0; }
+        catch (IOException) when (pipe != null) { return 0; }
         catch (Exception e) { Console.Error.WriteLine(e); return 1; }
-        finally { stop.Cancel(); lhm?.Dispose(); }
+        finally { stop.Cancel(); lhm?.Dispose(); pipe?.Dispose(); }
     }
 }

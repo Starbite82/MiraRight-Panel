@@ -8,6 +8,25 @@ public static class IntegrationChecks
     static void Assert(bool ok, string what) { if (!ok) throw new Exception(what); }
     static SensorOptions Options(string gpu = "") { using var p = Process.GetCurrentProcess(); return new() { IntervalMs = 100, GpuIdentifier = gpu, ParentId = p.Id, ParentStartTicks = p.StartTime.ToUniversalTime().Ticks }; }
     static void Wait(Func<bool> predicate, int seconds, string what) { var watch = Stopwatch.StartNew(); while (watch.Elapsed.TotalSeconds < seconds) { if (predicate()) return; Thread.Sleep(50); } throw new Exception("Timeout: " + what); }
+    public static void Elevated(string host)
+    {
+        FanNames.Import(new AioDisplay.SensorHost.FanControlSource("").Poll().Fans);
+        using var identity = System.Security.Principal.WindowsIdentity.GetCurrent();
+        Assert(!new System.Security.Principal.WindowsPrincipal(identity).IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator), "Test parent must remain unelevated");
+        using var client = new SensorProcessClient(host, Console.WriteLine, true);
+        var options = Options(); options.FanControlPath = @"C:\nonexistent-do-not-load";
+        client.EnsureRunning(options); Wait(() => client.Read().Fresh && client.Read().Fans.Any(f => f.Rpm > 0), 120, "UAC and direct RPM");
+        var first = client.Read(); int pid = client.ProcessId.Value;
+        Assert(first.FanSource == "Libre direkt", "Elevated host must bypass FanControl");
+        var clock = Stopwatch.StartNew(); long sequence = first.SampleSequence; int stale = 0;
+        while (clock.Elapsed.TotalSeconds < 12) { client.EnsureRunning(options); if (!client.Read().Fresh) stale++; Thread.Sleep(50); }
+        var final = client.Read();
+        Assert(client.ProcessId == pid && stale == 0 && final.SampleSequence > sequence + 70, "Stable elevated sample stream");
+        Assert(final.CpuTemperatureSource == "LibreHardwareMonitor", "Direct CPU temperature");
+        File.WriteAllText("elevated-result.json", JsonSerializer.Serialize(final,new JsonSerializerOptions{WriteIndented=true}));
+        client.Stop(); Wait(() => Exited(pid), 10, "Elevated host exits when pipe closes");
+        Console.WriteLine("PASS: unelevated UI, elevated direct CPU/fans, no FanControl, stable stream and graceful shutdown");
+    }
     public static void Live(string host, int seconds)
     {
         var lines = new List<string>(); using var client = new SensorProcessClient(host, l => { lock (lines) lines.Add(l); Console.WriteLine(l); }); var options = Options();

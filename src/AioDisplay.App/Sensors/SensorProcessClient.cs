@@ -19,11 +19,15 @@ public sealed class SensorProcessClient : IDisposable
     private string signature = "";
     private long sequence;
     private bool disposed;
+    private readonly bool elevated;
+    private bool elevationAttempted;
+    private ElevatedSensorTransport transport;
 
-    public SensorProcessClient(string path, Action<string> logger)
+    public SensorProcessClient(string path, Action<string> logger, bool elevated = false)
     {
         executable = path;
         log = logger;
+        this.elevated = elevated;
     }
 
     public int? ProcessId
@@ -47,6 +51,8 @@ public sealed class SensorProcessClient : IDisposable
         lock (sync)
         {
             if (disposed) return;
+            if (elevated && elevationAttempted && signature != configuration) { StopLocked(); elevationAttempted = false; attempted = DateTime.MinValue; }
+            if (transport?.Starting == true && signature == configuration) return;
             DateTime now = DateTime.UtcNow;
             if (child != null && !child.HasExited)
             {
@@ -58,12 +64,22 @@ public sealed class SensorProcessClient : IDisposable
                 attempted = DateTime.MinValue;
             }
             if (now - attempted < TimeSpan.FromSeconds(3)) return;
+            // Never repeat UAC prompts automatically after cancellation or worker failure.
+            if (elevated && elevationAttempted) return;
             attempted = now;
             StopLocked();
             try
             {
                 if (!File.Exists(executable))
                     throw new FileNotFoundException("Sensorprozess fehlt. Programm bitte vollständig entpacken.", executable);
+                if (elevated)
+                {
+                    if (options.ParentId <= 0) throw new InvalidDataException("Admin-Sensorprozess benötigt einen übergeordneten Prozess.");
+                    elevationAttempted = true; signature = configuration; sequence = 0; healthy = DateTime.MinValue;
+                    var currentTransport = new ElevatedSensorTransport(); transport = currentTransport;
+                    currentTransport.Start(executable, options, configuration, process => { lock (sync) { if (disposed || transport != currentTransport) { process.Dispose(); return; } child = process; attempted = DateTime.UtcNow; log("Admin sensor host started: pid=" + process.Id); } }, Receive, log);
+                    return;
+                }
                 var process = new Process
                 {
                     StartInfo = new ProcessStartInfo
@@ -145,11 +161,12 @@ public sealed class SensorProcessClient : IDisposable
     private void StopLocked()
     {
         var process = child;
+        transport?.Dispose(); transport = null;
         child = null;
         Volatile.Write(ref latest, null);
         if (process == null) return;
         // Do not wait under the lock: pending stdout callbacks can still need it.
-        try { if (!process.HasExited) process.Kill(true); }
+        try { if (!elevated && !process.HasExited) process.Kill(true); }
         catch (InvalidOperationException) { }
         catch (System.ComponentModel.Win32Exception e) { log("Sensor host stop: " + e.Message); }
         finally { process.Dispose(); }
@@ -161,6 +178,7 @@ public sealed class SensorProcessClient : IDisposable
         {
             StopLocked();
             attempted = DateTime.MinValue;
+            elevationAttempted = false;
         }
     }
 
