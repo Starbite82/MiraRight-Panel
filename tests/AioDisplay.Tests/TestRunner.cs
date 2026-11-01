@@ -12,6 +12,7 @@ internal static class TestRunner
         var output = args.Length > 1 ? Path.GetFullPath(args[1]) : Path.Combine(AppContext.BaseDirectory, "results"); Directory.CreateDirectory(output); Directory.SetCurrentDirectory(output); Directory.CreateDirectory("work"); Log.Root = output;
         try
         {
+            if (args.FirstOrDefault() == "--probe-fans") { using var direct = new AioDisplay.SensorHost.DirectFanSource(); var fc = new AioDisplay.SensorHost.FanControlSource(""); for(int i=0;i<3;i++) { Console.WriteLine("DIRECT " + JsonSerializer.Serialize(direct.Poll())); Console.WriteLine("FANCONTROL " + JsonSerializer.Serialize(fc.Poll())); Thread.Sleep(1000); } return 0; }
             if (args.FirstOrDefault() == "--discover") { foreach (string name in new[] { "FanControl.exe", "MSIAfterburner.exe", "LibreHardwareMonitor.exe" }) Console.WriteLine(name + ": " + (SoftwareDiscovery.Find(name, name == "FanControl.exe" ? "FanControl.IPC.dll" : null) ?? "not found")); return 0; }
             if (args.FirstOrDefault() == "--golden") { Golden.Main(new[] { output }); return 0; }
             if (args.FirstOrDefault() == "--live") { IntegrationChecks.Live(args[2], int.Parse(args[3])); return 0; }

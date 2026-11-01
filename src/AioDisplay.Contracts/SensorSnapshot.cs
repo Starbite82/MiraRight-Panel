@@ -24,6 +24,7 @@ public sealed class SensorSnapshot
     public long SampleTicks { get; set; }
     public long SampleSequence { get; set; }
     public long FanSampleTicks { get; set; }
+    public string FanSource { get; set; } = "";
     public int ReportedThreadCount { get; set; }
     [JsonIgnore] public Dictionary<string, double> BarValues { get; } = new();
     public Reading Find(uint id, string exact) { var r = Entries.Find(x => x.Id == id && x.Name.Equals(exact, StringComparison.OrdinalIgnoreCase)); return r ?? Entries.Find(x => x.Id == id); }

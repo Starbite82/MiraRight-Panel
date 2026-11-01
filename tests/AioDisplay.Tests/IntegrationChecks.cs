@@ -19,7 +19,7 @@ public static class IntegrationChecks
         var result = new { Seconds = clock.Elapsed.TotalSeconds, Hz = hz, MaxGapMs = maxGap, Stale = stale, Threads = final.ReportedThreadCount, Gpu = final.GpuName, Fans = final.Fans.Count, CpuTemperatureSource = final.CpuTemperatureSource }; File.WriteAllText("live-result.json", JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true })); Console.WriteLine(JsonSerializer.Serialize(result));
         var cards = final.Gpus.ToArray(); foreach (var card in cards) { options.GpuIdentifier = card.Id; client.EnsureRunning(options); Wait(() => client.Read().Fresh && client.Read().GpuName == card.Name, 15, "GPU selection " + card.Name); }
         options.GpuIdentifier = "/missing"; client.EnsureRunning(options); Wait(() => client.Read().Fresh, 15, "GPU auto fallback");
-        options.FanControlPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N")); client.EnsureRunning(options); Wait(() => client.Read().Fresh, 15, "No Fan Control"); Thread.Sleep(1500); Assert(client.Read().Fans.Count == 0, "Absent Fan Control must be optional");
+        options.FanControlPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N")); client.EnsureRunning(options); Wait(() => client.Read().Fresh, 15, "No Fan Control"); Thread.Sleep(1500); Assert(client.Read().FanSource != "Fan Control", "Absent Fan Control must use direct fallback");
         options.Provider = 1; client.EnsureRunning(options); Wait(() => client.Latest?.Source == "MSI Afterburner", 10, "Afterburner process source switch");
         Console.WriteLine("PASS: real sensors, explicit GPUs, missing GPU, absent Fan Control, Afterburner switch");
     }

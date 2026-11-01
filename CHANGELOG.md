@@ -1,5 +1,12 @@
 # Änderungen
 
+## 1.1.2 — Lüftersensoren und Hardware-Einstellungen
+
+- Direkte Mainboard-/Controller-RPM über Libre als automatische Ausweichquelle.
+- FanControl wird weiterhin verbunden, wenn es erst nach der Anzeige bereit ist.
+- Lüfterquelle wird korrekt angezeigt; reine GPU-RPM gelten nicht mehr als aktive FanControl-Verbindung.
+- Ordnerauswahl unter „Erweitert“; automatische Erkennung als Standard.
+
 ## 1.1.1 — Lizenzbereinigung
 
 - Automatische Programmsuche mit sichtbaren Pfaden im Hardware-Menü; keine separate Libre-Installation nötig.

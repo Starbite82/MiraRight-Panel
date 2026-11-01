@@ -21,7 +21,23 @@ internal static class SensorHostProgram
             using (parent)
             {
                 _ = Task.Run(async () => { while (!stop.IsCancellationRequested) { if (parent != null) { try { if (parent.HasExited) { stop.Cancel(); return; } } catch { stop.Cancel(); return; } } await Task.Delay(250, stop.Token); } }, stop.Token);
-                var fanTask = Task.Run(async () => { var source = new FanControlSource(options.FanControlPath); string lastError = ""; while (!stop.IsCancellationRequested) { var sample = source.Poll(); Volatile.Write(ref fans, sample); if (sample.Error != lastError) { lastError = sample.Error; if (lastError != "") Console.Error.WriteLine("Fan Control: " + lastError); } await Task.Delay(1000, stop.Token); } }, stop.Token);
+                var fanTask = Task.Run(async () =>
+                {
+                    var source = new FanControlSource(options.FanControlPath);
+                    using var direct = new DirectFanSource();
+                    string lastState = "";
+                    while (!stop.IsCancellationRequested)
+                    {
+                        var sample = source.Poll();
+                        string fanControlError = sample.Error;
+                        bool fromFanControl = FanSelection.HasReadings(sample);
+                        if (!fromFanControl) sample = direct.Poll();
+                        Volatile.Write(ref fans, sample);
+                        string state = (fromFanControl ? "Fan Control" : "Libre direkt") + ": " + sample.Fans.Count(f => f.Rpm.HasValue) + " RPM-Sensoren" + (sample.Error == "" ? "" : " (" + sample.Error + ")") + (fanControlError == "" ? "" : " | Fan Control: " + fanControlError);
+                        if (state != lastState) { lastState = state; Console.Error.WriteLine(state); }
+                        await Task.Delay(1000, stop.Token);
+                    }
+                }, stop.Token);
                 long sequence = 0; var clock = Stopwatch.StartNew(); double due = 0; DateTime nextOpen = DateTime.MinValue; string lastLhmError = "";
                 while (!stop.IsCancellationRequested)
                 {
@@ -36,7 +52,7 @@ internal static class SensorHostProgram
                         }
                         catch (Exception e) { if (e.Message != lastLhmError) { lastLhmError = e.Message; Console.Error.WriteLine("LHM: " + e.Message); } try { lhm?.Dispose(); } catch { } lhm = null; nextOpen = DateTime.UtcNow.AddSeconds(3); sample = new SensorSnapshot { Error = e.Message }; }
                     }
-                    var fan = Volatile.Read(ref fans); if (fan.Ticks > 0 && (DateTime.UtcNow.Ticks - fan.Ticks) < 3 * TimeSpan.TicksPerSecond) { sample.Fans = fan.Fans; sample.FanSampleTicks = fan.Ticks; if (sample.Fresh && sample.Find(128, "CPU temperature") == null && fan.CpuTemperature.HasValue) { sample.Entries.Add(new Reading { Id = 128, Gpu = uint.MaxValue, Name = "CPU temperature", Unit = "C", Value = fan.CpuTemperature.Value }); sample.CpuTemperatureSource = "Fan Control"; } }
+                    var fan = Volatile.Read(ref fans); if (fan.Ticks > 0 && (DateTime.UtcNow.Ticks - fan.Ticks) < 3 * TimeSpan.TicksPerSecond) { sample.Fans = fan.Fans; sample.FanSampleTicks = fan.Ticks; sample.FanSource = fan.Source; if (sample.Fresh && sample.Find(128, "CPU temperature") == null && fan.CpuTemperature.HasValue) { sample.Entries.Add(new Reading { Id = 128, Gpu = uint.MaxValue, Name = "CPU temperature", Unit = "C", Value = fan.CpuTemperature.Value }); sample.CpuTemperatureSource = "Fan Control"; } }
                     sample.SampleSequence = ++sequence;
                     // Afterburner timestamps must stay tied to its own samples, not the polling loop.
                     if (options.Provider == 0) sample.SampleTicks = DateTime.UtcNow.Ticks;

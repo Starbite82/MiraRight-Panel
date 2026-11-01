@@ -1,4 +1,4 @@
-AIO Display 1.1.1 – Anleitung
+AIO Display 1.1.2 – Anleitung
 
 1. VORAUSSETZUNGEN
 Windows x64 mit Unterstützung für die mitgelieferte .NET-10-Laufzeit.
@@ -33,6 +33,12 @@ und übliche Programmordner. „Automatisch suchen“ zeigt die gefundenen
 Pfade für FanControl, MSI Afterburner und eine optionale Libre-Oberfläche.
 Eine separate Libre-Oberfläche ist nicht nötig; die Sensorbibliothek ist
 unter sensors\LibreHardwareMonitorLib.dll bereits enthalten.
+Ohne gültige FanControl-RPM versucht die App, Mainboard-/Controller-Lüfter
+direkt über Libre auszulesen. Das hängt vom Board, Treiber und den
+Zugriffsrechten ab; unter Umständen sind erhöhte Rechte erforderlich.
+Ohne verfügbare Board-RPM bleibt nur der direkt erkannte GPU-Lüfter sichtbar.
+FanControl wird automatisch erneut abgefragt, auch wenn es später startet.
+Die manuelle Ordnerauswahl befindet sich unter „Erweitert“.
 Lüfterkurven und Treiber werden von AIO Display nicht verändert.
 
 MSI Afterburner bleibt eine alternative Sensorquelle. Sein Hardwaremonitor

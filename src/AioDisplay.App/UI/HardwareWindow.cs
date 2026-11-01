@@ -12,23 +12,26 @@ public sealed class HardwareWindow : Form
 {
     readonly List<string> ids = new List<string>(); readonly ComboBox gpu = new ComboBox();
     TextBox fan;
-    readonly TextBox detected = new TextBox { Multiline = true, ReadOnly = true, BackColor = UiTheme.Surface, ForeColor = UiTheme.Foreground, ScrollBars = ScrollBars.Vertical, Bounds = new Rectangle(18, 292, 604, 135) };
-    readonly Button detect = new Button { Text = "Automatisch suchen", Bounds = new Rectangle(18, 250, 190, 30) };
+    readonly TextBox detected = new TextBox { Multiline = true, ReadOnly = true, BackColor = UiTheme.Surface, ForeColor = UiTheme.Foreground, ScrollBars = ScrollBars.Vertical, Bounds = new Rectangle(18, 220, 604, 180) };
+    readonly Button detect = new Button { Text = "Erkennung aktualisieren", Bounds = new Rectangle(18, 178, 210, 30) };
     public HardwareWindow()
     {
-        Text = "Hardware & Pfade"; Icon = AppBrand.Icon; ClientSize = new Size(640, 490); BackColor = Color.FromArgb(9, 15, 25); ForeColor = UiTheme.Foreground; Font = new Font("Segoe UI", 10); FormBorderStyle = FormBorderStyle.FixedDialog; MaximizeBox = false; MinimizeBox = false; StartPosition = FormStartPosition.CenterParent;
-        Controls.Add(new Label { Text = "Leere Pfade = automatisch erkennen. Portable Ordner sind ebenfalls möglich.", Bounds = new Rectangle(18, 15, 604, 40) });
-        fan = PathRow("Fan Control (optional, Ordner)", 60, AppSettings.Current.FanControlPath);
-        Controls.Add(new Label { Text = "Grafikkarte (LibreHardwareMonitor)", Bounds = new Rectangle(18, 135, 440, 23) });
-        gpu.Bounds = new Rectangle(18, 160, 604, 28); gpu.DropDownStyle = ComboBoxStyle.DropDownList; Controls.Add(gpu);
+        Text = "Hardware & Sensoren"; Icon = AppBrand.Icon; ClientSize = new Size(640, 510); BackColor = Color.FromArgb(9, 15, 25); ForeColor = UiTheme.Foreground; Font = new Font("Segoe UI", 10); FormBorderStyle = FormBorderStyle.FixedDialog; MaximizeBox = false; MinimizeBox = false; StartPosition = FormStartPosition.CenterParent;
+        Controls.Add(new Label { Text = "Sensoren und optionale Programme werden automatisch erkannt. Eine separate Libre-Installation ist nicht erforderlich.", Bounds = new Rectangle(18, 15, 604, 44) });
+        fan = PathRow("FanControl-Ordner (nur für portable / abweichende Installationen)", 450, AppSettings.Current.FanControlPath);
+        var manual = Controls.Cast<Control>().Where(c => c.Top >= 450).ToArray(); foreach (var c in manual) c.Visible = false;
+        Controls.Add(new Label { Text = "Grafikkarte", Bounds = new Rectangle(18, 65, 440, 23) });
+        gpu.Bounds = new Rectangle(18, 90, 604, 28); gpu.DropDownStyle = ComboBoxStyle.DropDownList; Controls.Add(gpu);
         ids.Add(""); gpu.Items.Add("Automatisch – größter Grafikspeicher");
         try { foreach (var card in SensorHub.Gpus) { if (!ids.Contains(card.Id)) { ids.Add(card.Id); gpu.Items.Add(card.Name + " (" + card.Id + ")"); } } } catch (IOException) { }
         string selected = AppSettings.Current.GpuIdentifier; if (!ids.Contains(selected)) { ids.Add(selected); gpu.Items.Add(selected + " (zurzeit nicht erkannt)"); }
         gpu.SelectedIndex = ids.IndexOf(selected);
-        Controls.Add(new Label { Text = "Übernehmen startet die Sensor-Erkennung neu. Fehlende Werte erscheinen als --.", Bounds = new Rectangle(18, 203, 604, 44), ForeColor = UiTheme.Inactive });
+        Controls.Add(new Label { Text = "Übernehmen startet die Sensor-Erkennung neu. Fehlende Werte erscheinen als --.", Bounds = new Rectangle(18, 133, 604, 38), ForeColor = UiTheme.Inactive });
         Controls.Add(detected); Controls.Add(detect); detect.Click += async (a, b) => await Detect(); Shown += async (a, b) => await Detect();
-        var save = new Button { Text = "Übernehmen", Bounds = new Rectangle(347, 445, 135, 30) }; save.Click += (a, b) => Save(); Controls.Add(save);
-        var cancel = new Button { Text = "Abbrechen", Bounds = new Rectangle(492, 445, 130, 30), DialogResult = DialogResult.Cancel }; Controls.Add(cancel); CancelButton = cancel;
+        var save = new Button { Text = "Übernehmen", Bounds = new Rectangle(347, 465, 135, 30) }; save.Click += (a, b) => Save(); Controls.Add(save);
+        var cancel = new Button { Text = "Abbrechen", Bounds = new Rectangle(492, 465, 130, 30), DialogResult = DialogResult.Cancel }; Controls.Add(cancel); CancelButton = cancel;
+        var advanced = new ReadableCheckBox { Text = "Erweitert: FanControl-Ordner selbst festlegen", Bounds = new Rectangle(18, 414, 604, 28) }; Controls.Add(advanced);
+        advanced.CheckedChanged += (a, b) => { foreach (var c in manual) c.Visible = advanced.Checked; save.Top = cancel.Top = advanced.Checked ? 535 : 465; ClientSize = new Size(640, advanced.Checked ? 580 : 510); };
         using (var menu = new ContextMenuStrip()) UiTheme.Apply(this, menu);
     }
     async System.Threading.Tasks.Task Detect()
@@ -36,14 +39,13 @@ public sealed class HardwareWindow : Form
         detect.Enabled = false; detected.Text = "Programme werden gesucht…";
         try
         {
-            var result = await System.Threading.Tasks.Task.Run(() => new[] { SoftwareDiscovery.Find("FanControl.exe", "FanControl.IPC.dll"), SoftwareDiscovery.Find("MSIAfterburner.exe"), SoftwareDiscovery.Find("LibreHardwareMonitor.exe") });
+            var result = await System.Threading.Tasks.Task.Run(() => new[] { SoftwareDiscovery.Find("FanControl.exe", "FanControl.IPC.dll"), SoftwareDiscovery.Find("MSIAfterburner.exe") });
             if (IsDisposed) return;
-            string bundled = Path.Combine(AppContext.BaseDirectory, "sensors", "LibreHardwareMonitorLib.dll");
-            detected.Text = "Libre-Sensorbibliothek (integriert): " + (File.Exists(bundled) ? bundled : "im Entwicklungsbuild beim Sensorprozess") + Environment.NewLine
-                + "FanControl: " + (result[0] ?? "nicht gefunden – optional / portablen Ordner wählen") + Environment.NewLine
+            detected.Text = "CPU, GPU und Speicher: integrierte Libre-Sensorbibliothek" + Environment.NewLine
+                + "Lüfter: FanControl mit Namen, alternativ direkte Libre-RPM, soweit verfügbar. Später gestartetes FanControl wird automatisch verbunden." + Environment.NewLine
+                + "FanControl: " + (result[0] ?? "nicht gefunden – optional") + Environment.NewLine
                 + "MSI Afterburner: " + (result[1] ?? "nicht gefunden – optional") + Environment.NewLine
-                + "Libre-Oberfläche (nicht benötigt): " + (result[2] ?? "nicht installiert / nicht gefunden") + Environment.NewLine
-                + "Externe Sensorprogramme müssen laufen. Afterburner wird über Shared Memory gelesen; dafür ist kein Pfad nötig.";
+                + "Direkte Mainboard-RPM hängen von Hardware, Treiber und Zugriffsrechten ab. FanControl und Afterburner müssen für ihre Messwerte laufen.";
         }
         catch (Exception e) { if (!IsDisposed) detected.Text = "Suche nicht vollständig: " + e.Message; }
         finally { if (!IsDisposed) detect.Enabled = true; }

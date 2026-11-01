@@ -139,7 +139,7 @@ public sealed class SensorProcessClient : IDisposable
         Source = s.Source, CpuTemperatureSource = s.CpuTemperatureSource,
         GpuName = s.GpuName, Error = s.Error,
         SampleTicks = s.SampleTicks, SampleSequence = s.SampleSequence,
-        FanSampleTicks = s.FanSampleTicks, ReportedThreadCount = s.ReportedThreadCount
+        FanSampleTicks = s.FanSampleTicks, FanSource = s.FanSource, ReportedThreadCount = s.ReportedThreadCount
     };
 
     private void StopLocked()

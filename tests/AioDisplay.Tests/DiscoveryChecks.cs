@@ -19,5 +19,14 @@ internal static class DiscoveryChecks
         try { if (SoftwareDiscovery.FindInFolders(new[] { "%AIO_DISCOVERY_TEST%" }, "FanControl.exe") != current) throw new Exception("Expandable path detection"); }
         finally { Environment.SetEnvironmentVariable("AIO_DISCOVERY_TEST", null); }
         Console.WriteLine("PASS: software discovery, incomplete installs, missing tools, expandable paths");
+        var fans = new AioDisplay.SensorHost.FanSample { Ticks = DateTime.UtcNow.Ticks, Fans = new() { new FanReading { Rpm = 0 } } };
+        if (!AioDisplay.SensorHost.FanSelection.HasReadings(fans)) throw new Exception("Stopped fan remains a valid measurement");
+        fans.Fans[0].Rpm = null;
+        if (AioDisplay.SensorHost.FanSelection.HasReadings(fans)) throw new Exception("Uninitialized fan should fall back to direct sensors");
+        fans.Fans[0].Rpm = double.NaN;
+        if (AioDisplay.SensorHost.FanSelection.HasReadings(fans)) throw new Exception("Invalid RPM should fall back");
+        var stale = new AioDisplay.SensorHost.FanSample { Ticks = DateTime.UtcNow.AddSeconds(-10).Ticks, Fans = new() { new FanReading { Rpm = 900 } } };
+        if (AioDisplay.SensorHost.FanSelection.HasReadings(stale)) throw new Exception("Stale fan should fall back");
+        Console.WriteLine("PASS: fan fallback for uninitialized/invalid/stale readings and valid stopped fans");
     }
 }

@@ -40,10 +40,10 @@ public sealed class PanelWindow : Form
         var auto = Check("Mit Windows starten (minimiert)", 353, AutoStart.Enabled);
         auto.Enabled = !preview;
         var close = Check("Beim Schließen weiterlaufen", 384, AppSettings.Current.CloseToTray);
-        var note = new Label { Text = "Einstellungen werden sofort gespeichert.\nLHM-Messrate separat einstellbar.\nHardware-Erkennung unter „Hardware & Pfade“.", Bounds = new Rectangle(365, 427, 310, 67), ForeColor = Color.LightSteelBlue, Font = new Font("Segoe UI", 9) }; Controls.Add(note);
+        var note = new Label { Text = "Einstellungen werden sofort gespeichert.\nLHM-Messrate separat einstellbar.\nHardware-Erkennung unter „Hardware & Sensoren“.", Bounds = new Rectangle(365, 427, 310, 67), ForeColor = Color.LightSteelBlue, Font = new Font("Segoe UI", 9) }; Controls.Add(note);
         var about = new Button { Text = "Info & Impressum", Bounds = new Rectangle(20, 477, 320, 30) };
         about.Click += (sender, e) => { using var dialog = new AboutWindow(); dialog.ShowDialog(this); }; Controls.Add(about);
-        var hardware = new Button { Text = "Hardware & Pfade…", Bounds = new Rectangle(20, 513, 320, 30) };
+        var hardware = new Button { Text = "Hardware & Sensoren…", Bounds = new Rectangle(20, 513, 320, 30) };
         hardware.Click += (a, b) => { using (var dialog = new HardwareWindow()) if (dialog.ShowDialog(this) == DialogResult.OK) { SensorHub.Stop(); } }; Controls.Add(hardware);
         var hide = new Button { Text = "In den Infobereich", Bounds = new Rectangle(365, 513, 166, 30) }; hide.Click += (a, b) => HideToTray(); Controls.Add(hide);
         var exit = new Button { Text = "Beenden", Bounds = new Rectangle(543, 513, 132, 30) }; exit.Click += (a, b) => ExitNow(); Controls.Add(exit);
@@ -125,7 +125,7 @@ public sealed class PanelWindow : Form
         {
             SensorHub.EnsureRunning(); var sensors = SensorHub.Read(); barAverager.Apply(sensors, AppSettings.Current.BarWindowMs); bmp = PanelRenderer.RenderView(sensors, PanelRenderer.TotalMemoryGiB(), AppSettings.Current.View, AppSettings.Current.ThreadNumbers);
             if (!preview) preparedPixels = Encode565(bmp);
-            bool fanFresh = FanData.Read(sensors).Any(f => f.Rpm.HasValue); string info = (preview ? "Vorschau ohne Display" : streamError != "" ? "Warte: " + streamError : Interlocked.Read(ref frames) > 0 ? "Display verbunden" : "Display startet") + "\n" + sensors.Source + " " + (sensors.Fresh ? "aktiv" : "wartet") + "\nCPU-Temperatur: " + sensors.CpuTemperatureSource + "\nFan Control: " + (fanFresh ? "aktiv" : "wartet");
+            bool fanFresh = FanData.Read(sensors).Any(f => f.Rpm.HasValue); string info = (preview ? "Vorschau ohne Display" : streamError != "" ? "Warte: " + streamError : Interlocked.Read(ref frames) > 0 ? "Display verbunden" : "Display startet") + "\n" + sensors.Source + " " + (sensors.Fresh ? "aktiv" : "wartet") + "\nCPU-Temperatur: " + sensors.CpuTemperatureSource + "\nLüfter: " + (fanFresh ? (sensors.FanSource == "" ? "GPU" : sensors.FanSource) : "warte auf Messwerte");
             if (lastError != "") { Log.Write("RECOVERED"); lastError = ""; }
             if ((DateTime.Now - lastLog).TotalSeconds >= 5) { lastLog = DateTime.Now; File.WriteAllText(Path.Combine(Log.Root, "status.txt"), DateTime.Now.ToString("s") + " USB " + frames + " Frames | " + info.Replace("\n", " | ") + " | CPU=" + Value(sensors, 0x80, "CPU temperature", "°C") + " GPU=" + Value(sensors, 0, "GPU temperature", "°C") + " | Sample=" + sensors.SampleSequence + "@" + sensors.SampleTicks); bmp.Save(Path.Combine(Log.Root, "live-preview.png"), ImageFormat.Png); }
             var display = bmp; bmp = null; if (!closing) BeginInvoke((Action)(() => { if (closing) { display.Dispose(); return; } var old = picture.Image; picture.Image = display; if (old != null) old.Dispose(); status.Text = info; })); else display.Dispose();

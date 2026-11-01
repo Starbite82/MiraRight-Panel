@@ -13,6 +13,7 @@ public sealed class FanSample
     public long Ticks { get; init; }
     public List<FanReading> Fans { get; init; } = new(); public float? CpuTemperature { get; init; }
     public string Error { get; init; } = "";
+    public string Source { get; init; } = "";
 }
 // No Fan Control implementation is redistributed. Only the installed read-only IPC client is loaded.
 public sealed class FanControlSource
@@ -46,7 +47,7 @@ public sealed class FanControlSource
             }
             var preferred = cpu.Where(t => t.Name.Contains("Tctl", StringComparison.OrdinalIgnoreCase) || t.Name.Contains("Package", StringComparison.OrdinalIgnoreCase)).ToArray();
             float? temperature = preferred.Length > 0 ? preferred.Max(t => t.Value) : cpu.Count > 0 ? cpu.Max(t => t.Value) : null;
-            return new FanSample { Ticks = DateTime.UtcNow.Ticks, Fans = rows, CpuTemperature = temperature };
+            return new FanSample { Ticks = DateTime.UtcNow.Ticks, Fans = rows, CpuTemperature = temperature, Source = "Fan Control" };
         }
         catch (Exception e) { sensorClient = null; controlClient = null; return new FanSample { Error = (e is TargetInvocationException ? e.InnerException?.Message : e.Message) ?? "Fan Control unavailable" }; }
     }
