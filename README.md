@@ -2,9 +2,47 @@
 
 [Impressum / Anbieter und Kontakt](IMPRINT.txt)
 
-Gemeinsame Windows-Anwendung für **Thermalright 320 × 320** und **MiraBox D92 1920 × 462**.
-Beide Displays laufen gleichzeitig mit unabhängigen USB-Verbindungen und Einstellungen.
-Diese Entwicklung basiert auf AIO Display; die bisherigen Einzelprogramme bleiben als Backups erhalten.
+## Wofür ist das Programm?
+
+**AIO Unified Panel zeigt PC-Messwerte auf kleinen USB-Hardwaredisplays an.**
+Dazu gehören CPU-/GPU-Auslastung und Temperaturen, RAM-/VRAM-Belegung, Lüfterdrehzahlen
+und auf dem MiraBox-Layout FPS/Frame Time der aktuell aktiven Anwendung. Verfügbare
+Leistungs- und Temperatursensoren lassen sich gezielt auswählen.
+
+Unterstützt werden das getestete **Thermalright-LCD mit 320 × 320 Pixeln** und das
+**MiraBox D92 mit 1920 × 462 Pixeln**. Du kannst eines der Geräte oder beide gleichzeitig
+verwenden. Jedes Display bekommt eigene Einstellungen. Das Programm ist kein allgemeiner
+Treiber für beliebige USB-Bildschirme und steuert weder Lüfter noch Übertaktung.
+
+Die Anzeige läuft ohne MiraBox Craft oder Thermalright TRCC. LibreHardwareMonitor ist
+enthalten; MSI Afterburner ist eine optionale alternative Sensorquelle. Die lokale
+Anwendung benötigt weder Anmeldung noch Cloudkonto und lädt keine Messwerte hoch.
+
+## Projektstatus und Download
+
+**Entwicklungsvorschau 2.0:** Die gemeinsame Version liegt derzeit im Branch
+`feat/dual-display`. Das Repository ist noch privat; externe Nutzer ohne Freigabe können
+es nicht sehen. Die Standardansicht `main` enthält noch die bisherige Einzelversion.
+Ein öffentlicher Download der gemeinsamen Version ist noch nicht veröffentlicht.
+
+Für die spätere Veröffentlichung gehört das **Windows-x64-ZIP der gemeinsamen Version**
+in einen eindeutig bezeichneten [GitHub-Release](https://github.com/Starbite82/AIO-Display/releases).
+Die GitHub-Schaltfläche „Code → Download ZIP“ liefert Quellcode und ist kein fertiges Windows-Programm.
+
+## Schnellstart für Nutzer
+
+1. Das passende Windows-x64-Programmpaket vollständig in einen beschreibbaren Ordner entpacken.
+2. Frühere Einzelprogramme sowie MiraBox Craft / Thermalright TRCC beenden.
+3. **`AIO-Unified-Panel.cmd`** öffnen. Die .NET-Laufzeit und Sensorbibliotheken sind enthalten.
+4. Im Reiter **Thermalright** bzw. **MiraBox D92** die angeschlossenen Displays aktivieren;
+   den Reiter eines nicht vorhandenen Geräts deaktivieren.
+5. Design, Drehung, Sensorquelle und gewünschte Raten pro Gerät einstellen. Änderungen werden gespeichert.
+
+Für einen Blick auf die Oberfläche ohne USB-Ausgabe **`AIO-Display-Vorschau.cmd`** verwenden.
+Diese Vorschau fordert keine Administratorrechte an. Fehlende Sensorwerte erscheinen als `—`.
+
+Die ausführliche [deutsche Anleitung](LIESMICH.txt) erklärt Einrichtung, Sensorrechte,
+Autostart, Updates, Backups und Fehlerhilfe. [Getestete Hardware und Prüfungen](docs/DUAL-DISPLAY-VALIDATION-2026-11-03.md).
 
 ## Gemeinsam und getrennt
 
