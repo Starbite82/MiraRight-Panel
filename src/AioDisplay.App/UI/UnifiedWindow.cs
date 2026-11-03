@@ -12,8 +12,8 @@ public sealed class UnifiedWindow : Form {
  public UnifiedWindow(bool preview,bool minimized,bool verification=false){
   previewOnly=preview;verify=verification;suppressShow=minimized;settings=DisplaySettings.Load();if(!preview)settings.Save();
   Text="AIO Unified Panel · Thermalright + MiraBox";Icon=AppBrand.Icon;ClientSize=new Size(1180,800);MinimumSize=new Size(1000,700);BackColor=UiTheme.Surface;ForeColor=UiTheme.Foreground;Font=new Font("Segoe UI",10);StartPosition=FormStartPosition.CenterScreen;ShowInTaskbar=!minimized;
-  Controls.Add(tabs);Controls.Add(shared);AddDisplay("Thermalright");AddDisplay("MiraBox");AddGeneral();
-  var menu=new ContextMenuStrip();menu.Items.Add("Einstellungen öffnen",null,(_,_)=>PostOpen());menu.Items.Add("Beenden",null,(_,_)=>PostExit());
+  Controls.Add(tabs);var header=new Panel{Dock=DockStyle.Top,Height=38};Controls.Add(header);shared.Dock=DockStyle.Fill;header.Controls.Add(shared);var imprint=new LinkLabel{Text="Impressum",Dock=DockStyle.Right,Width=110,TextAlign=ContentAlignment.MiddleCenter,LinkColor=Color.FromArgb(78,216,233),ActiveLinkColor=Color.White};header.Controls.Add(imprint);imprint.LinkClicked+=(_,_)=>{using var dialog=new AboutWindow(true);dialog.ShowDialog(this);};AddDisplay("Thermalright");AddDisplay("MiraBox");AddGeneral();
+  var menu=new ContextMenuStrip();menu.Items.Add("Einstellungen öffnen",null,(_,_)=>PostOpen());menu.Items.Add("Impressum",null,(_,_)=>{using var dialog=new AboutWindow(true);dialog.ShowDialog(this);});menu.Items.Add("Beenden",null,(_,_)=>PostExit());
   tray.Icon=Icon;tray.Text="AIO Unified Panel";tray.ContextMenuStrip=menu;tray.Visible=true;tray.DoubleClick+=(_,_)=>PostOpen();UiTheme.Apply(this,menu);
   Resize+=(_,_)=>{if(WindowState==FormWindowState.Minimized){Hide();ShowInTaskbar=false;}};
   engine=new(()=>settings,previewOnly);refresh.Tick+=(_,_)=>UpdatePreview();
