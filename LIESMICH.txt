@@ -11,20 +11,21 @@ UNTERSTÜTZTE HARDWARE
 Windows x64 und eines oder beide dieser getesteten Geräte:
 - Thermalright-LCD, 320 x 320 Pixel, USB 87AD:70DB, Handshake PM32/SUB1.
   Der vorhandene passende WinUSB-Treiber muss eingerichtet sein.
-- MiraBox D92, 1920 x 462 Pixel, USB 5548:1011. Windows-HID-Treiber.
+- MiraBox D92 / 9,2-Zoll Universal Screen, 1920 x 462 Pixel, USB 5548:1011. Windows-HID-Treiber.
   2100:0006 ist zusätzlich als D92-Protokollvariante berücksichtigt, hier nicht physisch bestätigt.
+Thermalright Frozen Warframe 360: In dieser AIO-Baureihe kommen unterschiedliche
+LCD-Controller vor. Prüfe die USB-Kennung im Geräte-Manager; der Modellname allein
+genügt nicht. Unterstützt ist der oben angegebene 320-x-320-Controller.
 Andere Modellnamen, Controller und Firmware sind nicht pauschal kompatibel.
 Das Programm installiert oder ersetzt keine USB-Treiber und schreibt keine Firmware/Bootlogos.
 
 DOWNLOAD UND ERSTER START
 Verwende das fertige Windows-x64-ZIP der gemeinsamen Version aus dem zugehörigen Release.
 „Code / Download ZIP“ auf GitHub ist nur der Quellcode, kein fertiges Programm.
-Aktuell ist Version 2.0 eine Entwicklungsvorschau im privaten Entwicklungsbranch;
-ein öffentlicher gemeinsamer Release steht noch aus.
 
 1. ZIP vollständig in einen dauerhaften, beschreibbaren Ordner entpacken.
-2. Frühere AIO-/FlexPanel-Einzelprogramme im Tray vollständig beenden.
-   Auch MiraBox Craft und Thermalright TRCC vorher selbst beenden.
+2. Andere Programme mit Zugriff auf dasselbe Display vollständig beenden,
+   insbesondere MiraBox Craft und Thermalright TRCC.
 3. AIO-Unified-Panel.cmd öffnen. Keine separate .NET-/LHM-Installation erforderlich.
 4. Pro Display dessen Reiter öffnen und „Display aktiv“ einschalten.
    Nicht angeschlossene Geräte deaktivieren. Du kannst nur eines oder beide verwenden.
@@ -36,7 +37,7 @@ sendet aber keine USB-Bilder und fordert keine Administratorrechte an.
 Die Vorschau darf neben einer normalen Instanz laufen.
 
 EINSTELLUNGEN PRO DISPLAY
-Thermalright behält seine AIO-Ansichten und Drehung 0/90/180/270 Grad.
+Thermalright bietet sieben Ansichten und Drehung 0/90/180/270 Grad.
 MiraBox bietet klassisches FlexPanel- oder Thermalright-Panorama-Design,
 Bereiche/Reihenfolge, Helligkeit und Drehung 0/180 Grad im nativen breiten Format.
 Die Vorschau bleibt aufrecht; nur die Ausgabe auf dem Gerät wird gedreht.
