@@ -8,7 +8,7 @@ public static partial class Renderer {
  public static Bitmap Draw(Snapshot s,PanelConfig c) {
   if(c.Design=="Thermalright")return DrawThermalright(s,c);
   var b=new Bitmap(1920,462);using var g=Graphics.FromImage(b);g.SmoothingMode=SmoothingMode.AntiAlias;g.TextRenderingHint=System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;g.Clear(Back);
-  Color accent=ColorTranslator.FromHtml(c.Accent);Text(g,"FLEX / PANEL",28,15,21,accent,true);Text(g,s.SourceName.ToUpperInvariant(),246,18,16,Muted);Text(g,DateTime.Now.ToString("HH:mm:ss"),1752,15,21,White);
+  Color accent=ColorTranslator.FromHtml(c.Accent);Text(g,"MIRARIGHT PANEL",28,15,21,accent,true);Text(g,s.SourceName.ToUpperInvariant(),350,18,16,Muted);Text(g,DateTime.Now.ToString("HH:mm:ss"),1752,15,21,White);
   int count=c.Cards.Length;float width=(1920-40f-(count-1)*12)/count;
   for(int i=0;i<count;i++) {
    float x=20+i*(width+12);using var brush=new SolidBrush(Surface);g.FillRectangle(brush,x,57,width,379);using var pen=new Pen(accent,3);g.DrawLine(pen,x+18,78,x+54,78);

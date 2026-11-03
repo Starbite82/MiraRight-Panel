@@ -11,10 +11,10 @@ public sealed class UnifiedWindow : Form {
  readonly System.Windows.Forms.Timer refresh=new(){Interval=250};readonly NotifyIcon tray=new();bool closing,exitRequested,suppressShow;DateTime lastReport;
  public UnifiedWindow(bool preview,bool minimized,bool verification=false){
   previewOnly=preview;verify=verification;suppressShow=minimized;settings=DisplaySettings.Load();if(!preview)settings.Save();
-  Text="FlexPanel – Thermalright & MiraBox Hardware Monitor";Icon=AppBrand.Icon;ClientSize=new Size(1180,800);MinimumSize=new Size(1000,700);BackColor=UiTheme.Surface;ForeColor=UiTheme.Foreground;Font=new Font("Segoe UI",10);StartPosition=FormStartPosition.CenterScreen;ShowInTaskbar=!minimized;
+  Text="MiraRight Panel — Hardware Monitor";Icon=AppBrand.Icon;ClientSize=new Size(1180,800);MinimumSize=new Size(1000,700);BackColor=UiTheme.Surface;ForeColor=UiTheme.Foreground;Font=new Font("Segoe UI",10);StartPosition=FormStartPosition.CenterScreen;ShowInTaskbar=!minimized;
   Controls.Add(tabs);var header=new Panel{Dock=DockStyle.Top,Height=38};Controls.Add(header);shared.Dock=DockStyle.Fill;header.Controls.Add(shared);var imprint=new LinkLabel{Text="Impressum",Dock=DockStyle.Right,Width=110,TextAlign=ContentAlignment.MiddleCenter,LinkColor=Color.FromArgb(78,216,233),ActiveLinkColor=Color.White};header.Controls.Add(imprint);imprint.LinkClicked+=(_,_)=>{using var dialog=new AboutWindow(true);dialog.ShowDialog(this);};AddDisplay("Thermalright");AddDisplay("MiraBox");AddGeneral();
   var menu=new ContextMenuStrip();menu.Items.Add("Einstellungen öffnen",null,(_,_)=>PostOpen());menu.Items.Add("Impressum",null,(_,_)=>{using var dialog=new AboutWindow(true);dialog.ShowDialog(this);});menu.Items.Add("Beenden",null,(_,_)=>PostExit());
-  tray.Icon=Icon;tray.Text="FlexPanel";tray.ContextMenuStrip=menu;tray.Visible=true;tray.DoubleClick+=(_,_)=>PostOpen();UiTheme.Apply(this,menu);
+  tray.Icon=Icon;tray.Text="MiraRight Panel";tray.ContextMenuStrip=menu;tray.Visible=true;tray.DoubleClick+=(_,_)=>PostOpen();UiTheme.Apply(this,menu);
   Resize+=(_,_)=>{if(WindowState==FormWindowState.Minimized){Hide();ShowInTaskbar=false;}};
   engine=new(()=>settings,previewOnly);refresh.Tick+=(_,_)=>UpdatePreview();
   Shown+=async(_,_)=>{if(verify){await Task.Delay(9000);if(!closing)CaptureVerification();}};
@@ -35,7 +35,7 @@ public sealed class UnifiedWindow : Form {
   void Title(string text)=>flow.Controls.Add(new Label{Text=text,AutoSize=true,Margin=new Padding(3,9,3,2)});
   var enabled=new CheckBox{Text="Display aktiv",AutoSize=true,Checked=initial.Enabled};flow.Controls.Add(enabled);enabled.CheckedChanged+=(_,_)=>Change(kind,p=>p.Enabled=enabled.Checked);
   Title("Design / Ansicht");
-  int[] views=[6,1,0,2,3,4,5];object[] designs=kind=="Thermalright"?["Dashboard mit CPU und Lüftern","CPU-Detailansicht","Vier CPU-Varianten","Cyan nach Rot","Kompakte Balken","Farbsegmente","Schmale Linien"]:["FlexPanel · klassisch","Thermalright · Panorama"];
+  int[] views=[6,1,0,2,3,4,5];object[] designs=kind=="Thermalright"?["Dashboard mit CPU und Lüftern","CPU-Detailansicht","Vier CPU-Varianten","Cyan nach Rot","Kompakte Balken","Farbsegmente","Schmale Linien"]:["Klassisches Dashboard","Thermalright · Panorama"];
   var design=SelectBox(designs,kind=="Thermalright"?Array.IndexOf(views,initial.AioView):initial.MiraBox.Design=="Thermalright"?1:0);flow.Controls.Add(design);
   design.SelectionChangeCommitted+=(_,_)=>Change(kind,p=>{if(kind=="Thermalright")p.AioView=views[design.SelectedIndex];else p.MiraBox.Design=design.SelectedIndex==1?"Thermalright":"Classic";});
   Title("Drehung · nur auf dem Display");int[] angles=kind=="Thermalright"?[0,90,180,270]:[0,180];var rotation=SelectBox(angles.Select(v=>(object)(v+"°")).ToArray(),Array.IndexOf(angles,initial.Rotation));flow.Controls.Add(rotation);rotation.SelectionChangeCommitted+=(_,_)=>Change(kind,p=>p.Rotation=angles[rotation.SelectedIndex]);

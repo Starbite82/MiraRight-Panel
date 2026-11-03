@@ -1,5 +1,13 @@
 # Änderungen
 
+## 2.0.0-preview.2 — MiraRight Panel
+
+- Gemeinsame Anwendung als „MiraRight Panel — Hardware Monitor“ benannt.
+- Vollständige Modellnamen und geprüfte USB-Controller in der Anleitung.
+- Vorschauen der Oberfläche, des Thermalright-Dashboards und beider MiraBox-Designs.
+- Deutsche Nutzungs-, Gewährleistungs- und Haftungshinweise im Programm und Download.
+- Hinweise für Fehlermeldungen, Beiträge und vertrauliche Sicherheitsmeldungen.
+
 ## 2.0.0-preview.1 — Zusammenführung
 
 - Thermalright und MiraBox gleichzeitig in einer AIO-Anwendung.

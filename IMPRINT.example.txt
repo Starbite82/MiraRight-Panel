@@ -12,7 +12,7 @@ Kontakt
 E-Mail: [freigegebene Kontaktadresse]
 
 Projekt
-https://github.com/Starbite82/FlexPanel-Thermalright-MiraBox
+https://github.com/Starbite82/MiraRight-Panel
 
 Diese Vorlage ist für einen Anbieter als natürliche Person vorgesehen.
 Geschäftliche, registerpflichtige oder erlaubnispflichtige Angebote können

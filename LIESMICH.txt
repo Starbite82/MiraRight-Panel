@@ -1,4 +1,4 @@
-FLEXPANEL — THERMALRIGHT & MIRABOX HARDWARE MONITOR
+MIRARIGHT PANEL — HARDWARE MONITOR
 ANLEITUNG
 
 ZWECK
@@ -27,19 +27,19 @@ Verwende das fertige Windows-x64-ZIP der gemeinsamen Version aus dem zugehörige
 1. ZIP vollständig in einen dauerhaften, beschreibbaren Ordner entpacken.
 2. Andere Programme mit Zugriff auf dasselbe Display vollständig beenden,
    insbesondere MiraBox Craft und Thermalright TRCC.
-3. Start-FlexPanel.cmd öffnen. Keine separate .NET-/LHM-Installation erforderlich.
+3. Start-MiraRight-Panel.cmd öffnen. Keine separate .NET-/LHM-Installation erforderlich.
 4. Pro Display dessen Reiter öffnen und „Display aktiv“ einschalten.
    Nicht angeschlossene Geräte deaktivieren. Du kannst nur eines oder beide verwenden.
 5. Einstellungen werden sofort in displays.json gespeichert.
 
 VORSCHAU OHNE DISPLAYZUGRIFF
-FlexPanel-Vorschau.cmd öffnet beide Vorschauen mit realen Sensorwerten,
+MiraRight-Panel-Vorschau.cmd öffnet beide Vorschauen mit realen Sensorwerten,
 sendet aber keine USB-Bilder und fordert keine Administratorrechte an.
 Die Vorschau darf neben einer normalen Instanz laufen.
 
 EINSTELLUNGEN PRO DISPLAY
 Thermalright bietet sieben Ansichten und Drehung 0/90/180/270 Grad.
-MiraBox bietet klassisches FlexPanel- oder Thermalright-Panorama-Design,
+MiraBox bietet klassisches Dashboard- oder Thermalright-Panorama-Design,
 Bereiche/Reihenfolge, Helligkeit und Drehung 0/180 Grad im nativen breiten Format.
 Die Vorschau bleibt aufrecht; nur die Ausgabe auf dem Gerät wird gedreht.
 
@@ -85,7 +85,7 @@ den gemeinsamen Sensorprozess und die eigene PresentMon-Sitzung.
 Der gemeinsame Autostart ist eine eigene Option unter „Gemeinsame Sensoren & Start“.
 Vor dem dauerhaften Wechsel die alten Einzelprogramm-Autostarts deaktivieren, damit
 sie die Geräte nicht bei der nächsten Anmeldung erneut belegen. Die gemeinsame Option
-setzt den Benutzereintrag „FlexPanel“ im Windows-Autostart; sie installiert keinen Dienst
+setzt den Benutzereintrag „MiraRight Panel“ im Windows-Autostart; sie installiert keinen Dienst
 und beseitigt nicht die UAC-Anforderung eines aktivierten Admin-Sensorprozesses.
 
 UPDATE, ÜBERNAHME UND BACKUP
@@ -116,3 +116,13 @@ IMPRESSUM, LIZENZEN UND QUELLEN
 Anbieter und Kontakt: IMPRINT.txt; auch in README und unter „Info & Impressum“ verlinkt.
 Projektlizenzen: LICENSE / LICENSE-MAP.txt. Fremde Lizenztexte und passende offene Quellen
 liegen im Paket. SHA256SUMS.txt enthält Datei-Prüfsummen; neben dem ZIP liegt dessen Prüfsumme.
+
+NUTZUNG, GEWÄHRLEISTUNG UND HAFTUNG
+Kostenloses Open-Source-Hobbyprojekt, bereitgestellt im vorhandenen Zustand.
+Keine Garantie für Fehlerfreiheit, Messgenauigkeit oder Kompatibilität.
+Gewährleistung und Haftung sind nach der jeweiligen Lizenz im gesetzlich zulässigen
+Umfang ausgeschlossen oder beschränkt. Zwingende gesetzliche Haftung bleibt bestehen,
+insbesondere bei Vorsatz, grober Fahrlässigkeit und schuldhaft verursachten Personenschäden.
+Der vollständige Hinweis steht in NUTZUNG-UND-HAFTUNG.txt und im Programm unter
+„Info & Impressum → Nutzung & Haftung“. Die unveränderten Lizenztexte sind maßgeblich.
+Die Hinweise schaffen keine zusätzlichen Einschränkungen der Open-Source-Rechte.

@@ -16,7 +16,7 @@ jobs:
         run: ./tools/package.ps1 -OutputDirectory ./artifacts
       - uses: actions/upload-artifact@v4
         with:
-          name: FlexPanel-Thermalright-MiraBox-windows-x64
+          name: MiraRight-Panel-windows-x64
           path: artifacts/*.zip
           retention-days: 7
           compression-level: 0

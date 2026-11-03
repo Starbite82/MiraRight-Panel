@@ -1,12 +1,12 @@
-# FlexPanel – Thermalright & MiraBox Hardware Monitor
+# MiraRight Panel — Hardware Monitor
 
 **Hardware-Monitoring für Thermalright FROZEN WARFRAME 360 LCD und MiraBox D92 9.2-inch Universal Screen for PC.**
 
-[Download](#download) · [Anleitung](LIESMICH.txt) · [Unterstützte Modelle](#unterstützte-displays) · [Impressum](IMPRINT.txt)
+[Vorschau](#vorschau) · [Download](#download) · [Anleitung](LIESMICH.txt) · [Unterstützte Modelle](#unterstützte-displays) · [Nutzung & Haftung](NUTZUNG-UND-HAFTUNG.txt) · [Impressum](IMPRINT.txt)
 
 ## Wofür ist das Programm?
 
-**FlexPanel zeigt PC-Messwerte auf kleinen USB-Hardwaredisplays an.**
+**MiraRight Panel zeigt PC-Messwerte auf kleinen USB-Hardwaredisplays an.**
 Dazu gehören CPU-/GPU-Auslastung und Temperaturen, RAM-/VRAM-Belegung, Lüfterdrehzahlen
 und auf dem MiraBox-Layout FPS/Frame Time der aktuell aktiven Anwendung. Verfügbare
 Leistungs- und Temperatursensoren lassen sich gezielt auswählen.
@@ -22,9 +22,44 @@ Anwendung benötigt weder Anmeldung noch Cloudkonto und lädt keine Messwerte ho
 
 Unabhängiges Community-Projekt; kein offizielles Produkt von Thermalright oder MiraBox.
 
+## Vorschau
+
+Die Bilder zeigen die echte Windows-Oberfläche und die von der Anwendung gerenderten
+Display-Layouts. Es sind Software-Vorschauen, keine Fotos der Geräte. Die abgebildeten
+Messwerte sind feste Beispieldaten für die Dokumentation; verfügbare Sensoren, Werte,
+Lüfter und Schriftplatz hängen von deiner Hardware und deinen Einstellungen ab.
+`—` bedeutet, dass kein aktueller Messwert vorliegt. Bilder anklicken, um sie in voller Größe zu sehen.
+
+### Thermalright FROZEN WARFRAME 360
+
+Dashboard mit CPU-Gesamtlast, einzelnen CPU-Threads, Temperaturen, Speicher und Lüftern
+auf dem unterstützten 320-×-320-Controller. Die Software-Vorschau bleibt bei gedrehter LCD-Ausgabe aufrecht.
+
+![Thermalright FROZEN WARFRAME 360: Dashboard in nativer Auflösung](docs/images/thermalright-dashboard.png)
+
+Eigene Einstellungen für Ansicht, Drehung, Displayrate, Messwertübernahme,
+Balkenglättung, Sensorquelle und einzelne Hardware-Sensoren:
+
+![MiraRight Panel: Einstellungen für Thermalright FROZEN WARFRAME 360](docs/images/settings-thermalright.png)
+
+### MiraBox D92 9.2-inch Universal Screen for PC
+
+**Klassisches Dashboard**, 1920 × 462 Pixel, mit CPU-Threads, GPU, RAM/VRAM,
+FPS/Frame Time und Lüftern. Bereiche und Reihenfolge sind einstellbar.
+
+![MiraBox D92 9.2-inch Universal Screen for PC: klassisches Dashboard](docs/images/mirabox-classic.png)
+
+**Thermalright-Panorama-Design** als alternative Ansicht auf demselben MiraBox-Display:
+
+![MiraBox D92 9.2-inch Universal Screen for PC: Panorama-Design](docs/images/mirabox-panorama.png)
+
+MiraBox bekommt ein eigenes Profil, unabhängig von einem gleichzeitig betriebenen Thermalright-LCD:
+
+![MiraRight Panel: Einstellungen für MiraBox D92 9.2-inch Universal Screen for PC](docs/images/settings-mirabox.png)
+
 ## Download
 
-Lade das **Windows-x64-Programmpaket** unter [Releases](https://github.com/Starbite82/FlexPanel-Thermalright-MiraBox/releases)
+Lade das **Windows-x64-Programmpaket** unter [Releases](https://github.com/Starbite82/MiraRight-Panel/releases)
 herunter und entpacke das ZIP vollständig. .NET-Laufzeit, Sensorbibliothek und PresentMon sind enthalten.
 Die GitHub-Schaltfläche „Code → Download ZIP“ liefert den Quellcode für Entwickler.
 
@@ -32,12 +67,12 @@ Die GitHub-Schaltfläche „Code → Download ZIP“ liefert den Quellcode für 
 
 1. Das passende Windows-x64-Programmpaket vollständig in einen beschreibbaren Ordner entpacken.
 2. Andere Programme beenden, die auf dasselbe LCD zugreifen, insbesondere MiraBox Craft oder Thermalright TRCC.
-3. **`Start-FlexPanel.cmd`** öffnen. Die .NET-Laufzeit und Sensorbibliotheken sind enthalten.
+3. **`Start-MiraRight-Panel.cmd`** öffnen. Die .NET-Laufzeit und Sensorbibliotheken sind enthalten.
 4. Im Reiter **Thermalright** bzw. **MiraBox D92** die angeschlossenen Displays aktivieren;
    den Reiter eines nicht vorhandenen Geräts deaktivieren.
 5. Design, Drehung, Sensorquelle und gewünschte Raten pro Gerät einstellen. Änderungen werden gespeichert.
 
-Für einen Blick auf die Oberfläche ohne USB-Ausgabe **`FlexPanel-Vorschau.cmd`** verwenden.
+Für einen Blick auf die Oberfläche ohne USB-Ausgabe **`MiraRight-Panel-Vorschau.cmd`** verwenden.
 Diese Vorschau fordert keine Administratorrechte an. Fehlende Sensorwerte erscheinen als `—`.
 
 Die ausführliche [deutsche Anleitung](LIESMICH.txt) erklärt Einrichtung, Sensorrechte,
@@ -85,6 +120,24 @@ Einstellungen werden in `displays.json` gespeichert. Für ein Update die Anwendu
 im Tray beenden, den bisherigen Ordner sichern und die Konfiguration in den neuen Ordner übernehmen.
 Einrichtung, Autostart und die optionale Übernahme älterer Konfigurationen stehen in der Anleitung.
 
+## Nutzung, Gewährleistung und Haftung
+
+Kostenloses Open-Source-Hobbyprojekt, bereitgestellt im vorhandenen Zustand.
+Eine Garantie für Fehlerfreiheit, Messgenauigkeit oder Kompatibilität wird nicht übernommen.
+Gewährleistung und Haftung sind nach der jeweiligen Lizenz im gesetzlich zulässigen
+Umfang ausgeschlossen oder beschränkt. Zwingende gesetzliche Haftung bleibt bestehen,
+insbesondere bei Vorsatz, grober Fahrlässigkeit und schuldhaft verursachten Personenschäden.
+Die vollständigen [Nutzungs- und Haftungshinweise](NUTZUNG-UND-HAFTUNG.txt) liegen auch
+jedem Programmpaket bei und sind unter **Info & Impressum → Nutzung & Haftung** lesbar.
+Die unveränderten Lizenztexte bleiben maßgeblich; zusätzliche Nutzungseinschränkungen gibt es nicht.
+
+## Hilfe und Mitarbeit
+
+Für Fehlerberichte bitte Programmversion, vollständigen Display-Modellnamen, USB-Kennung,
+Sensorquelle und Schritte zum Nachstellen angeben. Anleitung: [CONTRIBUTING.md](CONTRIBUTING.md).
+Sicherheitslücken bitte vertraulich über den in [SECURITY.md](SECURITY.md) beschriebenen Weg melden.
+Support und Weiterentwicklung erfolgen nach Verfügbarkeit.
+
 ## Bauen und testen
 
 Windows x64, Git und SDK aus `global.json`:
@@ -108,3 +161,7 @@ Weitere Geräte/Firmware sind nicht pauschal bestätigt. USB-Bilder/s sind Über
 keine zugesicherte physische LCD-Bildwiederholrate. Die App ist nicht codesigniert.
 
 Details für Entwickler und bisherige Hardwareprüfungen stehen unter `docs/`.
+
+Die Dokumentationsbilder lassen sich unter Windows mit `./tools/screenshots.ps1`
+neu erzeugen. Das Werkzeug verwendet die echte Oberfläche und die echten Renderer
+mit Beispieldaten; es liest keine Hardware aus und schreibt nicht auf USB-Displays.

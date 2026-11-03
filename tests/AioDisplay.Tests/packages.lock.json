@@ -172,13 +172,6 @@
       "aiodisplay.contracts": {
         "type": "Project"
       },
-      "FlexPanel": {
-        "type": "Project",
-        "dependencies": {
-          "AioDisplay.Contracts": "[2.0.0-preview.1, )",
-          "FlexPanel.Core": "[2.0.0-preview.1, )"
-        }
-      },
       "flexpanel.core": {
         "type": "Project",
         "dependencies": {
@@ -186,11 +179,18 @@
           "LibreHardwareMonitorLib": "[0.9.6, )"
         }
       },
-      "FlexPanel.SensorHost": {
+      "MiraRightPanel": {
         "type": "Project",
         "dependencies": {
-          "AioDisplay.Contracts": "[2.0.0-preview.1, )",
-          "FlexPanel.Core": "[2.0.0-preview.1, )",
+          "AioDisplay.Contracts": "[2.0.0-preview.2, )",
+          "FlexPanel.Core": "[2.0.0-preview.2, )"
+        }
+      },
+      "MiraRightPanel.SensorHost": {
+        "type": "Project",
+        "dependencies": {
+          "AioDisplay.Contracts": "[2.0.0-preview.2, )",
+          "FlexPanel.Core": "[2.0.0-preview.2, )",
           "LibreHardwareMonitorLib": "[0.9.6, )"
         }
       }

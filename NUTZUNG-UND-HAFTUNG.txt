@@ -1,0 +1,62 @@
+Nutzung, Gewährleistung und Haftung
+MiraRight Panel — Hardware Monitor
+
+1. Zweck und Grenzen
+MiraRight Panel ist ein kostenloses, quelloffenes Hobbyprojekt zur Anzeige von
+PC-Messwerten auf den ausdrücklich unterstützten USB-Display-Controllern.
+Es steuert keine Lüfterkurven, Übertaktung oder Schutzabschaltung. Die Anzeige
+ersetzt weder die Schutzfunktionen der Hardware noch eine sicherheitsrelevante
+Überwachung. Fehlende, verzögerte oder unzutreffende Messwerte sind möglich.
+Die Verfügbarkeit einzelner Sensoren hängt von Hardware, Treibern, Sensorquelle
+und Zugriffsrechten ab. Eine zugesicherte Kompatibilität mit anderen Geräten,
+Firmwareständen oder zukünftigen Windows-Versionen besteht nicht.
+
+2. Keine Garantie und Gewährleistung nur im gesetzlichen Umfang
+Die Software wird im vorhandenen Zustand bereitgestellt. Es wird keine
+Beschaffenheits-, Verfügbarkeits- oder Funktionsgarantie übernommen und keine
+Fehlerfreiheit, ununterbrochene Funktion oder Eignung für einen bestimmten
+Zweck zugesichert. Gewährleistung wird im gesetzlich zulässigen Umfang nach
+den Regelungen der jeweils anwendbaren Open-Source-Lizenz ausgeschlossen.
+Zwingende gesetzliche Rechte bleiben unberührt.
+
+3. Haftung
+Die Haftung ist nach Maßgabe der jeweils anwendbaren Lizenz ausgeschlossen
+oder beschränkt, soweit das geltende Recht dies zulässt. Dies betrifft auch
+Folgen unrichtiger Messwerte, Datenverlust und Betriebsunterbrechungen,
+soweit ein Haftungsausschluss hierfür gesetzlich zulässig ist.
+
+Eine gesetzlich zwingende Haftung bleibt bestehen. Insbesondere wird die
+Haftung für Vorsatz, grobe Fahrlässigkeit, schuldhaft verursachte Verletzungen
+von Leben, Körper oder Gesundheit, arglistig verschwiegene Mängel, ausdrücklich
+übernommene Garantien und zwingende Ansprüche nach dem Produkthaftungsrecht
+nicht ausgeschlossen oder beschränkt. Bei leicht fahrlässiger Verletzung
+wesentlicher Vertragspflichten bleibt die Haftung für den vertragstypischen,
+vorhersehbaren Schaden bestehen, soweit gesetzlich vorgeschrieben.
+
+4. Lizenzen und Drittanbieter
+Der eigene Anwendungscode steht unter GPL-3.0-only. Für den eigenständigen
+Sensorprozess, den Datenvertrag und FlexPanel.Core gelten die im Projekt
+ausgewiesenen MIT-Lizenzen; Drittanbieter behalten ihre eigenen Lizenzregeln.
+Maßgeblich sind die vollständigen Lizenztexte und deren gesetzlich zulässige
+Gewährleistungs- und Haftungsregelungen, insbesondere GPLv3 Abschnitte 15–17.
+Diese Erläuterung führt keine zusätzliche EULA, keine Nutzungseinschränkung
+und keinen Verzicht auf Rechte aus den Open-Source-Lizenzen ein.
+Siehe LICENSE, LICENSE-MAP.txt und die Lizenz-/Quellenordner im Download.
+
+MiraRight Panel ist ein unabhängiges Community-Projekt. Es besteht keine
+offizielle Verbindung zu Thermalright, MiraBox, MSI oder den Entwicklern
+der eingebundenen Bibliotheken. Hersteller- und Produktnamen benennen die
+jeweilige Kompatibilität oder Integration; Rechte daran verbleiben bei den
+jeweiligen Inhabern. Eine eigene Markenfreigabe wird damit nicht behauptet.
+
+5. Betrieb und Support
+Einstellungen vor Updates sichern und andere Anwendungen mit Zugriff auf
+dasselbe USB-Display beenden. Nur vertrauenswürdige Downloads verwenden.
+Sensorrechte nur aktivieren, wenn die zusätzlichen Messwerte benötigt werden.
+Support und Änderungen erfolgen nach Verfügbarkeit; eine bestimmte Reaktions-
+zeit oder dauerhafte Pflege wird nicht zugesichert. Kontakt: IMPRINT.txt.
+
+Rechtsquellen zum Nachlesen:
+https://www.gnu.org/licenses/gpl-3.0.html
+https://www.gesetze-im-internet.de/bgb/__276.html
+https://www.gesetze-im-internet.de/bgb/__309.html

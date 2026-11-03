@@ -1,4 +1,4 @@
-FLEXPANEL — LICENSE SCOPE
+MIRARIGHT PANEL — LICENSE SCOPE
 
 Unless an exception below applies, the project's own application code, assets,
 tests and build/packaging scripts are licensed under GPL-3.0-only. See LICENSE.

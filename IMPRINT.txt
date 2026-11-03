@@ -1,5 +1,5 @@
 Impressum
-FlexPanel – Thermalright & MiraBox Hardware Monitor
+MiraRight Panel — Hardware Monitor
 
 Anbieter / Projektverantwortlicher
 
@@ -14,4 +14,4 @@ E-Mail: info@mc-blub.de
 
 Projekt
 
-https://github.com/Starbite82/FlexPanel-Thermalright-MiraBox
+https://github.com/Starbite82/MiraRight-Panel

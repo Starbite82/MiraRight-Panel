@@ -6,7 +6,7 @@ public static partial class Renderer {
   var b=new Bitmap(1920,462);using var g=Graphics.FromImage(b);
   g.SmoothingMode=SmoothingMode.AntiAlias;g.TextRenderingHint=System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;g.Clear(Color.FromArgb(9,15,25));
   var cyan=Color.FromArgb(78,216,233);var purple=Color.FromArgb(177,155,255);
-  Text(g,"FLEX / THERMAL",24,12,21,cyan,true);Text(g,s.SourceName,290,16,16,Muted);Text(g,DateTime.Now.ToString("HH:mm:ss"),1752,12,21,White);
+  Text(g,"MIRARIGHT PANEL",24,12,21,cyan,true);Text(g,s.SourceName,350,16,16,Muted);Text(g,DateTime.Now.ToString("HH:mm:ss"),1752,12,21,White);
   float width=(1880f-(c.Cards.Length-1)*12)/c.Cards.Length;
   for(int i=0;i<c.Cards.Length;i++){
    string card=c.Cards[i];float x=20+i*(width+12);Color accent=card is "GPU" or "VRAM"?purple:cyan;
