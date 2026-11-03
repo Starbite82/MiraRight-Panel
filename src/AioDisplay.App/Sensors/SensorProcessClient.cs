@@ -43,6 +43,7 @@ public sealed class SensorProcessClient : IDisposable
     }
 
     public SensorSnapshot Latest => Volatile.Read(ref latest);
+    public int? ExitCode { get { lock(sync) { try { return child != null && child.HasExited ? child.ExitCode : null; } catch(InvalidOperationException) { return null; } catch(System.ComponentModel.Win32Exception) { return null; } } } }
 
     public void EnsureRunning(SensorOptions options)
     {

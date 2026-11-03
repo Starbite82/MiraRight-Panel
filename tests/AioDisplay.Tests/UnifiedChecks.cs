@@ -3,6 +3,21 @@ using System.Drawing;
 using System.Text.Json;
 
 static class UnifiedChecks {
+ public static void Live(string host,int seconds){
+  string old=SensorHub.HostPath;SensorHub.HostPath=host;
+  try{
+   var hub=new UnifiedSensorHub(new DisplaySettings{AdminSensors=false},false);
+   try{
+    var clock=System.Diagnostics.Stopwatch.StartNew();FlexPanel.HardwareBundle bundle=new();
+    while(clock.Elapsed.TotalSeconds<20){bundle=hub.Read();if(bundle.Libre.Count>0)break;Thread.Sleep(50);}
+    Check(bundle.Libre.Count>0&&hub.ProcessId.HasValue,"live shared hardware initialized");int pid=hub.ProcessId.Value;using var child=System.Diagnostics.Process.GetProcessById(pid);
+    int observations=0,stale=0;clock.Restart();while(clock.Elapsed.TotalSeconds<seconds){bundle=hub.Read();if(bundle.Libre.Count==0)stale++;Check(hub.ProcessId==pid,"single stable shared process");observations++;Thread.Sleep(80);}
+    Check(stale==0,"no stale shared snapshots");hub.Dispose();Check(child.WaitForExit(10000)&&hub.LastExitCode==0,"graceful sensor and PresentMon shutdown");
+    File.WriteAllText("unified-live-result.json",JsonSerializer.Serialize(new{Seconds=clock.Elapsed.TotalSeconds,Observations=observations,Stale=stale,Gpus=bundle.Libre.Count,OneProcess=true,GracefulExitCode=hub.LastExitCode},new JsonSerializerOptions{WriteIndented=true}));
+    Console.WriteLine("PASS: live common hardware, one stable process, source/GPU bundle and graceful shutdown");
+   }finally{hub.Dispose();}
+  }finally{SensorHub.HostPath=old;}
+ }
  static void Check(bool value,string name){if(!value)throw new Exception("Unified: "+name);}
  sealed class Output : IDisplayOutput {
   public int Count;public bool Fail;public ManualResetEventSlim Gate;

@@ -4,13 +4,14 @@ namespace AioDisplay.App;
 using System.Diagnostics;
 
 public sealed class UnifiedSensorHub : IDisposable {
- readonly SensorProcessClient client;readonly SensorOptions options;readonly EventWaitHandle stopSignal;long parsedSequence=-1;FlexPanel.HardwareBundle bundle=new();
+ readonly SensorProcessClient client;readonly SensorOptions options;readonly EventWaitHandle stopSignal;long parsedSequence=-1;FlexPanel.HardwareBundle bundle=new();bool disposed;
  public UnifiedSensorHub(DisplaySettings settings,bool allowElevation){
   client=new SensorProcessClient(SensorHub.HostPath,Log.Write,settings.AdminSensors&&allowElevation);
   string stopName="Local\\AioUnifiedSensorStop-"+Guid.NewGuid().ToString("N");stopSignal=new EventWaitHandle(false,EventResetMode.ManualReset,stopName);
   using var parent=Process.GetCurrentProcess();options=new(){Unified=true,IntervalMs=100,Provider=0,UseFanControl=false,FanConfigPath=settings.FanConfigPath,ParentId=parent.Id,ParentStartTicks=parent.StartTime.ToUniversalTime().Ticks,StopEvent=stopName};
  }
  public int? ProcessId=>client.ProcessId;
+ public int? LastExitCode {get;private set;}
  public FlexPanel.HardwareBundle Read(){
   client.EnsureRunning(options);var snapshot=client.Read();
   if(!snapshot.Fresh||snapshot.UnifiedJson.Length==0)return new();
@@ -18,8 +19,9 @@ public sealed class UnifiedSensorHub : IDisposable {
   return bundle;
  }
  public void Dispose(){
+  if(disposed)return;disposed=true;
   stopSignal.Set();try{if(client.ProcessId is int id){using var child=Process.GetProcessById(id);child.WaitForExit(7000);}}catch(ArgumentException){}catch(System.ComponentModel.Win32Exception){}
-  client.Dispose();stopSignal.Dispose();
+  LastExitCode=client.ExitCode;client.Dispose();stopSignal.Dispose();
  }
  public static SensorSnapshot ToAio(FlexPanel.Snapshot sample){
   var result=new SensorSnapshot{Fresh=(DateTime.UtcNow-sample.At).TotalSeconds<3&&sample.Sensors.Length>0,SampleTicks=sample.At.Ticks,SampleSequence=sample.At.Ticks,Source=sample.SourceName,GpuName=sample.GpuName,VramTotalMb=sample.VramTotal*1024,ReportedThreadCount=sample.CpuThreads.Length,FanSampleTicks=sample.At.Ticks,FanSource=sample.SourceName,Fans=sample.Fans.Select(f=>new FanReading{Id=f.Id,Name=f.Name,Rpm=f.Rpm}).ToList()};
