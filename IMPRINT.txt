@@ -1,5 +1,5 @@
 Impressum
-AIO Unified Panel
+FlexPanel – Thermalright & MiraBox Hardware Monitor
 
 Anbieter / Projektverantwortlicher
 
@@ -14,4 +14,4 @@ E-Mail: info@mc-blub.de
 
 Projekt
 
-https://github.com/Starbite82/AIO-Display
+https://github.com/Starbite82/FlexPanel-Thermalright-MiraBox

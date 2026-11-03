@@ -172,15 +172,7 @@
       "aiodisplay.contracts": {
         "type": "Project"
       },
-      "aiodisplay.sensorhost": {
-        "type": "Project",
-        "dependencies": {
-          "AioDisplay.Contracts": "[2.0.0-preview.1, )",
-          "FlexPanel.Core": "[2.0.0-preview.1, )",
-          "LibreHardwareMonitorLib": "[0.9.6, )"
-        }
-      },
-      "BLUB-Display": {
+      "FlexPanel": {
         "type": "Project",
         "dependencies": {
           "AioDisplay.Contracts": "[2.0.0-preview.1, )",
@@ -191,6 +183,14 @@
         "type": "Project",
         "dependencies": {
           "HidSharp": "[2.6.4, )",
+          "LibreHardwareMonitorLib": "[0.9.6, )"
+        }
+      },
+      "FlexPanel.SensorHost": {
+        "type": "Project",
+        "dependencies": {
+          "AioDisplay.Contracts": "[2.0.0-preview.1, )",
+          "FlexPanel.Core": "[2.0.0-preview.1, )",
           "LibreHardwareMonitorLib": "[0.9.6, )"
         }
       }

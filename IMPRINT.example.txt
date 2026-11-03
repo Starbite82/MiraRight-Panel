@@ -1,6 +1,6 @@
 VORLAGE — NICHT ALS VOLLSTÄNDIGES IMPRESSUM VERWENDEN
 
-Impressum — AIO Unified Panel
+Impressum — FlexPanel
 
 Anbieter / Projektverantwortlicher
 [Vollständiger Vor- und Nachname]
@@ -12,7 +12,7 @@ Kontakt
 E-Mail: [freigegebene Kontaktadresse]
 
 Projekt
-https://github.com/Starbite82/AIO-Display
+https://github.com/Starbite82/FlexPanel-Thermalright-MiraBox
 
 Diese Vorlage ist für einen Anbieter als natürliche Person vorgesehen.
 Geschäftliche, registerpflichtige oder erlaubnispflichtige Angebote können

@@ -12,11 +12,11 @@ $required=@(
  'licenses/microsoft.netcore.app.runtime.win-x64-10.0.13/LICENSE.TXT',
  'licenses/microsoft.netcore.app.runtime.win-x64-10.0.13/THIRD-PARTY-NOTICES.TXT',
  'licenses/microsoft.windowsdesktop.app.runtime.win-x64-10.0.13/LICENSE',
- 'sources/SOURCE-MANIFEST.json','sources/README-SOURCES.txt','sources/AIO-Display-source.zip'
+ 'sources/SOURCE-MANIFEST.json','sources/README-SOURCES.txt','sources/FlexPanel-source.zip'
 )
 foreach($relative in $required){if(-not (Test-Path -LiteralPath (Join-Path $PackageDirectory $relative))){throw ('Missing legal/package file: '+$relative)}}
 $records=@(Get-Content -LiteralPath (Join-Path $PackageDirectory 'sources/SOURCE-MANIFEST.json') -Raw|ConvertFrom-Json)
-$components=@('AIO Display','LibreHardwareMonitorLib','BlackSharp.Core','DiskInfoToolkit','RAMSPDToolkit-NDD','PawnIO.Modules')
+$components=@('FlexPanel','LibreHardwareMonitorLib','BlackSharp.Core','DiskInfoToolkit','RAMSPDToolkit-NDD','PawnIO.Modules')
 if($records.Count -ne $components.Count){throw 'Incomplete corresponding source manifest'}
 foreach($name in $components){if(@($records|Where-Object {$_.Component -eq $name}).Count -ne 1){throw ('Missing or duplicated source: '+$name)}}
 foreach($record in $records){
@@ -41,9 +41,9 @@ $mit=Get-Content -LiteralPath (Join-Path $PackageDirectory 'project-licenses/MIT
 if($mit -notmatch 'Permission is hereby granted' -or $mit -notmatch 'AIO Display contributors'){throw 'MIT grant missing'}
 if((Get-FileHash -LiteralPath (Join-Path $PackageDirectory 'sensors/LICENSE')).Hash -ne (Get-FileHash -LiteralPath (Join-Path $PackageDirectory 'project-licenses/MIT.txt')).Hash){throw 'Sensor license differs'}
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$ownZip=[IO.Compression.ZipFile]::OpenRead((Join-Path $PackageDirectory 'sources/AIO-Display-source.zip'))
+$ownZip=[IO.Compression.ZipFile]::OpenRead((Join-Path $PackageDirectory 'sources/FlexPanel-source.zip'))
 try{
- foreach($path in @('AIO-Display/LICENSE','AIO-Display/LICENSE-MAP.txt','AIO-Display/project-licenses/MIT.txt','AIO-Display/src/AioDisplay.SensorHost/LICENSE','AIO-Display/src/AioDisplay.Contracts/LICENSE')){
+ foreach($path in @('FlexPanel/LICENSE','FlexPanel/LICENSE-MAP.txt','FlexPanel/project-licenses/MIT.txt','FlexPanel/src/AioDisplay.SensorHost/LICENSE','FlexPanel/src/AioDisplay.Contracts/LICENSE')){
   if(-not $ownZip.GetEntry($path)){throw ('Source license missing: '+$path)}
  }
 }finally{$ownZip.Dispose()}

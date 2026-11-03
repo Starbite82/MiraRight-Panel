@@ -28,8 +28,8 @@ public sealed class AppSettings
 }
 public static class AutoStart
 {
-    const string Key = @"Software\Microsoft\Windows\CurrentVersion\Run", Name = "AIO Unified Panel";
-    public static string Command { get { return "\"" + Path.Combine(Log.Root, "BLUB-Display.exe") + "\" --minimized"; } }
+    const string Key = @"Software\Microsoft\Windows\CurrentVersion\Run", Name = "FlexPanel";
+    public static string Command { get { return "\"" + Path.Combine(Log.Root, "FlexPanel.exe") + "\" --minimized"; } }
     public static bool Enabled { get { using (var k = Registry.CurrentUser.OpenSubKey(Key)) return k != null && string.Equals(k.GetValue(Name) as string, Command, StringComparison.OrdinalIgnoreCase); } }
     public static void Set(bool enabled) { using (var k = Registry.CurrentUser.CreateSubKey(Key)) { if (enabled) k.SetValue(Name, Command, RegistryValueKind.String); else k.DeleteValue(Name, false); } }
 }

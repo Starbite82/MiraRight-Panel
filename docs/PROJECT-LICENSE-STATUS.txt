@@ -1,7 +1,7 @@
-AIO DISPLAY — PROJECT LICENSES
+FLEXPANEL — PROJECT LICENSES
 
-App / BLUB-Display.exe: GPL-3.0-only.
-Separate AioDisplay.SensorHost.exe: MIT, for its own code.
+App / FlexPanel.exe: GPL-3.0-only.
+Separate FlexPanel.SensorHost.exe: MIT, for its own code.
 AioDisplay.Contracts: MIT, for its own code.
 License choice expressly approved by the project owner on 2026-10-30.
 

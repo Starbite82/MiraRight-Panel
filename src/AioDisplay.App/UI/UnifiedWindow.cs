@@ -11,10 +11,10 @@ public sealed class UnifiedWindow : Form {
  readonly System.Windows.Forms.Timer refresh=new(){Interval=250};readonly NotifyIcon tray=new();bool closing,exitRequested,suppressShow;DateTime lastReport;
  public UnifiedWindow(bool preview,bool minimized,bool verification=false){
   previewOnly=preview;verify=verification;suppressShow=minimized;settings=DisplaySettings.Load();if(!preview)settings.Save();
-  Text="AIO Unified Panel · Thermalright + MiraBox";Icon=AppBrand.Icon;ClientSize=new Size(1180,800);MinimumSize=new Size(1000,700);BackColor=UiTheme.Surface;ForeColor=UiTheme.Foreground;Font=new Font("Segoe UI",10);StartPosition=FormStartPosition.CenterScreen;ShowInTaskbar=!minimized;
+  Text="FlexPanel – Thermalright & MiraBox Hardware Monitor";Icon=AppBrand.Icon;ClientSize=new Size(1180,800);MinimumSize=new Size(1000,700);BackColor=UiTheme.Surface;ForeColor=UiTheme.Foreground;Font=new Font("Segoe UI",10);StartPosition=FormStartPosition.CenterScreen;ShowInTaskbar=!minimized;
   Controls.Add(tabs);var header=new Panel{Dock=DockStyle.Top,Height=38};Controls.Add(header);shared.Dock=DockStyle.Fill;header.Controls.Add(shared);var imprint=new LinkLabel{Text="Impressum",Dock=DockStyle.Right,Width=110,TextAlign=ContentAlignment.MiddleCenter,LinkColor=Color.FromArgb(78,216,233),ActiveLinkColor=Color.White};header.Controls.Add(imprint);imprint.LinkClicked+=(_,_)=>{using var dialog=new AboutWindow(true);dialog.ShowDialog(this);};AddDisplay("Thermalright");AddDisplay("MiraBox");AddGeneral();
   var menu=new ContextMenuStrip();menu.Items.Add("Einstellungen öffnen",null,(_,_)=>PostOpen());menu.Items.Add("Impressum",null,(_,_)=>{using var dialog=new AboutWindow(true);dialog.ShowDialog(this);});menu.Items.Add("Beenden",null,(_,_)=>PostExit());
-  tray.Icon=Icon;tray.Text="AIO Unified Panel";tray.ContextMenuStrip=menu;tray.Visible=true;tray.DoubleClick+=(_,_)=>PostOpen();UiTheme.Apply(this,menu);
+  tray.Icon=Icon;tray.Text="FlexPanel";tray.ContextMenuStrip=menu;tray.Visible=true;tray.DoubleClick+=(_,_)=>PostOpen();UiTheme.Apply(this,menu);
   Resize+=(_,_)=>{if(WindowState==FormWindowState.Minimized){Hide();ShowInTaskbar=false;}};
   engine=new(()=>settings,previewOnly);refresh.Tick+=(_,_)=>UpdatePreview();
   Shown+=async(_,_)=>{if(verify){await Task.Delay(9000);if(!closing)CaptureVerification();}};
@@ -27,7 +27,7 @@ public sealed class UnifiedWindow : Form {
  }
  static ComboBox SelectBox(object[] values,int selected,int width=425){var box=new ComboBox{Width=width,DropDownStyle=ComboBoxStyle.DropDownList};box.Items.AddRange(values);box.SelectedIndex=Math.Clamp(selected,0,values.Length-1);return box;}
  void AddDisplay(string kind){
-  var initial=Profile(kind);var page=new TabPage(kind=="Thermalright"?"Thermalright · 320 × 320":"MiraBox D92 · 1920 × 462"){BackColor=BackColor};tabs.TabPages.Add(page);
+  var initial=Profile(kind);var page=new TabPage(kind=="Thermalright"?"Thermalright FROZEN WARFRAME 360":"MiraBox D92 9.2-inch Universal Screen"){BackColor=BackColor};tabs.TabPages.Add(page);
   var split=new SplitContainer{Size=new Size(1140,650),Dock=DockStyle.Fill,SplitterDistance=600,Panel1MinSize=330,Panel2MinSize=430};page.Controls.Add(split);
   var picture=new PictureBox{Dock=DockStyle.Fill,BackColor=Color.FromArgb(9,15,25),SizeMode=PictureBoxSizeMode.Zoom};pictures[kind]=picture;split.Panel1.Controls.Add(picture);
   var status=new Label{Dock=DockStyle.Bottom,Height=98,Padding=new Padding(12),ForeColor=Color.LightSteelBlue};labels[kind]=status;split.Panel1.Controls.Add(status);

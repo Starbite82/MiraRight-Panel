@@ -1,16 +1,18 @@
-# AIO Unified Panel 2.0 Preview
+# FlexPanel – Thermalright & MiraBox Hardware Monitor
 
-[Impressum / Anbieter und Kontakt](IMPRINT.txt)
+**Hardware-Monitoring für Thermalright FROZEN WARFRAME 360 LCD und MiraBox D92 9.2-inch Universal Screen for PC.**
+
+[Download](#download) · [Anleitung](LIESMICH.txt) · [Unterstützte Modelle](#unterstützte-displays) · [Impressum](IMPRINT.txt)
 
 ## Wofür ist das Programm?
 
-**AIO Unified Panel zeigt PC-Messwerte auf kleinen USB-Hardwaredisplays an.**
+**FlexPanel zeigt PC-Messwerte auf kleinen USB-Hardwaredisplays an.**
 Dazu gehören CPU-/GPU-Auslastung und Temperaturen, RAM-/VRAM-Belegung, Lüfterdrehzahlen
 und auf dem MiraBox-Layout FPS/Frame Time der aktuell aktiven Anwendung. Verfügbare
 Leistungs- und Temperatursensoren lassen sich gezielt auswählen.
 
-Unterstützt werden das getestete **Thermalright-LCD mit 320 × 320 Pixeln** und das
-**MiraBox D92 mit 1920 × 462 Pixeln**. Du kannst eines der Geräte oder beide gleichzeitig
+Unterstützt werden das getestete **Thermalright FROZEN WARFRAME 360 mit dem unterstützten 320-×-320-LCD-Controller** und das
+**MiraBox D92 9.2-inch Universal Screen for PC mit 1920 × 462 Pixeln**. Du kannst eines der Geräte oder beide gleichzeitig
 verwenden. Jedes Display bekommt eigene Einstellungen. Das Programm ist kein allgemeiner
 Treiber für beliebige USB-Bildschirme und steuert weder Lüfter noch Übertaktung.
 
@@ -18,9 +20,11 @@ Die Anzeige läuft ohne MiraBox Craft oder Thermalright TRCC. LibreHardwareMonit
 enthalten; MSI Afterburner ist eine optionale alternative Sensorquelle. Die lokale
 Anwendung benötigt weder Anmeldung noch Cloudkonto und lädt keine Messwerte hoch.
 
+Unabhängiges Community-Projekt; kein offizielles Produkt von Thermalright oder MiraBox.
+
 ## Download
 
-Lade das **Windows-x64-Programmpaket** unter [Releases](https://github.com/Starbite82/AIO-Display/releases)
+Lade das **Windows-x64-Programmpaket** unter [Releases](https://github.com/Starbite82/FlexPanel-Thermalright-MiraBox/releases)
 herunter und entpacke das ZIP vollständig. .NET-Laufzeit, Sensorbibliothek und PresentMon sind enthalten.
 Die GitHub-Schaltfläche „Code → Download ZIP“ liefert den Quellcode für Entwickler.
 
@@ -28,12 +32,12 @@ Die GitHub-Schaltfläche „Code → Download ZIP“ liefert den Quellcode für 
 
 1. Das passende Windows-x64-Programmpaket vollständig in einen beschreibbaren Ordner entpacken.
 2. Andere Programme beenden, die auf dasselbe LCD zugreifen, insbesondere MiraBox Craft oder Thermalright TRCC.
-3. **`AIO-Unified-Panel.cmd`** öffnen. Die .NET-Laufzeit und Sensorbibliotheken sind enthalten.
+3. **`Start-FlexPanel.cmd`** öffnen. Die .NET-Laufzeit und Sensorbibliotheken sind enthalten.
 4. Im Reiter **Thermalright** bzw. **MiraBox D92** die angeschlossenen Displays aktivieren;
    den Reiter eines nicht vorhandenen Geräts deaktivieren.
 5. Design, Drehung, Sensorquelle und gewünschte Raten pro Gerät einstellen. Änderungen werden gespeichert.
 
-Für einen Blick auf die Oberfläche ohne USB-Ausgabe **`AIO-Display-Vorschau.cmd`** verwenden.
+Für einen Blick auf die Oberfläche ohne USB-Ausgabe **`FlexPanel-Vorschau.cmd`** verwenden.
 Diese Vorschau fordert keine Administratorrechte an. Fehlende Sensorwerte erscheinen als `—`.
 
 Die ausführliche [deutsche Anleitung](LIESMICH.txt) erklärt Einrichtung, Sensorrechte,
@@ -54,10 +58,10 @@ RAM/VRAM zeigen benutzt/gesamt; die Lastfarben und stabilen Prozentzeichen bleib
 
 | Display | Auflösung | Unterstützter Controller |
 | --- | --- | --- |
-| Thermalright AIO-LCD | 320 × 320 Pixel | USB `87AD:70DB`, Handshake PM32/SUB1 |
-| MiraBox D92 / 9,2-Zoll Universal Screen | 1920 × 462 Pixel | USB `5548:1011` |
+| Thermalright FROZEN WARFRAME 360 · unterstützte LCD-Variante | 320 × 320 Pixel | USB `87AD:70DB`, Handshake PM32/SUB1 |
+| MiraBox D92 9.2-inch Universal Screen for PC | 1920 × 462 Pixel | USB `5548:1011` |
 
-**Thermalright Frozen Warframe 360:** Innerhalb der Frozen-Warframe-Reihe gibt es unterschiedliche
+**Thermalright FROZEN WARFRAME 360:** Innerhalb der Frozen-Warframe-Reihe gibt es unterschiedliche
 LCD-Controller und Auflösungen. Prüfe deshalb die USB-Kennung im Windows-Geräte-Manager.
 Ein gleicher Kühlername allein bestätigt die Kompatibilität nicht. Der hier getestete Thermalright-
 Controller ist oben angegeben; andere Warframe-/SE-/Pro-Varianten sind nicht pauschal unterstützt.
@@ -67,6 +71,8 @@ vorhandene passende WinUSB-Treiber benötigt. Die Anwendung installiert keine Tr
 Eines der unterstützten Displays genügt; zwei gleichzeitig sind optional.
 
 ## Messwerte und Rechte
+
+Die Produktbezeichnungen entsprechen der [Thermalright-Modellseite](https://www.thermalright.com/product/frozen-warframe-360-black-x/) und der [MiraBox-D92-Modellseite](https://mirabox.net/products/mirabox-9-2-inch-universal-screen). Die Modellreihe ersetzt nicht die oben genannte Controllerprüfung.
 
 Fehlende Werte erscheinen als `—`; nicht jede Hardware liefert alle Temperaturen oder Wattwerte.
 Nur der separate Sensorprozess benötigt optional eine Windows-Administratorbestätigung.
