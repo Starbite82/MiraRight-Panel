@@ -27,7 +27,7 @@ public sealed class UnifiedWindow : Form {
  }
  static ComboBox SelectBox(object[] values,int selected,int width=425){var box=new ComboBox{Width=width,DropDownStyle=ComboBoxStyle.DropDownList};box.Items.AddRange(values);box.SelectedIndex=Math.Clamp(selected,0,values.Length-1);return box;}
  void AddDisplay(string kind){
-  var initial=Profile(kind);var page=new TabPage(kind=="Thermalright"?"Thermalright FROZEN WARFRAME 360":"MiraBox D92 9.2-inch Universal Screen"){BackColor=BackColor};tabs.TabPages.Add(page);
+  var initial=Profile(kind);var page=new TabPage(kind=="Thermalright"?"Thermalright FROZEN WARFRAME 360":"MiraBox D92 9.2-inch Universal Screen for PC"){BackColor=BackColor};tabs.TabPages.Add(page);
   var split=new SplitContainer{Size=new Size(1140,650),Dock=DockStyle.Fill,SplitterDistance=600,Panel1MinSize=330,Panel2MinSize=430};page.Controls.Add(split);
   var picture=new PictureBox{Dock=DockStyle.Fill,BackColor=Color.FromArgb(9,15,25),SizeMode=PictureBoxSizeMode.Zoom};pictures[kind]=picture;split.Panel1.Controls.Add(picture);
   var status=new Label{Dock=DockStyle.Bottom,Height=98,Padding=new Padding(12),ForeColor=Color.LightSteelBlue};labels[kind]=status;split.Panel1.Controls.Add(status);
@@ -46,7 +46,7 @@ public sealed class UnifiedWindow : Form {
   Title("Grafikkarte");var gpu=SelectBox([new Choice("","Automatisch · größter Grafikspeicher")],0);gpus[kind]=gpu;flow.Controls.Add(gpu);gpu.SelectionChangeCommitted+=(_,_)=>Change(kind,p=>p.Gpu=((Choice)gpu.SelectedItem).Id);
   if(kind=="MiraBox"){
    Title("Helligkeit");var brightness=new NumericUpDown{Minimum=1,Maximum=100,Value=initial.MiraBox.Brightness,Width=120};flow.Controls.Add(brightness);brightness.ValueChanged+=(_,_)=>Change(kind,p=>p.MiraBox.Brightness=(int)brightness.Value);
-   Title("Bereiche · Reihenfolge aus FlexPanel bleibt erhalten");var cards=new CheckedListBox{Width=425,Height=130,CheckOnClick=true};foreach(var card in initial.MiraBox.Cards)cards.Items.Add(card,true);foreach(var card in new[]{"CPU","GPU","RAM","VRAM","FRAMES","FANS"}.Except(initial.MiraBox.Cards))cards.Items.Add(card,false);flow.Controls.Add(cards);
+   Title("Anzeigebereiche · Auswahl und Reihenfolge");var cards=new CheckedListBox{Width=425,Height=130,CheckOnClick=true};foreach(var card in initial.MiraBox.Cards)cards.Items.Add(card,true);foreach(var card in new[]{"CPU","GPU","RAM","VRAM","FRAMES","FANS"}.Except(initial.MiraBox.Cards))cards.Items.Add(card,false);flow.Controls.Add(cards);
    cards.ItemCheck+=(_,_)=>BeginInvoke((Action)(()=>{var selected=cards.CheckedItems.Cast<string>().ToArray();if(selected.Length>0)Change(kind,p=>p.MiraBox.Cards=selected);}));
    var order=new FlowLayoutPanel{Width=425,Height=34};flow.Controls.Add(order);
    foreach(int direction in new[]{-1,1}){var move=new Button{Text=direction<0?"↑":"↓",Width=70};order.Controls.Add(move);move.Click+=(_,_)=>{int from=cards.SelectedIndex,to=from+direction;if(from<0||to<0||to>=cards.Items.Count)return;var name=cards.Items[from];bool selected=cards.GetItemChecked(from);cards.Items.RemoveAt(from);cards.Items.Insert(to,name);cards.SetItemChecked(to,selected);cards.SelectedIndex=to;var active=cards.CheckedItems.Cast<string>().ToArray();if(active.Length>0)Change(kind,p=>p.MiraBox.Cards=active);};}
