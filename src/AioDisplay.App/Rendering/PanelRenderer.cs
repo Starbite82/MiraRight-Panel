@@ -11,6 +11,19 @@ using System.Windows.Forms;
 
 public static class PanelRenderer
 {
+    // Relative to the existing physical mounting orientation; clockwise on the LCD.
+    public static void ApplyRotation(Bitmap image, int degrees)
+    {
+        var rotation = degrees switch
+        {
+            0 => RotateFlipType.RotateNoneFlipNone,
+            90 => RotateFlipType.Rotate90FlipNone,
+            180 => RotateFlipType.Rotate180FlipNone,
+            270 => RotateFlipType.Rotate270FlipNone,
+            _ => throw new ArgumentOutOfRangeException(nameof(degrees))
+        };
+        if (degrees != 0) image.RotateFlip(rotation);
+    }
     [StructLayout(LayoutKind.Sequential)]
     class MemoryStatus
     {

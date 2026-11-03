@@ -1,5 +1,11 @@
 # Änderungen
 
+## Noch nicht veröffentlicht
+
+- Gespeicherte Display-Drehung um 0°, 90°, 180° oder 270° im Uhrzeigersinn.
+- Die Drehung betrifft nur die LCD-Ausgabe; Vorschau und Vorschau-Bild bleiben aufrecht.
+- Regressionstests prüfen Drehrichtung, unveränderte Vorschau und gespeicherte Einstellungen.
+
 ## 1.1.3 — Direkte Sensoren mit Adminrechten und eigene Lüfternamen
 
 - Optionaler Admin-Sensorprozess; Oberfläche bleibt ohne erhöhte Rechte.

@@ -7,6 +7,31 @@ public static class Check
 {
     public static void Main()
     {
+        foreach (int angle in new[] { 0, 90, 180, 270 })
+        {
+            using var image = new Bitmap(320, 320);
+            image.SetPixel(0, 0, Color.Red);
+            image.SetPixel(319, 0, Color.Lime);
+            image.SetPixel(319, 319, Color.Blue);
+            image.SetPixel(0, 319, Color.White);
+            var encodedDisplay = PanelWindow.EncodeDisplay(image, angle);
+            if (image.GetPixel(0, 0).ToArgb() != Color.Red.ToArgb() || image.GetPixel(319, 0).ToArgb() != Color.Lime.ToArgb())
+                throw new Exception("Display encoding rotated the preview");
+            PanelRenderer.ApplyRotation(image, angle);
+            Color[] expectedCorners = angle switch
+            {
+                90 => new[] { Color.White, Color.Red, Color.Lime, Color.Blue },
+                180 => new[] { Color.Blue, Color.White, Color.Red, Color.Lime },
+                270 => new[] { Color.Lime, Color.Blue, Color.White, Color.Red },
+                _ => new[] { Color.Red, Color.Lime, Color.Blue, Color.White }
+            };
+            Point[] corners = { new(0, 0), new(319, 0), new(319, 319), new(0, 319) };
+            for (int i = 0; i < corners.Length; i++)
+                if (image.GetPixel(corners[i].X, corners[i].Y).ToArgb() != expectedCorners[i].ToArgb())
+                    throw new Exception("Clockwise display rotation " + angle);
+            if (PanelWindow.Encode565(image).Length != 204800) throw new Exception("Rotated frame size");
+            if (!encodedDisplay.SequenceEqual(PanelWindow.Encode565(image))) throw new Exception("Display-only rotation " + angle);
+        }
         using (var b = new Bitmap(320, 320))
         {
             b.SetPixel(319, 319, Color.Red); b.SetPixel(0, 0, Color.Cyan); var p = PanelWindow.Encode565(b);

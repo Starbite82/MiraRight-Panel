@@ -14,6 +14,16 @@ public static class SettingsCheck
         string file = AppSettings.FilePath, old = File.Exists(file) ? File.ReadAllText(file) : null;
         try
         {
+            foreach (int angle in new[] { 0, 90, 180, 270 })
+            {
+                AppSettings.Current.Rotation = angle; AppSettings.Save(); AppSettings.Load();
+                if (AppSettings.Current.Rotation != angle) throw new Exception("Rotation roundtrip " + angle);
+            }
+            foreach (string invalid in new[] { "45", "-90", "360", "invalid" })
+            {
+                File.WriteAllText(file, "Rotation=" + invalid); AppSettings.Load();
+                if (AppSettings.Current.Rotation != 0) throw new Exception("Invalid rotation accepted");
+            }
             AppSettings.Current.AdminSensors = true; AppSettings.Save(); AppSettings.Load(); if (!AppSettings.Current.AdminSensors) throw new Exception("Admin sensor setting roundtrip"); AppSettings.Current.AdminSensors = false;
             File.WriteAllLines(file, new[] { "BarWindowMs=1000", "SensorProvider=1", "View=6", "RefreshMs=250", "ThreadNumbers=1", "HideStoppedFans=0", "CloseToTray=1" }); AppSettings.Load();
             if (AppSettings.Current.BarWindowMs != 1000 || AppSettings.Current.SensorProvider != 1 || AppSettings.Current.View != 6 || AppSettings.Current.RefreshMs != 250 || !AppSettings.Current.ThreadNumbers || AppSettings.Current.HideStoppedFans || !AppSettings.Current.CloseToTray) throw new Exception("Settings parse");

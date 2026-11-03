@@ -43,11 +43,18 @@ public sealed class PanelWindow : Form
         var note = new Label { Text = "Einstellungen werden sofort gespeichert.\nLHM-Messrate separat einstellbar.\nHardware-Erkennung unter „Hardware & Sensoren“.", Bounds = new Rectangle(365, 427, 310, 67), ForeColor = Color.LightSteelBlue, Font = new Font("Segoe UI", 9) }; Controls.Add(note);
         var about = new Button { Text = "Info & Impressum", Bounds = new Rectangle(20, 477, 320, 30) };
         about.Click += (sender, e) => { using var dialog = new AboutWindow(); dialog.ShowDialog(this); }; Controls.Add(about);
-        var hardware = new Button { Text = "Hardware & Sensoren…", Bounds = new Rectangle(20, 513, 320, 30) };
+        ClientSize = new Size(700, 600);
+        Controls.Add(new Label { Text = "Display-Drehung", Bounds = new Rectangle(20, 515, 160, 26), ForeColor = Color.LightSteelBlue });
+        int[] angles = { 0, 90, 180, 270 };
+        var rotation = new ComboBox { Bounds = new Rectangle(185, 512, 155, 28), DropDownStyle = ComboBoxStyle.DropDownList };
+        rotation.Items.AddRange(new object[] { "0°", "90°", "180°", "270°" });
+        rotation.SelectedIndex = Array.IndexOf(angles, AppSettings.Current.Rotation); Controls.Add(rotation);
+        var hardware = new Button { Text = "Hardware & Sensoren…", Bounds = new Rectangle(20, 551, 320, 30) };
         hardware.Click += (a, b) => { using (var dialog = new HardwareWindow()) if (dialog.ShowDialog(this) == DialogResult.OK) { SensorHub.Stop(); } }; Controls.Add(hardware);
-        var hide = new Button { Text = "In den Infobereich", Bounds = new Rectangle(365, 513, 166, 30) }; hide.Click += (a, b) => HideToTray(); Controls.Add(hide);
-        var exit = new Button { Text = "Beenden", Bounds = new Rectangle(543, 513, 132, 30) }; exit.Click += (a, b) => ExitNow(); Controls.Add(exit);
+        var hide = new Button { Text = "In den Infobereich", Bounds = new Rectangle(365, 551, 166, 30) }; hide.Click += (a, b) => HideToTray(); Controls.Add(hide);
+        var exit = new Button { Text = "Beenden", Bounds = new Rectangle(543, 551, 132, 30) }; exit.Click += (a, b) => ExitNow(); Controls.Add(exit);
         Action save = () => { try { AppSettings.Save(); } catch (Exception e) { note.Text = "Speichern nicht möglich: " + e.Message; } };
+        rotation.SelectedIndexChanged += (a, b) => { AppSettings.Current.Rotation = angles[rotation.SelectedIndex]; save(); };
         smoothing.SelectedIndexChanged += (a, b) => { AppSettings.Current.BarWindowMs = windows[smoothing.SelectedIndex]; save(); };
         source.SelectedIndexChanged += (a, b) => { AppSettings.Current.SensorProvider = source.SelectedIndex; sensorRate.Enabled = source.SelectedIndex == 0; save(); };
         sensorRate.SelectedIndexChanged += (a, b) => { AppSettings.Current.SensorMs = rates[sensorRate.SelectedIndex]; save(); };
@@ -80,6 +87,12 @@ public sealed class PanelWindow : Form
         bool stopped = streamThread == null || streamThread.Join(2500); if (stopped) stopStream.Dispose(); SensorHub.Stop(); tray.Dispose(); if (picture.Image != null) picture.Image.Dispose(); base.OnFormClosed(e);
     }
     string Value(SensorSnapshot s, uint id, string name, string suffix) { var r = s.Find(id, name); return s.Fresh && r != null && r.Valid ? r.Value.ToString("0") + suffix : "--"; }
+    public static byte[] EncodeDisplay(Bitmap preview, int rotation)
+    {
+        using var output = (Bitmap)preview.Clone();
+        PanelRenderer.ApplyRotation(output, rotation);
+        return Encode565(output);
+    }
     public static byte[] Encode565(Bitmap bmp)
     {
         var pixels = new byte[320 * 320 * 2]; var rectangle = new Rectangle(0, 0, 320, 320);
@@ -124,7 +137,7 @@ public sealed class PanelWindow : Form
         try
         {
             SensorHub.EnsureRunning(); var sensors = SensorHub.Read(); barAverager.Apply(sensors, AppSettings.Current.BarWindowMs); bmp = PanelRenderer.RenderView(sensors, PanelRenderer.TotalMemoryGiB(), AppSettings.Current.View, AppSettings.Current.ThreadNumbers);
-            if (!preview) preparedPixels = Encode565(bmp);
+            if (!preview) preparedPixels = EncodeDisplay(bmp, AppSettings.Current.Rotation);
             bool fanFresh = FanData.Read(sensors).Any(f => f.Rpm.HasValue); string info = (preview ? "Vorschau ohne Display" : streamError != "" ? "Warte: " + streamError : Interlocked.Read(ref frames) > 0 ? "Display verbunden" : "Display startet") + "\n" + sensors.Source + " " + (sensors.Fresh ? "aktiv" : "wartet") + "\nCPU-Temperatur: " + sensors.CpuTemperatureSource + "\nLüfter: " + (fanFresh ? (sensors.FanSource == "" ? "GPU" : sensors.FanSource) : "warte auf Messwerte");
             if (lastError != "") { Log.Write("RECOVERED"); lastError = ""; }
             if ((DateTime.Now - lastLog).TotalSeconds >= 5) { lastLog = DateTime.Now; File.WriteAllText(Path.Combine(Log.Root, "status.txt"), DateTime.Now.ToString("s") + " USB " + frames + " Frames | " + info.Replace("\n", " | ") + " | CPU=" + Value(sensors, 0x80, "CPU temperature", "°C") + " GPU=" + Value(sensors, 0, "GPU temperature", "°C") + " | Sample=" + sensors.SampleSequence + "@" + sensors.SampleTicks); bmp.Save(Path.Combine(Log.Root, "live-preview.png"), ImageFormat.Png); }

@@ -59,6 +59,9 @@ Nach Änderungen unter Hardware & Pfade werden die Sensoren neu gestartet.
 Fehlende oder veraltete Messwerte erscheinen als --.
 
 4. ANZEIGE UND EINSTELLUNGEN
+Display-Drehung dreht nur das LCD im Uhrzeigersinn um 0°, 90°, 180°
+oder 270°. Die Vorschau bleibt aufrecht. Die Auswahl wird sofort gespeichert;
+0° erhält die bisherige Ausrichtung auf dem LCD.
 CPU/RAM links oben, GPU/VRAM rechts oben, Threadbalken links unten und
 Lüfterdrehzahlen rechts unten. Die Detailansicht und Varianten bleiben
 über Displayansicht auswählbar. Threadnummern sind optional.

@@ -18,4 +18,5 @@ hardware-catalog.tsv*
 **/bin/
 **/obj/
 artifacts/
+runtime/
 .vs/
