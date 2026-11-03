@@ -39,9 +39,9 @@ static class DocumentationScreenshots
         using var classic = Renderer.Draw(sample, settings.MiraBox.MiraBox);
         var panoramaConfig = new PanelConfig { Design="Thermalright" }.Normalize();
         using var panorama = Renderer.Draw(sample, panoramaConfig);
-        thermal.Save(Path.Combine(output,"thermalright-dashboard.png"));
-        classic.Save(Path.Combine(output,"mirabox-classic.png"));
-        panorama.Save(Path.Combine(output,"mirabox-panorama.png"));
+        thermal.Save(Path.Combine(output,"miraright-panel-thermalright-dashboard.png"));
+        classic.Save(Path.Combine(output,"miraright-panel-mirabox-classic.png"));
+        panorama.Save(Path.Combine(output,"miraright-panel-mirabox-panorama.png"));
         Application.EnableVisualStyles(); Application.SetCompatibleTextRenderingDefault(false);
         using var form = new UnifiedWindow(preview:true, minimized:false);
         form.Show(); Application.DoEvents();
@@ -54,12 +54,12 @@ static class DocumentationScreenshots
             labels[pair.Item1].Text="Beispielwerte · USB aus\nDisplayrate und Messwertübernahme unabhängig einstellbar\nLibreHardwareMonitor";
         }
         var tabs=Field<TabControl>(form,"tabs");
-        tabs.SelectedIndex=0; form.PerformLayout(); Capture(form,Path.Combine(output,"settings-thermalright.png"));
-        tabs.SelectedIndex=1; form.PerformLayout(); Capture(form,Path.Combine(output,"settings-mirabox.png"));
+        tabs.SelectedIndex=0; form.PerformLayout(); Capture(form,Path.Combine(output,"miraright-panel-einstellungen-thermalright.png"));
+        tabs.SelectedIndex=1; form.PerformLayout(); Capture(form,Path.Combine(output,"miraright-panel-einstellungen-mirabox.png"));
         using(var about=new AboutWindow()) {
             about.Show(); Application.DoEvents();
             about.Controls.OfType<Button>().Single(b=>b.Text=="Nutzung & Haftung").PerformClick();
-            Capture(about,Path.Combine(output,"usage-liability.png")); about.Close();
+            Capture(about,Path.Combine(output,"miraright-panel-nutzung-haftung.png")); about.Close();
         }
         form.PostExit(); Application.DoEvents();
         Console.WriteLine("Six documentation images generated with sample values; no hardware or USB access.");

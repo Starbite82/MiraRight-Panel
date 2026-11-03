@@ -35,27 +35,27 @@ Lüfter und Schriftplatz hängen von deiner Hardware und deinen Einstellungen ab
 Dashboard mit CPU-Gesamtlast, einzelnen CPU-Threads, Temperaturen, Speicher und Lüftern
 auf dem unterstützten 320-×-320-Controller. Die Software-Vorschau bleibt bei gedrehter LCD-Ausgabe aufrecht.
 
-![Thermalright FROZEN WARFRAME 360: Dashboard in nativer Auflösung](docs/images/thermalright-dashboard.png)
+![Thermalright FROZEN WARFRAME 360: Dashboard in nativer Auflösung](docs/images/miraright-panel-thermalright-dashboard.png)
 
 Eigene Einstellungen für Ansicht, Drehung, Displayrate, Messwertübernahme,
 Balkenglättung, Sensorquelle und einzelne Hardware-Sensoren:
 
-![MiraRight Panel: Einstellungen für Thermalright FROZEN WARFRAME 360](docs/images/settings-thermalright.png)
+![MiraRight Panel: Einstellungen für Thermalright FROZEN WARFRAME 360](docs/images/miraright-panel-einstellungen-thermalright.png)
 
 ### MiraBox D92 9.2-inch Universal Screen for PC
 
 **Klassisches Dashboard**, 1920 × 462 Pixel, mit CPU-Threads, GPU, RAM/VRAM,
 FPS/Frame Time und Lüftern. Bereiche und Reihenfolge sind einstellbar.
 
-![MiraBox D92 9.2-inch Universal Screen for PC: klassisches Dashboard](docs/images/mirabox-classic.png)
+![MiraBox D92 9.2-inch Universal Screen for PC: klassisches Dashboard](docs/images/miraright-panel-mirabox-classic.png)
 
 **Thermalright-Panorama-Design** als alternative Ansicht auf demselben MiraBox-Display:
 
-![MiraBox D92 9.2-inch Universal Screen for PC: Panorama-Design](docs/images/mirabox-panorama.png)
+![MiraBox D92 9.2-inch Universal Screen for PC: Panorama-Design](docs/images/miraright-panel-mirabox-panorama.png)
 
 MiraBox bekommt ein eigenes Profil, unabhängig von einem gleichzeitig betriebenen Thermalright-LCD:
 
-![MiraRight Panel: Einstellungen für MiraBox D92 9.2-inch Universal Screen for PC](docs/images/settings-mirabox.png)
+![MiraRight Panel: Einstellungen für MiraBox D92 9.2-inch Universal Screen for PC](docs/images/miraright-panel-einstellungen-mirabox.png)
 
 ## Download
 
