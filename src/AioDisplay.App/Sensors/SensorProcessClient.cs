@@ -150,7 +150,7 @@ public sealed class SensorProcessClient : IDisposable
 
     private static SensorSnapshot Copy(SensorSnapshot s) => new()
     {
-        Entries = s.Entries, Fans = s.Fans, Gpus = s.Gpus,
+        UnifiedJson = s.UnifiedJson, Entries = s.Entries, Fans = s.Fans, Gpus = s.Gpus,
         Status = s.Status, Fresh = s.Fresh, VramTotalMb = s.VramTotalMb,
         Source = s.Source, CpuTemperatureSource = s.CpuTemperatureSource,
         GpuName = s.GpuName, Error = s.Error,

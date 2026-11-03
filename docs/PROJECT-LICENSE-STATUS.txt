@@ -16,3 +16,6 @@ including the rights to use, modify and redistribute it under those terms.
 
 This license implementation does not establish all possible patent, trademark
 or provider-law requirements. Personal imprint data is intentionally deferred.
+
+Unified preview: src/FlexPanel.Core is an independently imported MIT component.
+Its original FlexPanel MIT grant is preserved; the AIO app remains GPL-3.0-only.

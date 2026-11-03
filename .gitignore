@@ -20,3 +20,9 @@ hardware-catalog.tsv*
 artifacts/
 runtime/
 .vs/
+
+displays.json
+dual-state.json
+legacy-flexpanel.json
+Unified-*.png
+*-preview.png

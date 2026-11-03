@@ -106,9 +106,9 @@ public static class PanelRenderer
         return load < 50 ? Blend(low, middle, load / 50) : Blend(middle, high, (load - 50) / 50);
     }
     static Color Blend(Color a, Color b, double t) { return Color.FromArgb((int)Math.Round(a.R + (b.R - a.R) * t), (int)Math.Round(a.G + (b.G - a.G) * t), (int)Math.Round(a.B + (b.B - a.B) * t)); }
-    public static Bitmap RenderView(SensorSnapshot s, double total, int view, bool numbers)
+    public static Bitmap RenderView(SensorSnapshot s, double total, int view, bool numbers, bool? hideStoppedFans = null)
     {
-        if (view == 6) return RenderDashboard(s, total, numbers, FanData.Read(s));
+        if (view == 6) return RenderDashboard(s, total, numbers, FanData.Read(s), hideStoppedFans);
         if (view == 1) return Render(s, total);
         if (view < 0 || view > 5) view = 0;
         Bitmap bmp = view == 0 ? new Bitmap(320, 320) : Render(s, total);
@@ -176,7 +176,7 @@ public static class PanelRenderer
         Color color = percent >= 90 ? Color.FromArgb(255, 58, 63) : percent >= 85 ? Color.FromArgb(255, 153, 51) : percent >= 80 ? Color.FromArgb(255, 205, 65) : Color.FromArgb(61, 216, 116);
         if (fill > 0) Rect(g, color, x, y + height - fill, width, fill);
     }
-    public static Bitmap RenderDashboard(SensorSnapshot s, double total, bool numbers, System.Collections.Generic.List<FanReading> fans)
+    public static Bitmap RenderDashboard(SensorSnapshot s, double total, bool numbers, System.Collections.Generic.List<FanReading> fans, bool? hideStoppedFans = null)
     {
         var bmp = Render(s, total); using (var g = Graphics.FromImage(bmp))
         {
@@ -199,7 +199,7 @@ public static class PanelRenderer
             Rect(g, Tile, 0, 160, 158, 160); Rect(g, Tile, 162, 160, 158, 160);
             DrawBars(g, s, new Rectangle(3, 163, 152, 154), 1, numbers);
             Text(g, "RPM", 166, 161, 8, Muted);
-            if (AppSettings.Current.HideStoppedFans) fans = fans.FindAll(fan => fan.Rpm.HasValue && fan.Rpm.Value > 0);
+            if (hideStoppedFans ?? AppSettings.Current.HideStoppedFans) fans = fans.FindAll(fan => fan.Rpm.HasValue && fan.Rpm.Value > 0);
             if (fans.Count == 0) Text(g, "Keine RPM", 166, 187, 8, Muted, 150);
             int fanStart = PageStart(fans.Count, 8, s.SampleTicks), count = Math.Min(fans.Count - fanStart, 8);
             if (fans.Count > 8) Text(g, (fanStart + 1) + "–" + (fanStart + count) + " / " + fans.Count, 216, 161, 7, Muted, 100);

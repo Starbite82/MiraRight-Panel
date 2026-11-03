@@ -1,5 +1,15 @@
 # Änderungen
 
+## 2.0.0-preview.1 — Zusammenführung
+
+- Thermalright und MiraBox gleichzeitig in einer AIO-Anwendung.
+- Ein Sensorprozess und eine FPS-Erfassung; GPU/Quelle/Sensoren je Display.
+- Getrennte Messwertübernahme, USB-Raten, Glättung, Designs, Ausrichtung und Status.
+- Unabhängige Ausgabeschleifen und Tests für fehlerhafte/blockierte USB-Geräte.
+- Aufrechte Vorschauen ohne USB-Zugriff und ohne UAC-Anforderung.
+- Alte Einzelprogramme, Einstellungen und Historien als Backups erhalten.
+- FlexPanel.Core als eigenständiges MIT-Modul in die GPL-AIO-Oberfläche eingebunden.
+
 ## Noch nicht veröffentlicht
 
 - Gespeicherte Display-Drehung um 0°, 90°, 180° oder 270° im Uhrzeigersinn.

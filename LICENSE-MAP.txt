@@ -9,6 +9,8 @@ GPL-3.0-only:
   historical own application sources in Archiv-*
 
 MIT exceptions for independently developed components:
+  src/FlexPanel.Core/ — imported FlexPanel hardware, D92 driver, renderers and FPS reader;
+    original MIT notice is retained in src/FlexPanel.Core/LICENSE.
   src/AioDisplay.SensorHost/ — separate sensor executable; LICENSE in that directory
   src/AioDisplay.Contracts/ — shared data model/JSON protocol; LICENSE in that directory
 The sensor host has no reference to or dependency on AioDisplay.App. The app

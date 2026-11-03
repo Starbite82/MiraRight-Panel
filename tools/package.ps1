@@ -1,4 +1,4 @@
-param([string]$Dotnet='dotnet',[string]$Version='1.1.3',[string]$OutputDirectory='')
+param([string]$Dotnet='dotnet',[string]$Version='2.0.0-preview.1',[string]$OutputDirectory='')
 $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot
 $stage=Join-Path $root ('work/publish-'+[Guid]::NewGuid().ToString('N'))
@@ -13,6 +13,13 @@ Copy-Item -Path (Join-Path $app '*') -Destination $package -Recurse
 $sensors=Join-Path $package 'sensors'
 New-Item -ItemType Directory -Force $sensors|Out-Null
 Copy-Item -Path (Join-Path $hostStage '*') -Destination $sensors -Recurse
+$presentMon=Join-Path $root 'work/PresentMon-2.6.0-x64.exe'
+if(-not(Test-Path $presentMon)){Invoke-WebRequest 'https://github.com/GameTechDev/PresentMon/releases/download/v2.6.0/PresentMon-2.6.0-x64.exe' -OutFile $presentMon}
+if((Get-FileHash $presentMon).Hash -ne 'B2A706BC6AD475749E3B7E3409263AA1E6906D45BDCF993F6DBC0F660188F1AF'){throw 'PresentMon checksum mismatch'}
+New-Item -ItemType Directory -Force (Join-Path $sensors 'tools') | Out-Null
+Copy-Item $presentMon (Join-Path $sensors 'tools/PresentMon.exe')
+Copy-Item (Join-Path $root 'displays.example.json') $package
+Copy-Item (Join-Path $PSScriptRoot 'AIO-Unified-Panel.cmd') $package
 if(Test-Path -LiteralPath (Join-Path $root 'IMPRINT.txt')){Copy-Item -LiteralPath (Join-Path $root 'IMPRINT.txt') -Destination $package}
 foreach($name in @('LIESMICH.txt','settings.example.ini')){Copy-Item -LiteralPath (Join-Path $root $name) -Destination (Join-Path $package $name)}
 Copy-Item -LiteralPath (Join-Path $root 'settings.example.ini') -Destination (Join-Path $package 'settings.ini')
@@ -29,7 +36,7 @@ $hashes|Set-Content -LiteralPath (Join-Path $package 'SHA256SUMS.txt') -Encoding
 & (Join-Path $PSScriptRoot 'check-package.ps1') -PackageDirectory $package
 if(-not $OutputDirectory){$OutputDirectory=Split-Path $root}
 New-Item -ItemType Directory -Force $OutputDirectory|Out-Null
-$zip=Join-Path $OutputDirectory ('AIO-Display-v'+$Version+'-windows-x64.zip')
+$zip=Join-Path $OutputDirectory ('AIO-Unified-Panel-v'+$Version+'-windows-x64.zip')
 Compress-Archive -LiteralPath $package -DestinationPath $zip -Force
 $hash=Get-FileHash -LiteralPath $zip -Algorithm SHA256
 ('{0}  {1}' -f $hash.Hash.ToLowerInvariant(),[IO.Path]::GetFileName($zip))|Set-Content -LiteralPath ($zip+'.sha256') -Encoding ascii

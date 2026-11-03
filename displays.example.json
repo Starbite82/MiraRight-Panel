@@ -1,0 +1,31 @@
+{
+  "Version": 1,
+  "AdminSensors": false,
+  "FanConfigPath": "",
+  "Thermalright": {
+    "Kind": "Thermalright",
+    "Enabled": true,
+    "Rotation": 0,
+    "Fps": 10,
+    "SensorMs": 100,
+    "BarWindowMs": 500,
+    "Source": "LibreHardwareMonitor",
+    "Gpu": "",
+    "AioView": 6,
+    "ThreadNumbers": true,
+    "HideStoppedFans": true
+  },
+  "MiraBox": {
+    "Kind": "MiraBox",
+    "Enabled": true,
+    "Rotation": 0,
+    "Fps": 10,
+    "SensorMs": 100,
+    "BarWindowMs": 500,
+    "Source": "LibreHardwareMonitor",
+    "Gpu": "",
+    "AioView": 6,
+    "ThreadNumbers": true,
+    "HideStoppedFans": true
+  }
+}
