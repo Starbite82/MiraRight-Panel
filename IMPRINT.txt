@@ -1,0 +1,17 @@
+Impressum
+AIO Unified Panel
+
+Anbieter / Projektverantwortlicher
+
+Simon Albrecht
+St.-Michael-Straße 15
+69231 Rauenberg
+Deutschland
+
+Kontakt
+
+E-Mail: info@mc-blub.de
+
+Projekt
+
+https://github.com/Starbite82/AIO-Display

@@ -47,4 +47,9 @@ try{
   if(-not $ownZip.GetEntry($path)){throw ('Source license missing: '+$path)}
  }
 }finally{$ownZip.Dispose()}
-[ordered]@{PackageFilesVerified=$entries;SourceArchivesVerified=$records.Count;RequiredNoticeFilesPresent=$required.Count;VendorBinariesIncluded=$false;ProjectLicenseDecisionPending=$licensePending;ImprintDeferred=$true}|ConvertTo-Json
+$hasImprint=Test-Path -LiteralPath (Join-Path $PackageDirectory 'IMPRINT.txt')
+if($hasImprint){
+ $provider=Get-Content -LiteralPath (Join-Path $PackageDirectory 'IMPRINT.txt') -Raw
+ if([string]::IsNullOrWhiteSpace($provider) -or $provider.Contains('VORLAGE —') -or $provider.Contains('[Vollständiger Vor- und Nachname]')){throw 'Unfinished imprint template in package'}
+}
+[ordered]@{PackageFilesVerified=$entries;SourceArchivesVerified=$records.Count;RequiredNoticeFilesPresent=$required.Count;VendorBinariesIncluded=$false;ProjectLicenseDecisionPending=$licensePending;ImprintDeferred=(-not $hasImprint);ImprintFileIncluded=$hasImprint}|ConvertTo-Json

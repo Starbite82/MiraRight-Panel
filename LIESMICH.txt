@@ -1,5 +1,8 @@
 AIO UNIFIED PANEL 2.0 PREVIEW
 
+Impressum und Kontakt: IMPRINT.txt im Programmordner.
+In der Anwendung: Info & Impressum; im neuen Build zusätzlich direkt im Kopfbereich und Tray-Menü.
+
 Thermalright und MiraBox D92 laufen gemeinsam. Die Reiter enthalten eigene Profile.
 Design, Rotation, Displayrate, Messwertübernahme, Glättung, Quelle, GPU und Sensoren
 lassen sich unabhängig wählen. Die tatsächlichen USB-Raten stehen jeweils darunter.

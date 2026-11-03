@@ -1,5 +1,7 @@
 # AIO Unified Panel 2.0 Preview
 
+[Impressum / Anbieter und Kontakt](IMPRINT.txt)
+
 Gemeinsame Windows-Anwendung für **Thermalright 320 × 320** und **MiraBox D92 1920 × 462**.
 Beide Displays laufen gleichzeitig mit unabhängigen USB-Verbindungen und Einstellungen.
 Diese Entwicklung basiert auf AIO Display; die bisherigen Einzelprogramme bleiben als Backups erhalten.

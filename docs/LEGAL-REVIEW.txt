@@ -48,3 +48,5 @@ Fortgesetzte Prüfung / Paketbereinigung:
 - Neue Veröffentlichung und Impressum bleiben ausdrücklich getrennte spätere Schritte.
 
 Entscheidung 2026-10-30: Der Anbieter hat GPL 3 für die App und MIT für den unabhängigen Sensorprozess ausdrücklich freigegeben. Umgesetzt als GPL-3.0-only für die App und MIT für SensorHost/Contracts, mit Lizenztexten, SPDX-Kennzeichnungen, klarer Geltungsbereichskarte und passendem vollständigem Quellpaket. Frühere Hinweise auf eine ausstehende Lizenzentscheidung beschreiben den historischen Prüfstand und sind durch LICENSE-MAP.txt / PROJECT-LICENSE-STATUS.txt überholt. Die GPL-Behandlung ist konservativ; es wird keine unbelegte Clean-Room-Herkunft behauptet. Impressum und weitere Anbieterangaben sind ausdrücklich zurückgestellt.
+
+Stand 03.11.2026: Der Anbieter hat die Angaben für das geplante öffentliche kostenlose Hobbyprojekt freigegeben. Sie stehen in IMPRINT.txt, werden in der README verlinkt und dem Downloadpaket beigelegt. Die oben dokumentierte Zurückstellung betrifft frühere Stände. Straßenbezeichnung anhand des Kartenverzeichnisses geprüft; keine zusätzlichen Register-, Steuer- oder journalistischen Angaben erfunden.
