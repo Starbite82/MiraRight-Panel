@@ -126,3 +126,10 @@ insbesondere bei Vorsatz, grober Fahrlässigkeit und schuldhaft verursachten Per
 Der vollständige Hinweis steht in NUTZUNG-UND-HAFTUNG.txt und im Programm unter
 „Info & Impressum → Nutzung & Haftung“. Die unveränderten Lizenztexte sind maßgeblich.
 Die Hinweise schaffen keine zusätzlichen Einschränkungen der Open-Source-Rechte.
+
+DATENSCHUTZ
+Die Anwendung übermittelt keine Hardwarewerte oder Prozessnamen an den Anbieter.
+Einstellungen und Diagnosedaten bleiben lokal. Wenn du per E-Mail oder über GitHub
+Kontakt aufnimmst, werden die von dir übermittelten Angaben zur Bearbeitung genutzt.
+DATENSCHUTZ.txt erklärt Zwecke, Dienstleister, Speicherregeln und deine Rechte.
+Die Datei ist auch unter „Info & Impressum → Datenschutz“ erreichbar.

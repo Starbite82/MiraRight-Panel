@@ -1,0 +1,94 @@
+Datenschutzhinweise
+MiraRight Panel — Hardware Monitor
+Stand: 04.11.2026
+
+1. Verantwortlicher und Kontakt
+Simon Albrecht
+St.-Michael-Straße 15
+69231 Rauenberg, Deutschland
+E-Mail: info@mc-blub.de
+Weitere Anbieterangaben: IMPRINT.txt.
+
+2. Lokale Windows-Anwendung
+Die Anwendung arbeitet lokal. Sie liest Hardware-Sensoren und für die FPS-Anzeige
+Messdaten sowie den Namen der aktuell aktiven Anwendung. Einstellungen und lokale
+Diagnosedateien können Hardwarebezeichnungen, Prozessnamen, technische Fehler und
+Dateipfade enthalten. Diese Daten dienen der Anzeige, Konfiguration und Fehlerhilfe.
+Die App enthält keine Telemetrie, Werbung, Benutzerkonten oder automatische
+Übermittlung von Messwerten, Prozessnamen oder Protokollen an den Projektanbieter.
+Sie kommuniziert lokal mit dem eigenen Sensorprozess und den USB-Displays.
+Lokale Dateien bleiben auf deinem Rechner; du kannst sie mit dem Programmordner
+löschen. Einzelne Messwerte werden während des Betriebs im Arbeitsspeicher gehalten.
+Extern installierte Programme wie MSI Afterburner haben eigene Bedingungen.
+
+3. Kontakt per E-Mail
+Wenn du an info@mc-blub.de schreibst, werden Absenderadresse, gegebenenfalls dein
+Name, Nachrichteninhalt, Anhänge sowie technische Versand-/Empfangsdaten verarbeitet.
+Zweck ist, deine Anfrage zu beantworten, technische Probleme nachzuvollziehen und
+Sicherheitsmeldungen zu bearbeiten. Rechtsgrundlage ist Artikel 6 Absatz 1 Buchstabe f
+DSGVO: berechtigtes Interesse an der Kommunikation und der Pflege dieses Projekts.
+Du musst keine Anfrage stellen. Ohne Kontaktadresse bzw. erforderliche Angaben kann
+eine Rückmeldung oder Fehleranalyse gegebenenfalls nicht erfolgen.
+
+Das Postfach wird bei IONOS SE, Elgendorfer Straße 57, 56410 Montabaur, Deutschland,
+betrieben. IONOS und die für den Mailbetrieb eingesetzten technischen Dienstleister
+können Daten für E-Mail-Hosting, Zustellung und Spam-/Virenschutz verarbeiten.
+Weitere Informationen: https://www.ionos.de/terms-gtc/datenschutzerklaerung/
+Normale E-Mail ist keine Ende-zu-Ende-verschlüsselte Kommunikation. Bitte sende keine
+Passwörter, vollständigen Speicherabbilder oder unnötigen persönlichen Daten.
+Eine Nutzung deiner Kontaktangaben für Werbung oder Newsletter erfolgt nicht.
+
+4. GitHub-Projektseite, Downloads und öffentliche Beiträge
+Repository und Downloads werden über GitHub bereitgestellt. Beim Besuch verarbeitet
+GitHub insbesondere Verbindungs-/Nutzungsdaten wie IP-Adresse, Browserinformationen
+und Abrufzeitpunkte; bei angemeldeter Nutzung auch Kontodaten. GitHub ist für seine
+eigene Plattformverarbeitung verantwortlich. Es werden vom Projektanbieter keine
+zusätzlichen Analyse- oder Werbedienste auf der GitHub-Seite eingebunden.
+
+Wenn du ein Issue, einen Kommentar oder einen Pull Request einreichst, verarbeitet
+der Projektanbieter die sichtbaren Kontodaten und die von dir übermittelten Inhalte,
+Anhänge und technischen Angaben, um Fehler, Fragen und Beiträge zu bearbeiten.
+Rechtsgrundlage hierfür ist Artikel 6 Absatz 1 Buchstabe f DSGVO: berechtigtes
+Interesse an Support, Fehlerbehebung und nachvollziehbarer Projektentwicklung.
+Öffentliche Beiträge sind weltweit sichtbar und können von Dritten kopiert werden.
+Für vertrauliche Anliegen verwende bitte die Kontakt-E-Mail statt eines öffentlichen
+Issues. Sicherheitsmeldungen sind in SECURITY.md beschrieben.
+
+GitHub verarbeitet Daten auch außerhalb des Europäischen Wirtschaftsraums,
+insbesondere in den USA. Die zuständige GitHub-Gesellschaft, Empfänger, Speicherregeln,
+Rechtsgrundlagen sowie die von GitHub genannten Schutzmechanismen für internationale
+Übermittlungen stehen in den aktuellen GitHub-Datenschutzhinweisen:
+https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement
+Dort findest du auch Angaben zu Cookies und deinen Einstellungen auf GitHub.
+
+5. Empfänger und Speicherdauer beim Projektanbieter
+Zugriff auf Supportdaten hat der Projektanbieter sowie, soweit technisch erforderlich,
+die oben genannten E-Mail- und Plattformdienstleister. Öffentlich eingereichte Beiträge
+können außerdem von allen Besuchern gelesen werden. Eine Weitergabe privater Nachrichten
+als öffentliche Fehlerberichte erfolgt nicht ohne vorherige Abstimmung oder Anonymisierung.
+
+Private Anfragen werden so lange gespeichert, wie dies für die Bearbeitung, notwendige
+Rückfragen und eine erforderliche Dokumentation des Sachverhalts nötig ist. Danach werden
+sie gelöscht, sofern keine gesetzlichen Aufbewahrungspflichten oder erforderlichen Gründe
+zur Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen entgegenstehen.
+Öffentliche Issues und Beiträge dienen auch der längerfristigen Dokumentation von Fehlern
+und Änderungen. Nicht mehr erforderliche personenbezogene Angaben können auf Anfrage
+entfernt oder anonymisiert werden; bereits von Dritten angelegte Kopien sind dadurch
+nicht automatisch gelöscht. GitHub hat zusätzlich eigene Speicher- und Löschregeln.
+
+6. Deine Rechte
+Unter den gesetzlichen Voraussetzungen hast du Rechte auf Auskunft, Berichtigung,
+Löschung, Einschränkung der Verarbeitung und Datenübertragbarkeit. Soweit eine
+Verarbeitung auf einer Einwilligung beruht, kannst du diese für die Zukunft widerrufen.
+
+WIDERSPRUCH: Gegen eine auf Artikel 6 Absatz 1 Buchstabe f DSGVO gestützte Verarbeitung
+kannst du aus Gründen, die sich aus deiner besonderen Situation ergeben, Widerspruch
+einlegen. Wende dich für die Verarbeitung durch den Projektanbieter an info@mc-blub.de.
+Bei der eigenständigen Verarbeitung durch GitHub kannst du dich direkt an GitHub wenden.
+Eine automatisierte Entscheidung mit rechtlicher oder vergleichbar erheblicher Wirkung
+und Profiling durch den Projektanbieter finden nicht statt.
+
+Du kannst dich bei einer Datenschutzaufsichtsbehörde beschweren, insbesondere an deinem
+Wohn- oder Arbeitsort oder am Ort des vermuteten Verstoßes. Zuständig für den Anbieter
+ist der Landesbeauftragte für den Datenschutz und die Informationsfreiheit Baden-Württemberg:
+https://www.baden-wuerttemberg.datenschutz.de/beschwerde/

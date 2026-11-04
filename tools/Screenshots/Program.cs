@@ -22,6 +22,7 @@ static class DocumentationScreenshots
         settings.MiraBox.MiraBox.Design = "Classic";
         settings.Save();
         File.Copy(Path.Combine(repository, "NUTZUNG-UND-HAFTUNG.txt"), Path.Combine(Log.Root, "NUTZUNG-UND-HAFTUNG.txt"), true);
+        File.Copy(Path.Combine(repository, "DATENSCHUTZ.txt"), Path.Combine(Log.Root, "DATENSCHUTZ.txt"), true);
         var sample = new Snapshot {
             CpuLoad=48, CpuTemp=64, CpuWatts=88.4,
             CpuThreads=Enumerable.Range(0,32).Select(i=>(double?)(6+(i*17)%91)).ToArray(),
@@ -59,9 +60,11 @@ static class DocumentationScreenshots
         using(var about=new AboutWindow()) {
             about.Show(); Application.DoEvents();
             about.Controls.OfType<Button>().Single(b=>b.Text=="Nutzung & Haftung").PerformClick();
-            Capture(about,Path.Combine(output,"miraright-panel-nutzung-haftung.png")); about.Close();
+            Capture(about,Path.Combine(output,"miraright-panel-nutzung-haftung.png"));
+            about.Controls.OfType<Button>().Single(b=>b.Text=="Datenschutz").PerformClick();
+            Capture(about,Path.Combine(output,"miraright-panel-datenschutz.png")); about.Close();
         }
         form.PostExit(); Application.DoEvents();
-        Console.WriteLine("Six documentation images generated with sample values; no hardware or USB access.");
+        Console.WriteLine("Seven documentation images generated with sample values; no hardware or USB access.");
     }
 }

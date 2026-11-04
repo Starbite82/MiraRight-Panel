@@ -3,6 +3,7 @@
 Bitte melde vermutete Sicherheitslücken vertraulich an **info@mc-blub.de**.
 Veröffentliche ausnutzbare Details zunächst nicht als öffentliches Issue.
 Die Kontaktangaben stehen auch im [Impressum](IMPRINT.txt).
+Wie deine Meldung verarbeitet wird, erklären die [Datenschutzhinweise](DATENSCHUTZ.txt).
 
 Hilfreich sind Programmversion, Windows-Version, betroffene Komponente und
 eine Beschreibung, wie sich das Problem nachvollziehen lässt. Sende keine

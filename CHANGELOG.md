@@ -1,5 +1,11 @@
 # Änderungen
 
+## 2.0.0-preview.3 — Öffentliche Vorschau
+
+- Datenschutzhinweise für lokalen Betrieb, IONOS-E-Mail-Support und GitHub-Beiträge.
+- Datenschutz im Informationsfenster und als Textdatei im Programmpaket erreichbar.
+- Direkter Downloadlink zur aktuellen MiraRight-Vorschau.
+
 ## 2.0.0-preview.2 — MiraRight Panel
 
 - Gemeinsame Anwendung als „MiraRight Panel — Hardware Monitor“ benannt.

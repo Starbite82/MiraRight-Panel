@@ -15,6 +15,7 @@ public static class AboutContent
     public static string Version => typeof(AboutContent).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion.Split('+')[0] ?? "unbekannt";
     public static string Info => $"MiraRight Panel {Version}\n\n{Development}\n{Technology}\n\nHardware-Monitor für Thermalright FROZEN WARFRAME 360 (unterstützter 320-×-320-Controller) und MiraBox D92 9.2-inch Universal Screen for PC (1920 × 462). Ein separater Sensorprozess und eine FPS-Erfassung versorgen zwei unabhängig einstellbare USB-Ausgaben (WinUSB / HID).\n\nProjektverwaltung auf GitHub: Starbite82/MiraRight-Panel\nhttps://github.com/Starbite82/MiraRight-Panel\n\nDer GitHub-Projektname ist keine Anbieterkennzeichnung. Die verantwortliche Person und Kontaktangaben stehen im Reiter Impressum.\n\nBedienung: LIESMICH.txt im Programmordner.";
     public static string ReadImprint(string directory) => ReadOptional(directory, "IMPRINT.txt", MissingImprint);
+    public static string ReadPrivacy(string directory) => ReadOptional(directory, "DATENSCHUTZ.txt", "Die Datenschutzhinweise fehlen in diesem Ordner. Sie stehen auch im GitHub-Repository unter DATENSCHUTZ.txt.");
     public static string ReadUsage(string directory) => ReadOptional(directory, "NUTZUNG-UND-HAFTUNG.txt", "Die Nutzungs- und Haftungshinweise fehlen in diesem Ordner. Die vollständigen Gewährleistungs- und Haftungsregelungen stehen in den jeweiligen Lizenztexten; zwingendes Recht bleibt unberührt.");
     public static string ReadLicenses(string directory) => ReadOptional(directory, "THIRD-PARTY-COMPONENTS.txt", "Drittanbieterhinweise sind in diesem Entwicklungsordner noch nicht vorhanden. Sie werden beim Paketieren erzeugt.") + "\n\n" + ReadOptional(directory, "LICENSE-PROFILE.txt", "App: GPL-3.0-only. Separater Sensorprozess und Datenvertrag: MIT. Drittanbieter behalten ihre eigenen Lizenzen; vollständige Texte und Quellen liegen dem Paket bei.");
     private static string ReadOptional(string directory, string name, string fallback)
@@ -54,6 +55,9 @@ public sealed class AboutWindow : Form
         AddPage("Impressum", 178, () => AboutContent.ReadImprint(Log.Root));
         AddPage("Lizenzen", 336, () => AboutContent.ReadLicenses(Log.Root));
         AddPage("Nutzung & Haftung", 494, () => AboutContent.ReadUsage(Log.Root));
+        var privacy = new Button { Text = "Datenschutz", Bounds = new Rectangle(20, 397, 146, 30) };
+        privacy.Click += (sender, e) => { body.Text = AboutContent.ReadPrivacy(Log.Root); body.SelectionStart = 0; body.ScrollToCaret(); };
+        Controls.Add(privacy);
         var close = new Button { Text = "Schließen", Bounds = new Rectangle(510, 397, 130, 30), DialogResult = DialogResult.Cancel };
         Controls.Add(close);
         CancelButton = close;

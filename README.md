@@ -2,7 +2,7 @@
 
 **Hardware-Monitoring für Thermalright FROZEN WARFRAME 360 LCD und MiraBox D92 9.2-inch Universal Screen for PC.**
 
-[Vorschau](#vorschau) · [Download](#download) · [Anleitung](LIESMICH.txt) · [Unterstützte Modelle](#unterstützte-displays) · [Nutzung & Haftung](NUTZUNG-UND-HAFTUNG.txt) · [Impressum](IMPRINT.txt)
+[Vorschau](#vorschau) · [Download](#download) · [Anleitung](LIESMICH.txt) · [Unterstützte Modelle](#unterstützte-displays) · [Nutzung & Haftung](NUTZUNG-UND-HAFTUNG.txt) · [Datenschutz](DATENSCHUTZ.txt) · [Impressum](IMPRINT.txt)
 
 ## Wofür ist das Programm?
 
@@ -59,7 +59,7 @@ MiraBox bekommt ein eigenes Profil, unabhängig von einem gleichzeitig betrieben
 
 ## Download
 
-Lade das **Windows-x64-Programmpaket** unter [Releases](https://github.com/Starbite82/MiraRight-Panel/releases)
+Lade das **Windows-x64-Programmpaket** der [aktuellen öffentlichen Vorschau](https://github.com/Starbite82/MiraRight-Panel/releases/tag/v2.0.0-preview.3)
 herunter und entpacke das ZIP vollständig. .NET-Laufzeit, Sensorbibliothek und PresentMon sind enthalten.
 Die GitHub-Schaltfläche „Code → Download ZIP“ liefert den Quellcode für Entwickler.
 
@@ -137,6 +137,8 @@ Für Fehlerberichte bitte Programmversion, vollständigen Display-Modellnamen, U
 Sensorquelle und Schritte zum Nachstellen angeben. Anleitung: [CONTRIBUTING.md](CONTRIBUTING.md).
 Sicherheitslücken bitte vertraulich über den in [SECURITY.md](SECURITY.md) beschriebenen Weg melden.
 Support und Weiterentwicklung erfolgen nach Verfügbarkeit.
+Die [Datenschutzhinweise](DATENSCHUTZ.txt) erklären den lokalen Betrieb sowie E-Mail-Support
+über IONOS und öffentliche Beiträge auf GitHub. Sie liegen auch dem Download bei.
 
 ## Bauen und testen
 

@@ -9,6 +9,7 @@ tatsächliches Verhalten sowie die Schritte zum Nachstellen.
 Entferne persönliche Angaben, Geräte-Seriennummern und private Pfade aus Anhängen.
 Bitte keine vollständigen Konfigurations- oder Sensorprotokolle ungeprüft hochladen.
 Sicherheitslücken bitte über den in [SECURITY.md](SECURITY.md) beschriebenen Weg melden.
+Informationen zu E-Mail-Kontakt und öffentlichen Beiträgen: [Datenschutz](DATENSCHUTZ.txt).
 
 Für Codeänderungen sind kleine, klar beschriebene Pull Requests hilfreich.
 Die Build- und Testbefehle stehen in der [README](README.md#bauen-und-testen).

@@ -2,7 +2,7 @@ param([Parameter(Mandatory=$true)][string]$PackageDirectory)
 $ErrorActionPreference='Stop'
 $required=@(
  'FlexPanel.Core.dll','sensors/FlexPanel.Core.dll','sensors/tools/PresentMon.exe','licenses/FlexPanel.Core-MIT.txt','displays.example.json',
- 'NUTZUNG-UND-HAFTUNG.txt','LICENSE','LICENSE-MAP.txt','project-licenses/GPL-3.0-only.txt','project-licenses/MIT.txt','sensors/LICENSE','licenses/AioDisplay.Contracts-MIT.txt',
+ 'DATENSCHUTZ.txt','NUTZUNG-UND-HAFTUNG.txt','LICENSE','LICENSE-MAP.txt','project-licenses/GPL-3.0-only.txt','project-licenses/MIT.txt','sensors/LICENSE','licenses/AioDisplay.Contracts-MIT.txt',
  'THIRD-PARTY-COMPONENTS.txt','EXTERNAL-INTEGRATIONS.txt','CODE-PROVENANCE.txt','LICENSE-PROFILE.txt',
  'licenses/MPL-2.0.txt','licenses/LibreHardwareMonitorLib/LICENSE',
  'licenses/LibreHardwareMonitorLib/THIRD-PARTY-NOTICES.txt',

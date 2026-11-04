@@ -1,4 +1,4 @@
-param([string]$Dotnet='dotnet',[string]$Version='2.0.0-preview.2',[string]$OutputDirectory='')
+param([string]$Dotnet='dotnet',[string]$Version='2.0.0-preview.3',[string]$OutputDirectory='')
 $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot
 $stage=Join-Path $root ('work/publish-'+[Guid]::NewGuid().ToString('N'))
@@ -21,7 +21,7 @@ Copy-Item $presentMon (Join-Path $sensors 'tools/PresentMon.exe')
 Copy-Item (Join-Path $root 'displays.example.json') $package
 Copy-Item (Join-Path $PSScriptRoot 'Start-MiraRight-Panel.cmd') $package
 if(Test-Path -LiteralPath (Join-Path $root 'IMPRINT.txt')){Copy-Item -LiteralPath (Join-Path $root 'IMPRINT.txt') -Destination $package}
-foreach($name in @('LIESMICH.txt','NUTZUNG-UND-HAFTUNG.txt','settings.example.ini')){Copy-Item -LiteralPath (Join-Path $root $name) -Destination (Join-Path $package $name)}
+foreach($name in @('LIESMICH.txt','DATENSCHUTZ.txt','NUTZUNG-UND-HAFTUNG.txt','settings.example.ini')){Copy-Item -LiteralPath (Join-Path $root $name) -Destination (Join-Path $package $name)}
 Copy-Item -LiteralPath (Join-Path $root 'settings.example.ini') -Destination (Join-Path $package 'settings.ini')
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'MiraRight-Panel-Vorschau.cmd') -Destination $package
 & (Join-Path $PSScriptRoot 'third-party-notices.ps1') -PackageDirectory $package
