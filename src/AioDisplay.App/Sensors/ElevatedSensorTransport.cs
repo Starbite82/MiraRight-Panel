@@ -9,7 +9,7 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Runtime.InteropServices;
 
-// A short-lived, read-only hardware worker. No persistent elevated service or task.
+// A short-lived, read-only hardware worker; an optional preauthorized task can launch it.
 internal sealed class ElevatedSensorTransport : IDisposable
 {
     readonly CancellationTokenSource stop = new();
@@ -33,10 +33,14 @@ internal sealed class ElevatedSensorTransport : IDisposable
                 var info = new ProcessStartInfo { FileName = executable, WorkingDirectory = Path.GetDirectoryName(executable), UseShellExecute = true, Verb = "runas", WindowStyle = ProcessWindowStyle.Hidden };
                 foreach (string argument in new[] { "--pipe", name, "--parent", options.ParentId.ToString(), "--parent-start", options.ParentStartTicks.ToString() }) info.ArgumentList.Add(argument);
                 stop.Token.ThrowIfCancellationRequested();
-                var process = Process.Start(info) ?? throw new IOException("Sensorprozess wurde nicht gestartet.");
-                started(process);
+                Process process = null;
+                bool scheduled = ScheduledSensorTask.Installed;
+                if (scheduled) { ScheduledSensorTask.Run(name, options); log("Sensorstart über Windows-Aufgabe (ohne UAC)."); }
+                else { process = Process.Start(info) ?? throw new IOException("Sensorprozess wurde nicht gestartet."); started(process); }
                 await pipe.WaitForConnectionAsync(timeout.Token);
-                if (!GetNamedPipeClientProcessId(pipe.SafePipeHandle.DangerousGetHandle(), out uint pid) || pid != process.Id) throw new IOException("Unerwarteter Sensorprozess am Datenkanal.");
+                if (!GetNamedPipeClientProcessId(pipe.SafePipeHandle.DangerousGetHandle(), out uint pid)) throw new IOException("Sensorprozess am Datenkanal unbekannt.");
+                if (scheduled) { process = ScheduledSensorTask.ConnectedProcess(pid); started(process); }
+                else if (pid != process.Id) throw new IOException("Unerwarteter Sensorprozess am Datenkanal.");
                 using var writer = new StreamWriter(pipe, new System.Text.UTF8Encoding(false), 4096, true) { AutoFlush = true };
                 using var reader = new StreamReader(pipe, System.Text.Encoding.UTF8, false, 4096, true);
                 await writer.WriteLineAsync(configuration);

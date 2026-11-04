@@ -38,7 +38,7 @@ static class DocumentationScreenshots
         };
         using var thermal = UnifiedEngine.RenderThermalright(sample, settings.Thermalright);
         using var classic = Renderer.Draw(sample, settings.MiraBox.MiraBox);
-        var panoramaConfig = new PanelConfig { Design="Thermalright" }.Normalize();
+        var panoramaConfig = new PanelConfig { Design="Thermalright", ThreadNumbers=true }.Normalize();
         using var panorama = Renderer.Draw(sample, panoramaConfig);
         thermal.Save(Path.Combine(output,"miraright-panel-thermalright-dashboard.png"));
         classic.Save(Path.Combine(output,"miraright-panel-mirabox-classic.png"));

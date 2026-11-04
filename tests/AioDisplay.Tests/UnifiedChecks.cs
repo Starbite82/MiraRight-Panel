@@ -3,17 +3,41 @@ using System.Drawing;
 using System.Text.Json;
 
 static class UnifiedChecks {
- public static void Live(string host,int seconds){
+ public static void Layout(){
+  SensorHub.HostPath=Path.Combine(Log.Root,"MissingSensorHost.exe");
+  new DisplaySettings().Save();
+  using var form=new UnifiedWindow(true,false);form.Show();System.Windows.Forms.Application.DoEvents();
+  var tabs=(System.Windows.Forms.TabControl)form.Controls.OfType<System.Windows.Forms.TabControl>().Single();
+  foreach(var size in new[]{new Size(1180,800),new Size(1000,700)}){
+   form.ClientSize=size;
+   for(int index=0;index<2;index++){
+    tabs.SelectedIndex=index;System.Windows.Forms.Application.DoEvents();
+    var split=tabs.TabPages[index].Controls.OfType<System.Windows.Forms.SplitContainer>().Single();
+    var flow=split.Panel2.Controls.OfType<System.Windows.Forms.FlowLayoutPanel>().Single();
+    flow.ScrollControlIntoView(flow.Controls[flow.Controls.Count-1]);System.Windows.Forms.Application.DoEvents();
+    var last=flow.Controls.OfType<System.Windows.Forms.ComboBox>().Last();
+    Check(last.Top>=0&&last.Bottom<=flow.ClientSize.Height-32,"last sensor fully visible with breathing room");
+    var numbers=flow.Controls.OfType<System.Windows.Forms.CheckBox>().Single(c=>c.Text=="Threadnummern anzeigen");
+    numbers.Checked=!numbers.Checked;
+    Check((index==0?DisplaySettings.Load().Thermalright:DisplaySettings.Load().MiraBox).ThreadNumbers==numbers.Checked,"thread checkbox persisted");
+    using var image=new Bitmap(form.Width,form.Height);form.DrawToBitmap(image,new Rectangle(Point.Empty,image.Size));image.Save(Path.Combine(Log.Root,$"layout-{index}-{size.Width}.png"));
+   }
+  }
+  form.PostExit();System.Windows.Forms.Application.DoEvents();Console.WriteLine("PASS: both tabs at normal/minimum size, last sensor fully visible, independent thread options");
+ }
+ public static void Live(string host,int seconds,bool scheduled=false){
+  if(scheduled){Check(ScheduledSensorTask.Installed,"preauthorized sensor task installed");using var identity=System.Security.Principal.WindowsIdentity.GetCurrent();Check(!new System.Security.Principal.WindowsPrincipal(identity).IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator),"UI stays unelevated");}
   string old=SensorHub.HostPath;SensorHub.HostPath=host;
   try{
-   var hub=new UnifiedSensorHub(new DisplaySettings{AdminSensors=false},false);
+   var hub=new UnifiedSensorHub(new DisplaySettings{AdminSensors=scheduled},scheduled);
    try{
     var clock=System.Diagnostics.Stopwatch.StartNew();FlexPanel.HardwareBundle bundle=new();
-    while(clock.Elapsed.TotalSeconds<20){bundle=hub.Read();if(bundle.Libre.Count>0)break;Thread.Sleep(50);}
+    while(clock.Elapsed.TotalSeconds<20){System.Windows.Forms.Application.DoEvents();bundle=hub.Read();if(bundle.Libre.Count>0)break;Thread.Sleep(50);}
     Check(bundle.Libre.Count>0&&hub.ProcessId.HasValue,"live shared hardware initialized");int pid=hub.ProcessId.Value;using var child=System.Diagnostics.Process.GetProcessById(pid);
     int observations=0,stale=0;clock.Restart();while(clock.Elapsed.TotalSeconds<seconds){bundle=hub.Read();if(bundle.Libre.Count==0)stale++;Check(hub.ProcessId==pid,"single stable shared process");observations++;Thread.Sleep(80);}
-    Check(stale==0,"no stale shared snapshots");hub.Dispose();Check(child.WaitForExit(10000)&&hub.LastExitCode==0,"graceful sensor and PresentMon shutdown");
+    Check(stale==0,"no stale shared snapshots");hub.Dispose();Check(child.WaitForExit(10000)&&(hub.LastExitCode==0||scheduled&&hub.LastExitCode==null),"sensor and PresentMon shutdown (elevated exit code may be unavailable to the UI)");
     File.WriteAllText("unified-live-result.json",JsonSerializer.Serialize(new{Seconds=clock.Elapsed.TotalSeconds,Observations=observations,Stale=stale,Gpus=bundle.Libre.Count,OneProcess=true,GracefulExitCode=hub.LastExitCode},new JsonSerializerOptions{WriteIndented=true}));
+    File.WriteAllText("unified-live-hardware.json",JsonSerializer.Serialize(bundle,new JsonSerializerOptions{WriteIndented=true}));
     Console.WriteLine("PASS: live common hardware, one stable process, source/GPU bundle and graceful shutdown");
    }finally{hub.Dispose();}
   }finally{SensorHub.HostPath=old;}
@@ -28,7 +52,16 @@ static class UnifiedChecks {
   string oldRoot=Log.Root;string root=Path.Combine(oldRoot,"dual-settings");Directory.CreateDirectory(root);
   try{
    Log.Root=root;var settings=new DisplaySettings{Thermalright=new(){Fps=2,Rotation=90,Source="MSIAfterburner",Gpu="a"},MiraBox=new(){Kind="MiraBox",Fps=30,Rotation=180,Gpu="b"}};
-   settings.MiraBox.MiraBox.Design="Thermalright";settings.Save();var restored=DisplaySettings.Load();
+   settings.MiraBox.ThreadNumbers=false;settings.MiraBox.MiraBox.Design="Thermalright";settings.Save();var restored=DisplaySettings.Load();
+   Check(restored.Thermalright.ThreadNumbers&&!restored.MiraBox.ThreadNumbers&&!restored.MiraBox.MiraBox.ThreadNumbers,"independent thread numbering survives roundtrip");
+   restored.MiraBox.ThreadNumbers=true;restored.Save();Check(DisplaySettings.Load().MiraBox.MiraBox.ThreadNumbers,"MiraBox renderer receives numbering option");
+   foreach(string design in new[]{"Classic","Thermalright"}){
+    var fixture=new FlexPanel.Snapshot{CpuThreads=Enumerable.Range(0,32).Select(i=>(double?)(i*3)).ToArray()};
+    using var plain=FlexPanel.Renderer.Draw(fixture,new(){Cards=["CPU"],Design=design});
+    using var numbered=FlexPanel.Renderer.Draw(fixture,new(){Cards=["CPU"],Design=design,ThreadNumbers=true});
+    int changes=0;for(int y=236;y<376;y++)for(int x=36;x<1884;x++)if(plain.GetPixel(x,y)!=numbered.GetPixel(x,y))changes++;
+    Check(changes>100,"visible optional thread numbers in "+design);
+   }
    Check(restored.Thermalright.Fps==2&&restored.Thermalright.Rotation==90&&restored.Thermalright.Gpu=="a"&&restored.MiraBox.Fps==30&&restored.MiraBox.Rotation==180&&restored.MiraBox.MiraBox.Design=="Thermalright","independent settings roundtrip");
    var copy=restored.MiraBox.Copy();copy.MiraBox.SensorSelections["test"]="sensor";Check(restored.MiraBox.MiraBox.SensorSelections.Count==0,"settings copies isolated");
    var bundle=new FlexPanel.HardwareBundle{Libre=new(){{"a",new(){GpuLoad=10,VramTotal=8}},{"b",new(){GpuLoad=20,VramTotal=16}}},Afterburner=new(){{"a",new(){GpuLoad=30,VramTotal=8}}},Fps=75};

@@ -22,7 +22,7 @@ public sealed class UnifiedEngine : IDisposable {
   Thermalright.Start();MiraBox.Start();
  }
  public void SaveState(){
-  var state=new{At=DateTime.UtcNow,ProcessId=Environment.ProcessId,SensorProcessId,SharedSensorProcesses=SensorProcessId.HasValue?1:0,Thermalright=new{Thermalright.Status,Thermalright.Frames,Thermalright.ActualFps},MiraBox=new{MiraBox.Status,MiraBox.Frames,MiraBox.ActualFps}};
+  var state=new{At=DateTime.UtcNow,ProcessId=Environment.ProcessId,SensorProcessId,SharedSensorProcesses=SensorProcessId.HasValue?1:0,Thermalright=new{Thermalright.Status,Thermalright.Frames,Thermalright.ActualFps,Thermalright.FansWithRpm},MiraBox=new{MiraBox.Status,MiraBox.Frames,MiraBox.ActualFps,MiraBox.FansWithRpm}};
   string file=Path.Combine(Log.Root,"dual-state.json");File.WriteAllText(file+".tmp",JsonSerializer.Serialize(state,new JsonSerializerOptions{WriteIndented=true}));File.Move(file+".tmp",file,true);
  }
  public void Dispose(){stop.Cancel();Thermalright.Cancel();MiraBox.Cancel();if(sensorTask!=null&&!sensorTask.Wait(10000))throw new TimeoutException("Sensorzugriff wird noch beendet");Thermalright.Dispose();MiraBox.Dispose();hub.Dispose();stop.Dispose();}

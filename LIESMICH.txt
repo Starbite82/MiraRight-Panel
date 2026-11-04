@@ -74,7 +74,7 @@ SENSORRECHTE
 Die Oberfläche startet normal. Manche CPU-/RAM-/Mainboard-Sensoren und die FPS-Erfassung
 benötigen erhöhte Rechte. Unter „Gemeinsame Sensoren & Start“ lässt sich das ausdrücklich
 aktivieren. Danach fragt Windows für den separaten Sensorprozess per UAC nach.
-Bei aktivierten Sensorrechten ist auch beim nächsten normalen Start eine UAC-Abfrage möglich.
+Ohne eingerichtete Sensoraufgabe ist auch beim nächsten normalen Start eine UAC-Abfrage möglich.
 Eine abgelehnte Abfrage wird nicht automatisch wiederholt. Die Vorschau fordert nie Rechte an.
 
 TRAY UND AUTOSTART
@@ -85,13 +85,25 @@ den gemeinsamen Sensorprozess und die eigene PresentMon-Sitzung.
 Der gemeinsame Autostart ist eine eigene Option unter „Gemeinsame Sensoren & Start“.
 Vor dem dauerhaften Wechsel die alten Einzelprogramm-Autostarts deaktivieren, damit
 sie die Geräte nicht bei der nächsten Anmeldung erneut belegen. Die gemeinsame Option
-setzt den Benutzereintrag „MiraRight Panel“ im Windows-Autostart; sie installiert keinen Dienst
-und beseitigt nicht die UAC-Anforderung eines aktivierten Admin-Sensorprozesses.
+setzt den Benutzereintrag „MiraRight Panel“ im Windows-Autostart.
+
+OPTIONAL: SENSOREN OHNE WIEDERHOLTE UAC-ABFRAGE
+Panel über „Beenden“ im Infobereich schließen. Aus dem vollständig entpackten Paket
+Install-SensorAutostart.ps1 einmal mit dem eigenen Windows-Administratorkonto als
+Administrator ausführen. Beispielsweise im Paketordner ein Administrator-PowerShell-
+Fenster öffnen und .\Install-SensorAutostart.ps1 ausführen. Danach das Panel neu starten.
+Die feste Windows-Aufgabe startet dann den getrennten Sensorprozess automatisch mit
+dem Panel. UAC bleibt aktiviert; die Oberfläche läuft mit normalen Rechten. Es werden
+keine Kennwörter gespeichert. Einzelheiten und Entfernung: SENSOR-AUTOSTART.md.
+Für Windows-Standardkonten ist diese optionale Einrichtung nicht vorgesehen.
 
 UPDATE, ÜBERNAHME UND BACKUP
 Altes Programm vollständig beenden. Alten Ordner mit Einstellungen als Backup behalten.
 Neues ZIP in einen neuen Ordner entpacken. Eine vorhandene eigene displays.json übernehmen.
 Beim Ordnerwechsel einen gewünschten gemeinsamen Autostart aus dem neuen Ordner neu einrichten.
+Ist die Sensoraufgabe eingerichtet, nach einem Sensor-Update zusätzlich
+Install-SensorAutostart.ps1 aus dem neuen Paket erneut als Administrator ausführen.
+Die bisherige geschützte Sensorinstallation bleibt dabei als Backup erhalten.
 
 Erstübernahme aus Einzelprogrammen, solange noch keine displays.json vorhanden ist:
 - bisherige AIO-settings.ini als settings.ini in den neuen Ordner legen;

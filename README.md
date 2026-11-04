@@ -59,7 +59,7 @@ MiraBox bekommt ein eigenes Profil, unabhängig von einem gleichzeitig betrieben
 
 ## Download
 
-Lade das **Windows-x64-Programmpaket** der [aktuellen öffentlichen Vorschau](https://github.com/Starbite82/MiraRight-Panel/releases/tag/v2.0.0-preview.3)
+Lade das **Windows-x64-Programmpaket** der [aktuellen öffentlichen Vorschau](https://github.com/Starbite82/MiraRight-Panel/releases/tag/v2.0.0-preview.4)
 herunter und entpacke das ZIP vollständig. .NET-Laufzeit, Sensorbibliothek und PresentMon sind enthalten.
 Die GitHub-Schaltfläche „Code → Download ZIP“ liefert den Quellcode für Entwickler.
 
@@ -77,6 +77,10 @@ Diese Vorschau fordert keine Administratorrechte an. Fehlende Sensorwerte ersche
 
 Die ausführliche [deutsche Anleitung](LIESMICH.txt) erklärt Einrichtung, Sensorrechte,
 Autostart, Updates, Backups und Fehlerhilfe.
+
+Der optionale [Sensor-Autostart ohne wiederholte UAC-Abfrage](docs/sensor-autostart.md)
+kann einmalig als Administrator eingerichtet werden. Die Oberfläche läuft weiterhin
+mit normalen Rechten; UAC bleibt eingeschaltet.
 
 ## Gemeinsam und getrennt
 

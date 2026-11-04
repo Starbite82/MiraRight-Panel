@@ -18,7 +18,7 @@ public static partial class Renderer {
    switch(card){
     case "CPU":
      Value(N(s.CpuTemp," °C"),112);Percentage(g,s.CpuLoad,x+16,186,30,cyan);
-     Label("THREADS",244);ThermalThreads(g,ThreadBars(s),x+16,276,width-32,100,cyan);
+     Label("THREADS",244);ThermalThreads(g,ThreadBars(s),x+16,276,width-32,100,cyan,c.ThreadNumbers);
      Label("LEISTUNG  "+N(s.CpuWatts," W","0.0"),394);break;
     case "GPU":
      Value(N(s.GpuTemp," °C"),112);Percentage(g,s.GpuLoad,x+16,186,30,purple);
@@ -45,7 +45,7 @@ public static partial class Renderer {
   double load=Math.Clamp(value/capacity,0,1);Color color=memory?MemoryColor(load*100):LoadColor(load*100);
   using var fill=new SolidBrush(color);g.FillRectangle(fill,x,y,width*(float)load,height);
  }
- static void ThermalThreads(Graphics g,double?[] threads,float x,float y,float width,int height,Color accent){
+ static void ThermalThreads(Graphics g,double?[] threads,float x,float y,float width,int height,Color accent,bool numbers){
   if(threads.Length==0){Text(g,"—",x,y,20,Muted);return;}
   const int pageSize=32;int pages=(threads.Length+pageSize-1)/pageSize,page=(int)(DateTime.UtcNow.TimeOfDay.TotalSeconds/5)%pages;
   var loads=threads.Skip(page*pageSize).Take(pageSize).ToArray();int columns=Math.Min(8,loads.Length),rows=(loads.Length+columns-1)/columns;float cellWidth=width/columns,cellHeight=(float)height/rows;
@@ -53,6 +53,7 @@ public static partial class Renderer {
    float left=x+j%columns*cellWidth,top=y+j/columns*cellHeight;float w=cellWidth-4,h=cellHeight-4;
    using var track=new SolidBrush(Color.FromArgb(51,71,95));g.FillRectangle(track,left,top,w,h);
    if(loads[j] is double value&&double.IsFinite(value)){float fill=h*(float)Math.Clamp(value/100,0,1);using var brush=new SolidBrush(LoadColor(value));g.FillRectangle(brush,left,top+h-fill,w,fill);}
+   if(numbers)ThreadNumber(g,page*pageSize+j+1,new RectangleF(left,top,w,h));
   }
  }
 }

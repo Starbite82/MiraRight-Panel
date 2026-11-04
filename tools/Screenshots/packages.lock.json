@@ -182,8 +182,8 @@
       "MiraRightPanel": {
         "type": "Project",
         "dependencies": {
-          "AioDisplay.Contracts": "[2.0.0-preview.3, )",
-          "FlexPanel.Core": "[2.0.0-preview.3, )"
+          "AioDisplay.Contracts": "[2.0.0-preview.4, )",
+          "FlexPanel.Core": "[2.0.0-preview.4, )"
         }
       }
     },

@@ -12,6 +12,7 @@ public sealed class PanelConfig {
  public string DeviceSerial {get;set;} = "";
  public int Brightness {get;set;} = 65;
  public bool Rotate180 {get;set;}
+ public bool ThreadNumbers {get;set;}
  public bool UsbEnabled {get;set;} = true;
  public int RefreshMs {get;set;} = 500;
  public string Design {get;set;} = "Classic";

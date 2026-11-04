@@ -15,7 +15,7 @@ public sealed class DisplayProfile {
   if(!FlexPanel.PanelConfig.DisplayRates.Contains(Fps))Fps=10;if(!FlexPanel.PanelConfig.SensorIntervals.Contains(SensorMs))SensorMs=100;
   if(!FlexPanel.PanelConfig.BarWindows.Contains(BarWindowMs))BarWindowMs=500;
   if(Source!="MSIAfterburner")Source="LibreHardwareMonitor";if(AioView<0||AioView>6)AioView=6;
-  MiraBox??=new();MiraBox.Normalize();MiraBox.GpuId=Gpu;MiraBox.SensorSource=Source;MiraBox.BarWindowMs=BarWindowMs;MiraBox.Rotate180=Rotation==180;
+  MiraBox??=new();MiraBox.Normalize();MiraBox.GpuId=Gpu;MiraBox.SensorSource=Source;MiraBox.BarWindowMs=BarWindowMs;MiraBox.Rotate180=Rotation==180;MiraBox.ThreadNumbers=ThreadNumbers;
  }
  public DisplayProfile Copy()=>JsonSerializer.Deserialize<DisplayProfile>(JsonSerializer.Serialize(this));
 }

@@ -23,7 +23,7 @@ public static partial class Renderer {
      if(BarValue(s,"cpu",s.CpuLoad) is double load){using var fill=new SolidBrush(LoadColor(load));g.FillRectangle(fill,x+18,197,(width-36)*(float)Math.Clamp(load/100,0,1),6);}
      var threads=s.CpuThreads.Length>0?ThreadBars(s):new double?[Environment.ProcessorCount];
      Text(g,$"THREADS 1–{threads.Length}",x+18,212,13,Muted);
-     ThreadGrid(g,threads,x+18,236,width-36,106,accent);
+     ThreadGrid(g,threads,x+18,236,width-36,106,accent,c.ThreadNumbers);
      Text(g,"TEMPERATUR",x+18,361,15,Muted);Text(g,N(s.CpuTemp," °C"),x+18,383,23,White,true,width/2-20);
      Text(g,"LEISTUNG",x+width/2+4,361,15,Muted);Text(g,N(s.CpuWatts," W","0.0"),x+width/2+4,383,23,White,true,width/2-20);
      break;
@@ -50,7 +50,7 @@ public static partial class Renderer {
   }
  }
  public static int FilledPixels(double? load,int height)=>load is double value&&double.IsFinite(value)?(int)Math.Floor(Math.Clamp(value,0,100)*height/100+1e-9):0;
- static void ThreadGrid(Graphics g,double?[] loads,float x,float y,float width,int height,Color accent){
+ static void ThreadGrid(Graphics g,double?[] loads,float x,float y,float width,int height,Color accent,bool numbers){
   const int gap=6;int columns=Math.Min(8,loads.Length),rows=(loads.Length+columns-1)/columns;
   int cellWidth=(int)Math.Floor((width-(columns-1)*gap)/columns);
   int innerHeight=Math.Min(20,(height-(rows-1)*gap)/rows-2),cellHeight=innerHeight+2;
@@ -61,8 +61,16 @@ public static partial class Renderer {
    g.FillRectangle(background,left+1,top+1,cellWidth-2,innerHeight);g.DrawRectangle(border,left,top,cellWidth-1,cellHeight-1);
    if(loads[i] is double value&&double.IsFinite(value)){int pixels=FilledPixels(value,innerHeight);if(pixels>0){using var fill=new SolidBrush(LoadColor(value));g.FillRectangle(fill,left+1,top+1+innerHeight-pixels,cellWidth-2,pixels);}}
    else g.DrawLine(missing,left+cellWidth/2-3,top+cellHeight/2,left+cellWidth/2+3,top+cellHeight/2);
+   if(numbers)ThreadNumber(g,i+1,new RectangleF(left,top,cellWidth,cellHeight));
   }
   g.SmoothingMode=smoothing;
+ }
+ static void ThreadNumber(Graphics g,int number,RectangleF cell){
+  using var font=new Font("Segoe UI",Math.Min(12,Math.Max(7,cell.Height-4)),FontStyle.Bold,GraphicsUnit.Pixel);
+  using var format=new StringFormat{Alignment=StringAlignment.Center,LineAlignment=StringAlignment.Center};
+  using var shadow=new SolidBrush(Color.FromArgb(9,14,21));using var ink=new SolidBrush(White);
+  g.DrawString(number.ToString(),font,shadow,new RectangleF(cell.X+1,cell.Y+1,cell.Width,cell.Height),format);
+  g.DrawString(number.ToString(),font,ink,cell,format);
  }
  static void Text(Graphics g,string text,float x,float y,float size,Color color,bool bold=false,float maxWidth=10000){size+=4;using var brush=new SolidBrush(color);using var font=new Font("Segoe UI",size,bold?FontStyle.Bold:FontStyle.Regular,GraphicsUnit.Pixel);using var fmt=new StringFormat{Trimming=StringTrimming.EllipsisCharacter,FormatFlags=StringFormatFlags.NoWrap};g.DrawString(text,font,brush,new RectangleF(x,y,maxWidth,size*1.6f),fmt);}
 }

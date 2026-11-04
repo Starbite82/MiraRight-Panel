@@ -18,6 +18,8 @@ internal static class TestRunner
             if (args.FirstOrDefault() == "--discover") { foreach (string name in new[] { "FanControl.exe", "MSIAfterburner.exe", "LibreHardwareMonitor.exe" }) Console.WriteLine(name + ": " + (SoftwareDiscovery.Find(name, name == "FanControl.exe" ? "FanControl.IPC.dll" : null) ?? "not found")); return 0; }
             if (args.FirstOrDefault() == "--golden") { Golden.Main(new[] { output }); return 0; }
             if (args.FirstOrDefault() == "--unified-live") { UnifiedChecks.Live(args[2],int.Parse(args[3])); return 0; }
+            if (args.FirstOrDefault() == "--scheduled-live") { UnifiedChecks.Live(args[2],int.Parse(args[3]),true); return 0; }
+            if (args.FirstOrDefault() == "--layout") { UnifiedChecks.Layout(); return 0; }
             if (args.FirstOrDefault() == "--live") { IntegrationChecks.Live(args[2], int.Parse(args[3])); return 0; }
             if (args.FirstOrDefault() == "--lifecycle") { IntegrationChecks.Lifecycle(args[2], args[3]); return 0; }
             if (args.FirstOrDefault() == "--parent-harness") { IntegrationChecks.ParentHarness(args[2]); return 0; }

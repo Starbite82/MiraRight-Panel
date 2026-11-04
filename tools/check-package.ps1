@@ -1,6 +1,7 @@
 param([Parameter(Mandatory=$true)][string]$PackageDirectory)
 $ErrorActionPreference='Stop'
 $required=@(
+ 'Install-SensorAutostart.ps1','SENSOR-AUTOSTART.md',
  'FlexPanel.Core.dll','sensors/FlexPanel.Core.dll','sensors/tools/PresentMon.exe','licenses/FlexPanel.Core-MIT.txt','displays.example.json',
  'DATENSCHUTZ.txt','NUTZUNG-UND-HAFTUNG.txt','LICENSE','LICENSE-MAP.txt','project-licenses/GPL-3.0-only.txt','project-licenses/MIT.txt','sensors/LICENSE','licenses/AioDisplay.Contracts-MIT.txt',
  'THIRD-PARTY-COMPONENTS.txt','EXTERNAL-INTEGRATIONS.txt','CODE-PROVENANCE.txt','LICENSE-PROFILE.txt',

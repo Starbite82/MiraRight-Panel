@@ -18,6 +18,7 @@ public sealed class DisplaySession : IDisposable {
   }}catch(OperationCanceledException)when(stop.IsCancellationRequested){}
  }
  public DateTime LastSampleAt=>sample.At;
+ public int FansWithRpm=>sample.Fans.Count(f=>f.Rpm.HasValue);
  public Bitmap Preview(){lock(imageLock)return preview==null?null:(Bitmap)preview.Clone();}
  async Task Run(){
   IDisplayOutput output=null;
