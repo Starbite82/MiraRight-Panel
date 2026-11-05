@@ -205,7 +205,7 @@ public static class PanelRenderer
                 Text(g, Value(s, 0, "GPU temperature", "°C"), 165, 25, 21, White, 92);
                 RightText(g, MetricText(metrics.CpuWatts, "W", s.Fresh), 155, 39, 11, White, 59);
                 RightText(g, MetricText(metrics.GpuWatts, "W", s.Fresh), 317, 39, 11, White, 59);
-                RightText(g, MetricText(metrics.Fps, "FPS", s.Fresh), 317, 59, 10, Purple, 85);
+                RightText(g, MetricText(metrics.Fps, "FPS", s.Fresh), 317, 55, 14, Purple, 85);
             }
             LoadText(g, s, 0x90, "CPU usage", 6, 56, 13, Cyan);
             LoadText(g, s, 0x30, "GPU usage", 168, 56, 13, Purple);
