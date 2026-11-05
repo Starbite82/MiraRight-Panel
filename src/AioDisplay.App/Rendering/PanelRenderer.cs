@@ -11,6 +11,15 @@ using System.Windows.Forms;
 
 public static class PanelRenderer
 {
+    public sealed record DashboardMetrics(double? CpuWatts, double? GpuWatts, double? Fps);
+    public static string MetricText(double? value, string unit, bool fresh) => fresh && value is double number && double.IsFinite(number) && number >= 0 && number < 100000 ? number.ToString("0") + " " + unit : "— " + unit;
+    static void RightText(Graphics g, string text, float right, float y, float size, Color color, int maxWidth)
+    {
+        using var font = new Font("Segoe UI", size, FontStyle.Bold, GraphicsUnit.Point);
+        float width = g.MeasureString(text, font).Width;
+        if (width > maxWidth && size > 6) { RightText(g, text, right, y, size - 0.5f, color, maxWidth); return; }
+        using var brush = new SolidBrush(color); g.DrawString(text, font, brush, right - width, y);
+    }
     // Relative to the existing physical mounting orientation; clockwise on the LCD.
     public static void ApplyRotation(Bitmap image, int degrees)
     {
@@ -106,9 +115,9 @@ public static class PanelRenderer
         return load < 50 ? Blend(low, middle, load / 50) : Blend(middle, high, (load - 50) / 50);
     }
     static Color Blend(Color a, Color b, double t) { return Color.FromArgb((int)Math.Round(a.R + (b.R - a.R) * t), (int)Math.Round(a.G + (b.G - a.G) * t), (int)Math.Round(a.B + (b.B - a.B) * t)); }
-    public static Bitmap RenderView(SensorSnapshot s, double total, int view, bool numbers, bool? hideStoppedFans = null)
+    public static Bitmap RenderView(SensorSnapshot s, double total, int view, bool numbers, bool? hideStoppedFans = null, DashboardMetrics metrics = null)
     {
-        if (view == 6) return RenderDashboard(s, total, numbers, FanData.Read(s), hideStoppedFans);
+        if (view == 6) return RenderDashboard(s, total, numbers, FanData.Read(s), hideStoppedFans, metrics);
         if (view == 1) return Render(s, total);
         if (view < 0 || view > 5) view = 0;
         Bitmap bmp = view == 0 ? new Bitmap(320, 320) : Render(s, total);
@@ -176,7 +185,7 @@ public static class PanelRenderer
         Color color = percent >= 90 ? Color.FromArgb(255, 58, 63) : percent >= 85 ? Color.FromArgb(255, 153, 51) : percent >= 80 ? Color.FromArgb(255, 205, 65) : Color.FromArgb(61, 216, 116);
         if (fill > 0) Rect(g, color, x, y + height - fill, width, fill);
     }
-    public static Bitmap RenderDashboard(SensorSnapshot s, double total, bool numbers, System.Collections.Generic.List<FanReading> fans, bool? hideStoppedFans = null)
+    public static Bitmap RenderDashboard(SensorSnapshot s, double total, bool numbers, System.Collections.Generic.List<FanReading> fans, bool? hideStoppedFans = null, DashboardMetrics metrics = null)
     {
         var bmp = Render(s, total); using (var g = Graphics.FromImage(bmp))
         {
@@ -185,8 +194,19 @@ public static class PanelRenderer
             Rect(g, Tile, 0, 0, 158, 153); Rect(g, Tile, 162, 0, 158, 153);
             Rect(g, Cyan, 0, 0, 158, 3); Rect(g, Purple, 162, 0, 158, 3);
             Text(g, "CPU", 5, 5, 10, Cyan); Text(g, "GPU", 167, 5, 10, Purple);
-            Text(g, Value(s, 0x80, "CPU temperature", "°C"), 3, 22, 24, White, 153);
-            Text(g, Value(s, 0, "GPU temperature", "°C"), 165, 22, 24, White, 153);
+            if (metrics == null)
+            {
+                Text(g, Value(s, 0x80, "CPU temperature", "°C"), 3, 22, 24, White, 153);
+                Text(g, Value(s, 0, "GPU temperature", "°C"), 165, 22, 24, White, 153);
+            }
+            else
+            {
+                Text(g, Value(s, 0x80, "CPU temperature", "°C"), 3, 25, 21, White, 92);
+                Text(g, Value(s, 0, "GPU temperature", "°C"), 165, 25, 21, White, 92);
+                RightText(g, MetricText(metrics.CpuWatts, "W", s.Fresh), 155, 39, 11, White, 59);
+                RightText(g, MetricText(metrics.GpuWatts, "W", s.Fresh), 317, 39, 11, White, 59);
+                RightText(g, MetricText(metrics.Fps, "FPS", s.Fresh), 317, 59, 10, Purple, 85);
+            }
             LoadText(g, s, 0x90, "CPU usage", 6, 56, 13, Cyan);
             LoadText(g, s, 0x30, "GPU usage", 168, 56, 13, Purple);
             Rect(g, Track, 5, 85, 148, 1); Rect(g, Track, 167, 85, 148, 1);

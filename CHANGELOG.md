@@ -1,5 +1,13 @@
 # Änderungen
 
+## 2.0.0-preview.7 — Thermalright-Dashboard (noch kein GitHub-Release)
+
+- CPU-/GPU-Leistungsaufnahme rechts neben der jeweiligen Temperatur auf dem 320×320-Dashboard.
+- FPS der aktiven Anwendung rechts neben der GPU-Prozentlast, aus der gemeinsamen PresentMon-Erfassung.
+- Kompaktere Temperaturzahlen; fehlende, ungültige und veraltete Zusatzwerte erscheinen als nicht verfügbar.
+- Dokumentationsvorschau mit gültig gekennzeichneten Beispielsensordaten und aktualisierten Thermalright-Bildern.
+- Tests für Wertübergabe, fehlende/Null-/ungültige Werte und unveränderte Speicher-/Thread-/Lüfterbereiche; 42 historische Referenzbilder unverändert.
+
 ## 2.0.0-preview.3 — Öffentliche Vorschau
 
 - Datenschutzhinweise für lokalen Betrieb, IONOS-E-Mail-Support und GitHub-Beiträge.

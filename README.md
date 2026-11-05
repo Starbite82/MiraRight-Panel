@@ -48,7 +48,9 @@ Lüfter und Schriftplatz hängen von deiner Hardware und deinen Einstellungen ab
 ### Thermalright FROZEN WARFRAME 360
 
 Dashboard mit CPU-Gesamtlast, einzelnen CPU-Threads, Temperaturen, Speicher und Lüftern
-auf dem unterstützten 320-×-320-Controller. Die Software-Vorschau bleibt bei gedrehter LCD-Ausgabe aufrecht.
+auf dem unterstützten 320-×-320-Controller. CPU-/GPU-Watt stehen jeweils neben der Temperatur;
+FPS der aktiven Anwendung rechts neben der GPU-Prozentlast. Ohne gültige Messung erscheint `—`.
+Die Software-Vorschau bleibt bei gedrehter LCD-Ausgabe aufrecht.
 
 ![Thermalright FROZEN WARFRAME 360: Dashboard in nativer Auflösung](docs/images/miraright-panel-thermalright-dashboard.png)
 

@@ -31,6 +31,7 @@ static class DocumentationScreenshots
             RamUsed=24, RamTotal=64, RamFree=40, RamTemp=42, RamWatts=null,
             VramUsed=13, VramTotal=16, VramFree=3,
             Fps=132, FrameMs=7.58, FrameApp="Beispiel-Spiel.exe", SourceName="LibreHardwareMonitor",
+            Sensors=[new("example-cpu","Beispiel-CPU","Cpu","example-load","CPU Total","Load",48)],
             Fans=[new("case","Gehäuselüfter",850,"LibreHardwareMonitor",42,"","","",""),
                   new("cpu","AIO-Lüfter",1200,"LibreHardwareMonitor",64,"","","",""),
                   new("pump","AIO-Pumpe",2400,"LibreHardwareMonitor",null,"","","",""),

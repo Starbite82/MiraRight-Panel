@@ -16,7 +16,7 @@ public sealed class UnifiedEngine : IDisposable {
  public static Bitmap RenderThermalright(FlexPanel.Snapshot sample,DisplayProfile profile){
   var adapted=UnifiedSensorHub.ToAio(sample);
   foreach(var bar in sample.BarValues)adapted.BarValues[bar.Key.StartsWith("thread:")?"thread:"+(int.Parse(bar.Key[7..])+1):bar.Key]=bar.Key is "ram" or "vram"?bar.Value*1024:bar.Value;
-  return PanelRenderer.RenderView(adapted,sample.RamTotal??double.NaN,profile.AioView,profile.ThreadNumbers,profile.HideStoppedFans);
+  return PanelRenderer.RenderView(adapted,sample.RamTotal??double.NaN,profile.AioView,profile.ThreadNumbers,profile.HideStoppedFans,new PanelRenderer.DashboardMetrics(sample.CpuWatts,sample.GpuWatts,sample.Fps));
  }
  public void Start(){
   sensorTask=Task.Run(async()=>{try{while(!stop.IsCancellationRequested){try{latest=hub.Read();}catch(Exception e){latest=new();Log.Write("Shared sensors: "+e.Message);}await Task.Delay(50,stop.Token);}}catch(OperationCanceledException)when(stop.IsCancellationRequested){}});

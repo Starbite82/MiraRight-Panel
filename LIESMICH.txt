@@ -38,6 +38,9 @@ sendet aber keine USB-Bilder und fordert keine Administratorrechte an.
 Die Vorschau darf neben einer normalen Instanz laufen.
 
 EINSTELLUNGEN PRO DISPLAY
+Im Thermalright-Dashboard stehen CPU-/GPU-Watt neben der jeweiligen Temperatur.
+Unter der GPU steht rechts neben der prozentualen Last die FPS der aktiven Anwendung.
+Ohne gültige FPS-/Leistungsmessung erscheint —; fehlende Werte werden nicht geschätzt.
 Thermalright bietet sieben Ansichten und Drehung 0/90/180/270 Grad.
 MiraBox bietet klassisches Dashboard- oder Thermalright-Panorama-Design,
 Bereiche/Reihenfolge, Helligkeit und Drehung 0/180 Grad im nativen breiten Format.
