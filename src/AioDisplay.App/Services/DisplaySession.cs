@@ -11,9 +11,9 @@ public sealed class DisplaySession : IDisposable {
  public DisplaySession(Func<DisplayProfile> settings,Func<FlexPanel.HardwareBundle> source,Func<IDisplayOutput> output,Func<FlexPanel.Snapshot,DisplayProfile,Bitmap> renderer,bool previewMode=false){profile=settings;sensors=source;factory=output;render=renderer;previewOnly=previewMode;}
  public void Start(){sampler=Task.Run(SampleLoop);worker=Task.Run(Run);}
  async Task SampleLoop(){
-  var average=new FlexPanel.BarAverager();var clock=Stopwatch.StartNew();
+  var average=new FlexPanel.BarAverager();var numbers=new FlexPanel.ReadoutAverager();var clock=Stopwatch.StartNew();
   try{while(!stop.IsCancellationRequested){double started=clock.Elapsed.TotalMilliseconds;var p=profile();
-   if(p.Enabled){try{var raw=sensors().Select(p.Source,p.Gpu);p.MiraBox.SensorSource=p.Source;p.MiraBox.GpuId=p.Gpu;p.MiraBox.BarWindowMs=p.BarWindowMs;sample=average.Apply(FlexPanel.SensorSelection.Apply(raw,p.MiraBox),p.MiraBox);}catch(Exception e){average.Reset();sample=new(){SensorStatus=e.Message};}}
+   if(p.Enabled){try{var raw=sensors().Select(p.Source,p.Gpu);p.MiraBox.SensorSource=p.Source;p.MiraBox.GpuId=p.Gpu;p.MiraBox.BarWindowMs=p.BarWindowMs;sample=numbers.Apply(average.Apply(FlexPanel.SensorSelection.Apply(raw,p.MiraBox),p.MiraBox),p.MiraBox,p.ValueWindowMs??p.PercentWindowMs);}catch(Exception e){average.Reset();numbers.Reset();sample=new(){SensorStatus=e.Message};}}
    await FlexPanel.PanelRate.Delay(clock,started,p.SensorMs,stop.Token);
   }}catch(OperationCanceledException)when(stop.IsCancellationRequested){}
  }
@@ -23,11 +23,14 @@ public sealed class DisplaySession : IDisposable {
  async Task Run(){
   IDisplayOutput output=null;
   var clock=Stopwatch.StartNew();double report=0;int count=0;
+  var framesAverage=new FlexPanel.ReadoutAverager();FlexPanel.HardwareBundle previousFrames=null;long frameSequence=0;
   try{while(!stop.IsCancellationRequested){double started=clock.Elapsed.TotalMilliseconds;var p=profile();
    if(!p.Enabled){output?.Dispose();output=null;status="Deaktiviert";Volatile.Write(ref actualFps,0);await Task.Delay(100,stop.Token);continue;}
    try{
-    var rawFrame=sensors();var visible=sample with{Fps=rawFrame.Fps,FrameMs=rawFrame.FrameMs,FrameApp=rawFrame.FrameApp,FrameStatus=rawFrame.FrameStatus};
-    if((DateTime.UtcNow-visible.At).TotalSeconds>3)visible=new(){SourceName=p.Source,FrameApp=rawFrame.FrameApp,Fps=rawFrame.Fps,FrameMs=rawFrame.FrameMs};
+    var rawFrame=sensors();if(!ReferenceEquals(rawFrame,previousFrames)){previousFrames=rawFrame;frameSequence++;}
+    var visible=sample with{Fps=rawFrame.Fps,FrameMs=rawFrame.FrameMs,FrameApp=rawFrame.FrameApp,FrameStatus=rawFrame.FrameStatus};
+    visible=framesAverage.ApplyFrames(visible,frameSequence,p.ValueWindowMs??p.PercentWindowMs);
+    if((DateTime.UtcNow-visible.At).TotalSeconds>3)visible=new(){SourceName=p.Source,FrameApp=visible.FrameApp,Fps=visible.Fps,FrameMs=visible.FrameMs};
     using var image=render(visible,p);lock(imageLock){preview?.Dispose();preview=(Bitmap)image.Clone();}
     if(!previewOnly){output??=factory();output.Send(image,p);Interlocked.Increment(ref frames);count++;status="Verbunden";}else status="Vorschau · USB aus";
     double now=clock.Elapsed.TotalMilliseconds;if(now-report>=2000){Volatile.Write(ref actualFps,count*1000/(now-report));count=0;report=now;}

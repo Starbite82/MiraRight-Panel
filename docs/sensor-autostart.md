@@ -6,6 +6,8 @@ Mit `Install-SensorAutostart.ps1` aus dem vollständig entpackten Windows-Paket 
 
 Die Aufgabe hat keine eigene Anmeldeauslösung: Die normal gestartete Oberfläche fordert ihren Sensorprozess an. Dieser beendet sich mit der Panelsitzung. Seine Dateien liegen geschützt unter `C:\Program Files\MiraRight Panel\Sensors`. UAC bleibt aktiv. Die Aufgabe erlaubt ausschließlich den fest eingetragenen Sensorprozess; die Verbindung ist an die laufende Oberfläche gebunden.
 
+Der Sensorprozess zeigt kein Konsolenfenster. Bei einem Verbindungsabbruch oder ausbleibenden Messwerten kann die Oberfläche den Sensorprozess über die eingerichtete Aufgabe erneut starten. Für diesen automatischen Neustart wird niemals auf eine neue UAC-Abfrage ausgewichen. Verbindungsereignisse und Datenalter stehen im lokalen `debug.log`, erreichbar über **Gemeinsame Sensoren & Start → Debug-Log öffnen**. Ein vollständiger Hardware- oder Treiberstillstand kann trotzdem einen manuellen Neustart erfordern.
+
 Nach einem Update des Sensorprozesses das Skript aus dem neuen Paket erneut als Administrator ausführen. Die vorherige geschützte Sensorinstallation wird als `Sensors-Backup-…` aufbewahrt. Ein vorhandener Sensorprozess muss zuvor über **Beenden** im Infobereich geschlossen werden.
 
 Zum Entfernen der Aufgabe das Skript als Administrator mit `-Remove` ausführen. Die geschützten Programmdateien bleiben zur manuellen Sicherung erhalten. Ohne eingerichtete Aufgabe fragt das Panel beim Start mit aktivierten Sensorrechten wieder nach der normalen Windows-Bestätigung. Für Windows-Standardkonten ist diese Einrichtung nicht vorgesehen.

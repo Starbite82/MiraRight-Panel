@@ -4,6 +4,7 @@ fan-rpm.tsv*
 sensors.txt
 status.txt
 panel.log
+debug.log*
 error.txt
 live-preview.png
 work/

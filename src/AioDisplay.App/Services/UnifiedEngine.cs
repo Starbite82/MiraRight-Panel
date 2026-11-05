@@ -9,6 +9,7 @@ public sealed class UnifiedEngine : IDisposable {
  public FlexPanel.HardwareBundle Latest=>latest;public int? SensorProcessId=>hub.ProcessId;
  public UnifiedEngine(Func<DisplaySettings> settings,bool previewOnly){
   hub=new(settings(),!previewOnly);
+  Log.Debug("panel.start",new { Version=System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(System.Reflection.AssemblyInformationalVersionAttribute),false).Cast<System.Reflection.AssemblyInformationalVersionAttribute>().FirstOrDefault()?.InformationalVersion, Preview=previewOnly, settings().AdminSensors });
   Thermalright=new(()=>settings().Thermalright.Copy(),()=>latest,()=>new ThermalrightOutput(),RenderThermalright,previewOnly);
   MiraBox=new(()=>settings().MiraBox.Copy(),()=>latest,()=>new MiraBoxOutput(),(s,p)=>FlexPanel.Renderer.Draw(s,p.MiraBox),previewOnly);
  }

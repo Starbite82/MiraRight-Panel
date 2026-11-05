@@ -16,6 +16,13 @@ $required=@(
  'sources/SOURCE-MANIFEST.json','sources/README-SOURCES.txt','sources/MiraRight-Panel-source.zip'
 )
 foreach($relative in $required){if(-not (Test-Path -LiteralPath (Join-Path $PackageDirectory $relative))){throw ('Missing legal/package file: '+$relative)}}
+$sensorStream=[IO.File]::OpenRead((Join-Path $PackageDirectory 'sensors/MiraRightPanel.SensorHost.exe'))
+$sensorReader=[IO.BinaryReader]::new($sensorStream)
+try{
+ $sensorStream.Position=0x3c;$peOffset=$sensorReader.ReadInt32()
+ $sensorStream.Position=$peOffset+24+68
+ if($sensorReader.ReadUInt16() -ne 2){throw 'Sensor host must use Windows GUI subsystem, without a console window'}
+}finally{$sensorReader.Dispose();$sensorStream.Dispose()}
 $records=@(Get-Content -LiteralPath (Join-Path $PackageDirectory 'sources/SOURCE-MANIFEST.json') -Raw|ConvertFrom-Json)
 $components=@('MiraRight Panel','LibreHardwareMonitorLib','BlackSharp.Core','DiskInfoToolkit','RAMSPDToolkit-NDD','PawnIO.Modules')
 if($records.Count -ne $components.Count){throw 'Incomplete corresponding source manifest'}

@@ -15,6 +15,7 @@ public static partial class Renderer {
    string card=c.Cards[i];Text(g,card=="FANS"?"LÜFTER":card,x+18,92,22,White,true);
    float yy=137;void Big(string text){Text(g,text,x+18,yy,52,accent,true,width-32);}
    void Row(string name,string value,int row){Text(g,name,x+18,242+row*51,17,Muted);Text(g,value,x+18,263+row*51,23,White,true,width-32);}
+   void CpuGpuDetails(double? temperature,double? watts){Text(g,"TEMPERATUR",x+18,361,15,Muted);Text(g,N(temperature," °C"),x+18,383,23,White,true,width/2-20);Text(g,"LEISTUNG",x+width/2+4,361,15,Muted);Text(g,N(watts," W","0.0"),x+width/2+4,383,23,White,true,width/2-20);}
    void Bar(double? used,double? total){float y=211;using var bb=new SolidBrush(Color.FromArgb(40,54,69));g.FillRectangle(bb,x+18,y,width-36,9);if(used.HasValue&&total>0){double percent=Math.Clamp(used.Value/total.Value*100,0,100);using var ab=new SolidBrush(card is "RAM" or "VRAM"?MemoryColor(percent):LoadColor(percent));g.FillRectangle(ab,x+18,y,(width-36)*(float)(percent/100),9);}}
    switch(card){
     case "CPU":
@@ -24,10 +25,9 @@ public static partial class Renderer {
      var threads=s.CpuThreads.Length>0?ThreadBars(s):new double?[Environment.ProcessorCount];
      Text(g,$"THREADS 1–{threads.Length}",x+18,212,13,Muted);
      ThreadGrid(g,threads,x+18,236,width-36,106,accent,c.ThreadNumbers);
-     Text(g,"TEMPERATUR",x+18,361,15,Muted);Text(g,N(s.CpuTemp," °C"),x+18,383,23,White,true,width/2-20);
-     Text(g,"LEISTUNG",x+width/2+4,361,15,Muted);Text(g,N(s.CpuWatts," W","0.0"),x+width/2+4,383,23,White,true,width/2-20);
+     CpuGpuDetails(s.CpuTemp,s.CpuWatts);
      break;
-    case "GPU":Percentage(g,s.GpuLoad,x+18,137,52,accent);Bar(BarValue(s,"gpu",s.GpuLoad),100);Row("TEMPERATUR",N(s.GpuTemp," °C"),0);Row("LEISTUNGSAUFNAHME",N(s.GpuWatts," W","0.0"),2);break;
+    case "GPU":Percentage(g,s.GpuLoad,x+18,128,50,accent);using(var track=new SolidBrush(Color.FromArgb(40,54,69)))g.FillRectangle(track,x+18,197,width-36,6);if(BarValue(s,"gpu",s.GpuLoad) is double gpuLoad){using var fill=new SolidBrush(LoadColor(gpuLoad));g.FillRectangle(fill,x+18,197,(width-36)*(float)Math.Clamp(gpuLoad/100,0,1),6);}Text(g,s.GpuName,x+18,250,17,Muted,false,width-36);CpuGpuDetails(s.GpuTemp,s.GpuWatts);break;
     case "RAM":Big(N(s.RamTotal>0?s.RamUsed/s.RamTotal*100:null," %"));Bar(BarValue(s,"ram",s.RamUsed),s.RamTotal);Row("BENUTZT / GESAMT",N(s.RamUsed,"","0.0")+" / "+N(s.RamTotal," GiB","0.0"),0);Row("TEMPERATUR",N(s.RamTemp," °C"),1);Row("LEISTUNGSAUFNAHME",N(s.RamWatts," W","0.0"),2);break;
     case "VRAM":Big(N(s.VramTotal>0?s.VramUsed/s.VramTotal*100:null," %"));Bar(BarValue(s,"vram",s.VramUsed),s.VramTotal);Row("BENUTZT / GESAMT",N(s.VramUsed,"","0.0")+" / "+N(s.VramTotal," GiB","0.0"),0);Row("FREI",N(s.VramFree," GiB","0.0"),2);break;
     case "FRAMES":Big(N(s.Fps));Text(g,"FPS  /  GERENDERT",x+18,211,16,Muted);Row("FRAME TIME",N(s.FrameMs," ms","0.00"),0);Row("AKTIVE ANWENDUNG",s.FrameApp.Length>0?s.FrameApp:"—",2);break;

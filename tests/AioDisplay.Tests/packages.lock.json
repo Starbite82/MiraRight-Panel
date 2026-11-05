@@ -182,15 +182,15 @@
       "MiraRightPanel": {
         "type": "Project",
         "dependencies": {
-          "AioDisplay.Contracts": "[2.0.0-preview.4, )",
-          "FlexPanel.Core": "[2.0.0-preview.4, )"
+          "AioDisplay.Contracts": "[2.0.0-preview.5, )",
+          "FlexPanel.Core": "[2.0.0-preview.5, )"
         }
       },
       "MiraRightPanel.SensorHost": {
         "type": "Project",
         "dependencies": {
-          "AioDisplay.Contracts": "[2.0.0-preview.4, )",
-          "FlexPanel.Core": "[2.0.0-preview.4, )",
+          "AioDisplay.Contracts": "[2.0.0-preview.5, )",
+          "FlexPanel.Core": "[2.0.0-preview.5, )",
           "LibreHardwareMonitorLib": "[0.9.6, )"
         }
       }

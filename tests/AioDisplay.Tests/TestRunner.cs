@@ -19,12 +19,13 @@ internal static class TestRunner
             if (args.FirstOrDefault() == "--golden") { Golden.Main(new[] { output }); return 0; }
             if (args.FirstOrDefault() == "--unified-live") { UnifiedChecks.Live(args[2],int.Parse(args[3])); return 0; }
             if (args.FirstOrDefault() == "--scheduled-live") { UnifiedChecks.Live(args[2],int.Parse(args[3]),true); return 0; }
+            if (args.FirstOrDefault() == "--scheduled-recovery") { UnifiedChecks.ScheduledRecovery(args[2]); return 0; }
             if (args.FirstOrDefault() == "--layout") { UnifiedChecks.Layout(); return 0; }
             if (args.FirstOrDefault() == "--live") { IntegrationChecks.Live(args[2], int.Parse(args[3])); return 0; }
             if (args.FirstOrDefault() == "--lifecycle") { IntegrationChecks.Lifecycle(args[2], args[3]); return 0; }
             if (args.FirstOrDefault() == "--parent-harness") { IntegrationChecks.ParentHarness(args[2]); return 0; }
             foreach (var type in new[] { typeof(Check), typeof(SettingsCheck), typeof(BarAveragerCheck), typeof(HardwareCheck), typeof(SnapshotFilesCheck), typeof(AboutChecks) }) type.GetMethod("Main", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic).Invoke(null, null);
-            DiscoveryChecks.Main(); FanNamesChecks.Main(); ProtocolChecks(); UnifiedChecks.Run(); Console.WriteLine("ALL REGRESSION TESTS PASSED"); return 0;
+            DiscoveryChecks.Main(); FanNamesChecks.Main(); ProtocolChecks(); DebugLogChecks.Run(); PercentageChecks.Run(); ReadoutChecks.Run(); UnifiedChecks.Run(); Console.WriteLine("ALL REGRESSION TESTS PASSED"); return 0;
         }
         catch (Exception e) { Console.Error.WriteLine(e is TargetInvocationException ? e.InnerException : e); return 1; }
         finally { SensorHub.Stop(); }

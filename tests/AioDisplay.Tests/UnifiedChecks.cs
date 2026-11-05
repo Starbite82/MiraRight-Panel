@@ -3,6 +3,20 @@ using System.Drawing;
 using System.Text.Json;
 
 static class UnifiedChecks {
+ public static void ScheduledRecovery(string host){
+  Check(ScheduledSensorTask.Installed,"task required; test must not request UAC");
+  using var parent=System.Diagnostics.Process.GetCurrentProcess();
+  var options=new SensorOptions{Unified=true,IntervalMs=100,ParentId=parent.Id,ParentStartTicks=parent.StartTime.ToUniversalTime().Ticks};
+  using var client=new SensorProcessClient(host,Console.WriteLine,true);
+  void Wait(Func<bool> ready){var timer=System.Diagnostics.Stopwatch.StartNew();while(timer.Elapsed.TotalSeconds<35){System.Windows.Forms.Application.DoEvents();client.EnsureRunning(options);if(ready())return;Thread.Sleep(50);}throw new Exception("Scheduled recovery timeout");}
+  Wait(()=>client.Read().Fresh);int first=client.ProcessId.Value;using var old=System.Diagnostics.Process.GetProcessById(first);
+  var field=typeof(SensorProcessClient).GetField("transport",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic);
+  ((IDisposable)field.GetValue(client)).Dispose();
+  Wait(()=>client.ProcessId is int pid&&pid!=first&&client.Read().Fresh);
+  Check(old.WaitForExit(10000),"disconnected worker exited");int second=client.ProcessId.Value;
+  client.Stop();using var last=System.Diagnostics.Process.GetProcessById(second);Check(last.WaitForExit(15000),"replacement worker stopped");
+  Console.WriteLine("PASS: scheduled sensor recovers from disconnected pipe without UAC and both workers exit");
+ }
  public static void Layout(){
   SensorHub.HostPath=Path.Combine(Log.Root,"MissingSensorHost.exe");
   new DisplaySettings().Save();

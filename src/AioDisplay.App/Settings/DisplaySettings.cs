@@ -6,6 +6,8 @@ using System.Text.Json;
 public sealed class DisplayProfile {
  public string Kind {get;set;}="Thermalright";public bool Enabled {get;set;}=true;
  public int Rotation {get;set;}public int Fps {get;set;}=10;public int SensorMs {get;set;}=100;public int BarWindowMs {get;set;}=500;
+ public int PercentWindowMs {get;set;}=1000;
+ public int? ValueWindowMs {get;set;}
  public string Source {get;set;}="LibreHardwareMonitor";public string Gpu {get;set;}="";
  public int AioView {get;set;}=6;public bool ThreadNumbers {get;set;}=true;public bool HideStoppedFans {get;set;}=true;
  public FlexPanel.PanelConfig MiraBox {get;set;}=new FlexPanel.PanelConfig().Normalize();
@@ -14,6 +16,8 @@ public sealed class DisplayProfile {
   if(!(Kind=="MiraBox"?new[]{0,180}:new[]{0,90,180,270}).Contains(Rotation))Rotation=0;
   if(!FlexPanel.PanelConfig.DisplayRates.Contains(Fps))Fps=10;if(!FlexPanel.PanelConfig.SensorIntervals.Contains(SensorMs))SensorMs=100;
   if(!FlexPanel.PanelConfig.BarWindows.Contains(BarWindowMs))BarWindowMs=500;
+  if(!FlexPanel.PanelConfig.BarWindows.Contains(PercentWindowMs))PercentWindowMs=1000;
+  ValueWindowMs??=PercentWindowMs;if(!FlexPanel.PanelConfig.BarWindows.Contains(ValueWindowMs.Value))ValueWindowMs=1000;
   if(Source!="MSIAfterburner")Source="LibreHardwareMonitor";if(AioView<0||AioView>6)AioView=6;
   MiraBox??=new();MiraBox.Normalize();MiraBox.GpuId=Gpu;MiraBox.SensorSource=Source;MiraBox.BarWindowMs=BarWindowMs;MiraBox.Rotate180=Rotation==180;MiraBox.ThreadNumbers=ThreadNumbers;
  }

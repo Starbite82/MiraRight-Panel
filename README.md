@@ -22,6 +22,17 @@ Anwendung benötigt weder Anmeldung noch Cloudkonto und lädt keine Messwerte ho
 
 Unabhängiges Community-Projekt; kein offizielles Produkt von Thermalright oder MiraBox.
 
+## Messwerte beruhigen und Fehler prüfen
+
+In jedem Display-Reiter lassen sich **alle Messwert-Zahlen separat von den Balken glätten**:
+Aus bis zwei Sekunden für Auslastung, Temperaturen, Wattwerte, Speicher, Lüfter, FPS und Frame Time.
+Die CPU- und GPU-Leistungsaufnahme ist in beiden MiraBox-Designs einheitlich dargestellt.
+
+Der Sensorprozess läuft ohne eigenes Konsolenfenster. Mit eingerichteter Sensoraufgabe
+kann die Verbindung nach einem Ausfall automatisch ohne erneute UAC-Abfrage wiederhergestellt werden.
+**„Gemeinsame Sensoren & Start → Debug-Log öffnen“** öffnet das begrenzte lokale Diagnoseprotokoll.
+Es wird nicht automatisch übermittelt. Einrichtung und Fehlerhilfe stehen in der [Anleitung](LIESMICH.txt).
+
 ## Vorschau
 
 Die Bilder zeigen die echte Windows-Oberfläche und die von der Anwendung gerenderten
@@ -59,7 +70,7 @@ MiraBox bekommt ein eigenes Profil, unabhängig von einem gleichzeitig betrieben
 
 ## Download
 
-Lade das **Windows-x64-Programmpaket** der [aktuellen öffentlichen Vorschau](https://github.com/Starbite82/MiraRight-Panel/releases/tag/v2.0.0-preview.4)
+Lade das **Windows-x64-Programmpaket** der [aktuellen öffentlichen Vorschau](https://github.com/Starbite82/MiraRight-Panel/releases/tag/v2.0.0-preview.5)
 herunter und entpacke das ZIP vollständig. .NET-Laufzeit, Sensorbibliothek und PresentMon sind enthalten.
 Die GitHub-Schaltfläche „Code → Download ZIP“ liefert den Quellcode für Entwickler.
 

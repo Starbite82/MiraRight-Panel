@@ -5,6 +5,7 @@ using System.Diagnostics;
 
 public sealed class UnifiedSensorHub : IDisposable {
  readonly SensorProcessClient client;readonly SensorOptions options;readonly EventWaitHandle stopSignal;long parsedSequence=-1;FlexPanel.HardwareBundle bundle=new();bool disposed;
+ DateTime nextDebug;bool? wasFresh;
  public UnifiedSensorHub(DisplaySettings settings,bool allowElevation){
   client=new SensorProcessClient(SensorHub.HostPath,Log.Write,settings.AdminSensors&&allowElevation);
   string stopName="Local\\AioUnifiedSensorStop-"+Guid.NewGuid().ToString("N");stopSignal=new EventWaitHandle(false,EventResetMode.ManualReset,stopName);
@@ -14,8 +15,10 @@ public sealed class UnifiedSensorHub : IDisposable {
  public int? LastExitCode {get;private set;}
  public FlexPanel.HardwareBundle Read(){
   client.EnsureRunning(options);var snapshot=client.Read();
-  if(!snapshot.Fresh||snapshot.UnifiedJson.Length==0)return new();
-  if(snapshot.SampleSequence!=parsedSequence){bundle=FlexPanel.HardwareBundle.Parse(snapshot.UnifiedJson);parsedSequence=snapshot.SampleSequence;}
+  bool available=snapshot.Fresh&&snapshot.UnifiedJson.Length>0;
+  if(available&&snapshot.SampleSequence!=parsedSequence){bundle=FlexPanel.HardwareBundle.Parse(snapshot.UnifiedJson);parsedSequence=snapshot.SampleSequence;}
+  if(wasFresh!=available||DateTime.UtcNow>=nextDebug){wasFresh=available;nextDebug=DateTime.UtcNow.AddSeconds(30);Log.Debug("sensors.data",new { Pid=client.ProcessId, Fresh=available, snapshot.Status, snapshot.Error, snapshot.SampleSequence, UnifiedBytes=snapshot.UnifiedJson.Length, Libre=available?bundle.Libre.Count:0, Fans=available?bundle.Libre.Values.Select(s=>s.Fans.Count(f=>f.Rpm.HasValue)).ToArray():Array.Empty<int>() });}
+  if(!available)return new();
   return bundle;
  }
  public void Dispose(){

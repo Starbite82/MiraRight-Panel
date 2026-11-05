@@ -18,8 +18,8 @@ public static partial class Renderer {
    switch(card){
     case "CPU":
      Value(N(s.CpuTemp," °C"),112);Percentage(g,s.CpuLoad,x+16,186,30,cyan);
-     Label("THREADS",244);ThermalThreads(g,ThreadBars(s),x+16,276,width-32,100,cyan,c.ThreadNumbers);
-     Label("LEISTUNG  "+N(s.CpuWatts," W","0.0"),394);break;
+     Label("THREADS",244);ThermalThreads(g,ThreadBars(s),x+16,276,width-32,68,cyan,c.ThreadNumbers);
+     Label("LEISTUNG",353);Value(N(s.CpuWatts," W","0.0"),378,25);break;
     case "GPU":
      Value(N(s.GpuTemp," °C"),112);Percentage(g,s.GpuLoad,x+16,186,30,purple);
      ThermalMemory(g,BarValue(s,"gpu",s.GpuLoad),100,x+16,251,width-32,12,false);

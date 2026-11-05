@@ -54,9 +54,13 @@ Erreichte USB-Raten stehen unter der Vorschau. Gerät, USB und Bildberechnung k�
 Die Übertragungsrate ist keine Messung oder Zusicherung der physischen LCD-Bildrate.
 Ein langsames oder fehlendes Gerät unterbricht die andere Anzeige nicht.
 
-Balkenglättung: Aus / 0,25 / 0,5 / 1 / 2 Sekunden. Die Balken werden gemittelt,
-die Zahlen bleiben aktuelle Einzelwerte. Gleiche wiederholt gelesene Samples zählen
-nicht mehrfach. Farben warnen bei hoher Last; RAM/VRAM ab 80% Gelb, 85% Orange, 90% Rot.
+Balkenglättung: Aus / 0,25 / 0,5 / 1 / 2 Sekunden, unabhängig von den Zahlen.
+„Messwert-Zahlen glätten“ beruhigt pro Display Prozentzahlen, Temperaturen,
+Wattwerte, Speicherbelegung, Lüfterwerte sowie FPS und Frame Time. Auswahl:
+Aus / 0,25 / 0,5 / 1 / 2 Sekunden; standardmäßig 1 Sekunde. Fehlende Werte bleiben
+als fehlend erkennbar. Beim Wechsel der aktiven Anwendung wird die FPS-Mittelung
+zurückgesetzt. Wiederholt gezeichnete Sensor-Samples zählen nicht mehrfach.
+Farben warnen bei hoher Last; RAM/VRAM ab 80% Gelb, 85% Orange, 90% Rot.
 RAM/VRAM: benutzt / gesamt in GiB; fehlende Werte werden nicht geschätzt.
 
 SENSORQUELLEN, LÜFTER UND FPS
@@ -76,6 +80,18 @@ benötigen erhöhte Rechte. Unter „Gemeinsame Sensoren & Start“ lässt sich 
 aktivieren. Danach fragt Windows für den separaten Sensorprozess per UAC nach.
 Ohne eingerichtete Sensoraufgabe ist auch beim nächsten normalen Start eine UAC-Abfrage möglich.
 Eine abgelehnte Abfrage wird nicht automatisch wiederholt. Die Vorschau fordert nie Rechte an.
+Mit eingerichteter Sensoraufgabe kann sich die Verbindung nach einem Abbruch oder
+ausbleibenden Daten automatisch wieder aufbauen. Diese Wiederverbindung fordert
+keine erneute UAC-Bestätigung an. Der Sensorprozess hat kein eigenes Konsolenfenster.
+
+DEBUG-LOG BEI FEHLENDEN WERTEN
+Unter „Gemeinsame Sensoren & Start“ auf „Debug-Log öffnen“ klicken.
+debug.log im Programmordner erfasst lokal Starts, Verbindungsfehler, Datenalter,
+Sensorprozess-ID und verfügbare Lüfterwerte. Dazu kommen bis zu drei rotierende
+Sicherungen debug.log.1 bis debug.log.3 (je etwa 1 MiB). Zeitangaben sind in UTC.
+Protokolle werden nicht automatisch hochgeladen. Vor einer freiwilligen Weitergabe
+auf persönliche Dateipfade und andere Angaben prüfen. Die USB-Verbindung kann
+weiter aktiv sein, obwohl der Sensorprozess gerade keine aktuellen Daten liefert.
 
 TRAY UND AUTOSTART
 Minimieren oder Fenster-X blendet das Fenster aus; die Anzeigen laufen weiter.
