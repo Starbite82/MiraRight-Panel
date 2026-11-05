@@ -50,12 +50,13 @@ public static class Afterburner {
   double? vram=OnGpu(0x31,"MB")/1024;
   double? vramTotal=gpu?.MemoryKB>0?gpu.MemoryKB/1048576d:gpu!=null?baseline.VramTotal:null;
   var readings=rows.Select(e=>new Reading("afterburner/"+e.Gpu,"MSI Afterburner",e.Id is 0x80 or 0x90 or 0x100?"Cpu":e.Id==0x91?"Memory":"Afterburner","afterburner/"+e.Index,e.Name,e.Unit,e.Value)).ToArray();
-  return new Snapshot{At=data.Timestamp,SourceName="MSI Afterburner",CpuName=baseline.CpuName,GpuName=gpu?.Name??"GPU nicht zugeordnet",DiskName=baseline.DiskName,
+  var snapshot=new Snapshot{At=data.Timestamp,SourceName="MSI Afterburner",CpuName=baseline.CpuName,GpuName=gpu?.Name??"GPU nicht zugeordnet",DiskName=baseline.DiskName,
    CpuLoad=Global(0x90),CpuTemp=Global(0x80),CpuWatts=Global(0x100),CpuThreads=threads,
    GpuLoad=OnGpu(0x30,"%"),GpuTemp=OnGpu(0,"°C"),GpuWatts=OnGpu(0x61,"W"),RamUsed=ram,RamTotal=baseline.RamTotal,RamFree=Free(baseline.RamTotal,ram),
    VramUsed=vram,VramTotal=vramTotal,VramFree=Free(vramTotal,vram),Sensors=readings,
    FanChannels=rows.Where(e=>e.Unit.Equals("RPM",StringComparison.OrdinalIgnoreCase)).Select(e=>new FanChannel("afterburner/"+e.Index,e.Name,"afterburner/gpu/"+e.Gpu,e.Id is 0x11 or 0x13 or 0x15?data.Gpus.FirstOrDefault(g=>g.Index==e.Gpu)?.Name??"":"",e.Id is 0x11 or 0x13 or 0x15?(int)(e.Id-0x11)/2+1:0,e.Value,"MSI Afterburner")).ToArray(),
    SensorStatus="MSI Afterburner · "+rows.Length+" Sensoren · Kapazitäten: Windows/LHM"+(gpu==null?" · ausgewählte GPU nicht zugeordnet":"")};
+  return gpu==null?snapshot:GpuDetails.Apply(snapshot,"afterburner/"+gpu.Index);
  }
  static double? Free(double? total,double? used)=>total.HasValue&&used.HasValue&&used>=0&&used<=total?total-used:null;
 }

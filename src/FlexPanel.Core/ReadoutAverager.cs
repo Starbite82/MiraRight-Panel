@@ -24,11 +24,14 @@ public sealed class ReadoutAverager {
   var bars=new Dictionary<string,double>(s.BarValues);
   void RawBar(string key,double? value){if(!bars.ContainsKey(key)&&value is double v&&double.IsFinite(v))bars[key]=v;}
   RawBar("cpu",s.CpuLoad);RawBar("gpu",s.GpuLoad);RawBar("ram",s.RamUsed);RawBar("vram",s.VramUsed);
+  RawBar("gpu.3d",s.Gpu3dLoad);RawBar("gpu.decode",s.GpuDecodeLoad);RawBar("gpu.encode",s.GpuEncodeLoad);
   for(int i=0;i<s.CpuThreads.Length;i++)RawBar("thread:"+i,s.CpuThreads[i]);
   var result=s with{
    BarValues=bars,
    CpuLoad=M("cpu.load",s.CpuLoad),CpuTemp=M("cpu.temp",s.CpuTemp),CpuWatts=M("cpu.watts",s.CpuWatts),
    GpuLoad=M("gpu.load",s.GpuLoad),GpuTemp=M("gpu.temp",s.GpuTemp),GpuWatts=M("gpu.watts",s.GpuWatts),
+   GpuClockMhz=M("gpu.clock",s.GpuClockMhz),GpuMemoryTemp=M("gpu.memory.temp",s.GpuMemoryTemp),
+   Gpu3dLoad=M("gpu.3d",s.Gpu3dLoad),GpuDecodeLoad=M("gpu.decode",s.GpuDecodeLoad),GpuEncodeLoad=M("gpu.encode",s.GpuEncodeLoad),
    RamUsed=ram,RamFree=s.RamFree.HasValue&&ram.HasValue&&s.RamTotal.HasValue?Math.Max(0,s.RamTotal.Value-ram.Value):M("ram.free",s.RamFree),RamTemp=M("ram.temp",s.RamTemp),RamWatts=M("ram.watts",s.RamWatts),
    VramUsed=vram,VramFree=s.VramFree.HasValue&&vram.HasValue&&s.VramTotal.HasValue?Math.Max(0,s.VramTotal.Value-vram.Value):M("vram.free",s.VramFree),
    SsdTemp=M("ssd.temp",s.SsdTemp),DiskLoad=M("disk.load",s.DiskLoad),

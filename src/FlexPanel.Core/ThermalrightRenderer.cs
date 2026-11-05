@@ -17,20 +17,19 @@ public static partial class Renderer {
    void Label(string text,float y)=>Text(g,text,x+16,y,14,Muted,false,width-32);
    switch(card){
     case "CPU":
-     Value(N(s.CpuTemp," °C"),112);Percentage(g,s.CpuLoad,x+16,186,30,cyan);
-     Label("THREADS",244);ThermalThreads(g,ThreadBars(s),x+16,276,width-32,68,cyan,c.ThreadNumbers);
-     Label("LEISTUNG",353);Value(N(s.CpuWatts," W","0.0"),378,25);break;
+     CpuGpuTopStats(g,s.CpuTemp,s.CpuWatts,x+16,112,width-32);Percentage(g,s.CpuLoad,x+16,186,30,cyan);
+     Label("THREADS",244);ThermalThreads(g,ThreadBars(s),x+16,276,width-32,140,cyan,c.ThreadNumbers);break;
     case "GPU":
-     Value(N(s.GpuTemp," °C"),112);Percentage(g,s.GpuLoad,x+16,186,30,purple);
+     CpuGpuTopStats(g,s.GpuTemp,s.GpuWatts,x+16,112,width-32);Percentage(g,s.GpuLoad,x+16,186,30,purple);
      ThermalMemory(g,BarValue(s,"gpu",s.GpuLoad),100,x+16,251,width-32,12,false);
-     Label(s.GpuName,291);Label("LEISTUNG",353);Value(N(s.GpuWatts," W","0.0"),378,25);break;
+     DrawGpuDetails(g,s,x+16,277,width-32,purple);break;
     case "RAM":case "VRAM":
      bool ram=card=="RAM";double? used=ram?s.RamUsed:s.VramUsed,total=ram?s.RamTotal:s.VramTotal;
      Value(N(total>0?used/total*100:null," %"),112);Label("BENUTZT / GESAMT",208);
      Value(N(used,"","0.0")+" / "+N(total,"","0.0"),242,26);Label("GiB",290);
      ThermalMemory(g,BarValue(s,ram?"ram":"vram",used),total,x+16,329,width-32,18,true);
      Label(ram?"TEMP  "+N(s.RamTemp," °C"):"FREI  "+N(s.VramFree," GiB","0.0"),369);
-     if(ram)Label("LEISTUNG  "+N(s.RamWatts," W","0.0"),398);break;
+     if(ram&&s.RamWatts is double ramWatts&&double.IsFinite(ramWatts))Label("LEISTUNG  "+N(ramWatts," W","0.0"),398);break;
     case "FRAMES":
      Value(N(s.Fps),112);Label("FPS · AKTIVE ANWENDUNG",192);Value(N(s.FrameMs," ms","0.00"),246,32);
      Label("FRAME TIME",300);Text(g,s.FrameApp.Length>0?s.FrameApp:"—",x+16,377,18,White,true,width-32);break;

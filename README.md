@@ -27,6 +27,10 @@ Unabhängiges Community-Projekt; kein offizielles Produkt von Thermalright oder 
 In jedem Display-Reiter lassen sich **alle Messwert-Zahlen separat von den Balken glätten**:
 Aus bis zwei Sekunden für Auslastung, Temperaturen, Wattwerte, Speicher, Lüfter, FPS und Frame Time.
 Die CPU- und GPU-Leistungsaufnahme ist in beiden MiraBox-Designs einheitlich dargestellt.
+Wattwerte stehen neben den Temperaturen; der frei gewordene Platz gehört dem größeren CPU-Thread-Raster.
+Die GPU-Kachel ergänzt GPU-Takt und Speichertemperatur sowie Balken für 3D, Video Decode und Video Encode,
+ebenfalls mit Glättung. Die Werte stammen von der ausgewählten Grafikkarte; fehlende Sensorwerte erscheinen als `—`.
+Eine RAM-Leistungsaufnahme wird nur angezeigt, wenn ein gültiger Wattwert vorliegt.
 
 Der Sensorprozess läuft ohne eigenes Konsolenfenster. Mit eingerichteter Sensoraufgabe
 kann die Verbindung nach einem Ausfall automatisch ohne erneute UAC-Abfrage wiederhergestellt werden.
@@ -70,7 +74,7 @@ MiraBox bekommt ein eigenes Profil, unabhängig von einem gleichzeitig betrieben
 
 ## Download
 
-Lade das **Windows-x64-Programmpaket** der [aktuellen öffentlichen Vorschau](https://github.com/Starbite82/MiraRight-Panel/releases/tag/v2.0.0-preview.5)
+Lade das **Windows-x64-Programmpaket** der [aktuellen öffentlichen Vorschau](https://github.com/Starbite82/MiraRight-Panel/releases/tag/v2.0.0-preview.6)
 herunter und entpacke das ZIP vollständig. .NET-Laufzeit, Sensorbibliothek und PresentMon sind enthalten.
 Die GitHub-Schaltfläche „Code → Download ZIP“ liefert den Quellcode für Entwickler.
 

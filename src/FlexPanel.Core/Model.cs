@@ -55,6 +55,8 @@ public sealed record Snapshot {
  public double?[] CpuThreads {get;init;}=[];
  public IReadOnlyDictionary<string,double> BarValues {get;init;}=new Dictionary<string,double>();
  public double? GpuLoad {get;init;} public double? GpuTemp {get;init;} public double? GpuWatts {get;init;}
+ public double? GpuClockMhz {get;init;} public double? GpuMemoryTemp {get;init;}
+ public double? Gpu3dLoad {get;init;} public double? GpuDecodeLoad {get;init;} public double? GpuEncodeLoad {get;init;}
  public double? RamUsed {get;init;} public double? RamTotal {get;init;} public double? RamFree {get;init;}
  public double? RamTemp {get;init;} public double? RamWatts {get;init;}
  public double? VramUsed {get;init;} public double? VramTotal {get;init;} public double? VramFree {get;init;}

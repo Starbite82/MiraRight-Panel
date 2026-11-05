@@ -62,6 +62,19 @@ als fehlend erkennbar. Beim Wechsel der aktiven Anwendung wird die FPS-Mittelung
 zurückgesetzt. Wiederholt gezeichnete Sensor-Samples zählen nicht mehrfach.
 Farben warnen bei hoher Last; RAM/VRAM ab 80% Gelb, 85% Orange, 90% Rot.
 RAM/VRAM: benutzt / gesamt in GiB; fehlende Werte werden nicht geschätzt.
+RAM-Leistungsaufnahme erscheint nur bei einem vorhandenen gültigen Wattwert.
+Die Leistung des CPU-Speichercontrollers ist kein Ersatz für einen DIMM-Watt-Sensor.
+
+MIRABOX-GPU-DETAILS
+CPU-/GPU-Wattwerte stehen neben den Temperaturen. Das CPU-Thread-Raster nutzt
+den freien Platz unten. Unter der GPU stehen Takt in MHz und Speichertemperatur
+sowie drei Balken für 3D, Video Decode und Video Encode. Die Messwertglättung
+gilt für diese Zahlen; die separate Balkenglättung gilt auch für die drei Balken.
+Es werden nur Sensoren der ausgewählten Grafikkarte verwendet. Mehrere Sensoren
+derselben Engine-Art werden mit ihrem höchsten Wert dargestellt, nicht addiert.
+Ein allgemeiner Video-Engine-Sensor ersetzt keine getrennten Decode-/Encode-Werte.
+Fehlende Werte erscheinen als —, ein gemessener stillstehender Bereich als 0 %.
+Verfügbarkeit und Bezeichnungen hängen von Grafikkarte, Treiber und Sensorquelle ab.
 
 SENSORQUELLEN, LÜFTER UND FPS
 LibreHardwareMonitor ist enthalten. MSI Afterburner wird nicht mitgeliefert und muss

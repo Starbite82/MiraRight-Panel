@@ -19,6 +19,7 @@ public sealed class BarAverager {
    if(samples.Count>0)result[key]=samples.Average(p=>p.value);
   }
   Add("cpu",snapshot.CpuLoad);Add("gpu",snapshot.GpuLoad);Add("ram",snapshot.RamUsed);Add("vram",snapshot.VramUsed);
+  Add("gpu.3d",snapshot.Gpu3dLoad);Add("gpu.decode",snapshot.GpuDecodeLoad);Add("gpu.encode",snapshot.GpuEncodeLoad);
   for(int i=0;i<snapshot.CpuThreads.Length;i++)Add("thread:"+i,snapshot.CpuThreads[i]);
   foreach(string key in history.Keys.Where(k=>!active.Contains(k)).ToArray())history.Remove(key);
   lastSample=snapshot.At;return snapshot with{BarValues=result};

@@ -1,4 +1,4 @@
-param([string]$Dotnet='dotnet',[string]$Version='2.0.0-preview.5',[string]$OutputDirectory='')
+param([string]$Dotnet='dotnet',[string]$Version='2.0.0-preview.6',[string]$OutputDirectory='')
 $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot
 $stage=Join-Path $root ('work/publish-'+[Guid]::NewGuid().ToString('N'))

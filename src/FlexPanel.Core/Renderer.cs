@@ -15,20 +15,19 @@ public static partial class Renderer {
    string card=c.Cards[i];Text(g,card=="FANS"?"LÜFTER":card,x+18,92,22,White,true);
    float yy=137;void Big(string text){Text(g,text,x+18,yy,52,accent,true,width-32);}
    void Row(string name,string value,int row){Text(g,name,x+18,242+row*51,17,Muted);Text(g,value,x+18,263+row*51,23,White,true,width-32);}
-   void CpuGpuDetails(double? temperature,double? watts){Text(g,"TEMPERATUR",x+18,361,15,Muted);Text(g,N(temperature," °C"),x+18,383,23,White,true,width/2-20);Text(g,"LEISTUNG",x+width/2+4,361,15,Muted);Text(g,N(watts," W","0.0"),x+width/2+4,383,23,White,true,width/2-20);}
    void Bar(double? used,double? total){float y=211;using var bb=new SolidBrush(Color.FromArgb(40,54,69));g.FillRectangle(bb,x+18,y,width-36,9);if(used.HasValue&&total>0){double percent=Math.Clamp(used.Value/total.Value*100,0,100);using var ab=new SolidBrush(card is "RAM" or "VRAM"?MemoryColor(percent):LoadColor(percent));g.FillRectangle(ab,x+18,y,(width-36)*(float)(percent/100),9);}}
    switch(card){
     case "CPU":
-     Percentage(g,s.CpuLoad,x+18,128,50,accent);
-     using(var track=new SolidBrush(Color.FromArgb(40,54,69)))g.FillRectangle(track,x+18,197,width-36,6);
-     if(BarValue(s,"cpu",s.CpuLoad) is double load){using var fill=new SolidBrush(LoadColor(load));g.FillRectangle(fill,x+18,197,(width-36)*(float)Math.Clamp(load/100,0,1),6);}
+     Percentage(g,s.CpuLoad,x+18,128,44,accent);
+     using(var track=new SolidBrush(Color.FromArgb(40,54,69)))g.FillRectangle(track,x+18,190,width-36,6);
+     if(BarValue(s,"cpu",s.CpuLoad) is double load){using var fill=new SolidBrush(LoadColor(load));g.FillRectangle(fill,x+18,190,(width-36)*(float)Math.Clamp(load/100,0,1),6);}
+     CpuGpuTopStats(g,s.CpuTemp,s.CpuWatts,x+18,202,width-36);
      var threads=s.CpuThreads.Length>0?ThreadBars(s):new double?[Environment.ProcessorCount];
-     Text(g,$"THREADS 1–{threads.Length}",x+18,212,13,Muted);
-     ThreadGrid(g,threads,x+18,236,width-36,106,accent,c.ThreadNumbers);
-     CpuGpuDetails(s.CpuTemp,s.CpuWatts);
+     Text(g,$"THREADS 1–{threads.Length}",x+18,264,13,Muted);
+     ThreadGrid(g,threads,x+18,294,width-36,126,accent,c.ThreadNumbers);
      break;
-    case "GPU":Percentage(g,s.GpuLoad,x+18,128,50,accent);using(var track=new SolidBrush(Color.FromArgb(40,54,69)))g.FillRectangle(track,x+18,197,width-36,6);if(BarValue(s,"gpu",s.GpuLoad) is double gpuLoad){using var fill=new SolidBrush(LoadColor(gpuLoad));g.FillRectangle(fill,x+18,197,(width-36)*(float)Math.Clamp(gpuLoad/100,0,1),6);}Text(g,s.GpuName,x+18,250,17,Muted,false,width-36);CpuGpuDetails(s.GpuTemp,s.GpuWatts);break;
-    case "RAM":Big(N(s.RamTotal>0?s.RamUsed/s.RamTotal*100:null," %"));Bar(BarValue(s,"ram",s.RamUsed),s.RamTotal);Row("BENUTZT / GESAMT",N(s.RamUsed,"","0.0")+" / "+N(s.RamTotal," GiB","0.0"),0);Row("TEMPERATUR",N(s.RamTemp," °C"),1);Row("LEISTUNGSAUFNAHME",N(s.RamWatts," W","0.0"),2);break;
+    case "GPU":Percentage(g,s.GpuLoad,x+18,128,44,accent);using(var track=new SolidBrush(Color.FromArgb(40,54,69)))g.FillRectangle(track,x+18,190,width-36,6);if(BarValue(s,"gpu",s.GpuLoad) is double gpuLoad){using var fill=new SolidBrush(LoadColor(gpuLoad));g.FillRectangle(fill,x+18,190,(width-36)*(float)Math.Clamp(gpuLoad/100,0,1),6);}CpuGpuTopStats(g,s.GpuTemp,s.GpuWatts,x+18,202,width-36);DrawGpuDetails(g,s,x+18,277,width-36,accent);break;
+    case "RAM":Big(N(s.RamTotal>0?s.RamUsed/s.RamTotal*100:null," %"));Bar(BarValue(s,"ram",s.RamUsed),s.RamTotal);Row("BENUTZT / GESAMT",N(s.RamUsed,"","0.0")+" / "+N(s.RamTotal," GiB","0.0"),0);Row("TEMPERATUR",N(s.RamTemp," °C"),1);if(s.RamWatts is double ramWatts&&double.IsFinite(ramWatts))Row("LEISTUNGSAUFNAHME",N(ramWatts," W","0.0"),2);break;
     case "VRAM":Big(N(s.VramTotal>0?s.VramUsed/s.VramTotal*100:null," %"));Bar(BarValue(s,"vram",s.VramUsed),s.VramTotal);Row("BENUTZT / GESAMT",N(s.VramUsed,"","0.0")+" / "+N(s.VramTotal," GiB","0.0"),0);Row("FREI",N(s.VramFree," GiB","0.0"),2);break;
     case "FRAMES":Big(N(s.Fps));Text(g,"FPS  /  GERENDERT",x+18,211,16,Muted);Row("FRAME TIME",N(s.FrameMs," ms","0.00"),0);Row("AKTIVE ANWENDUNG",s.FrameApp.Length>0?s.FrameApp:"—",2);break;
     case "FANS":DrawFans(g,s.Fans,x,width,accent);break;
@@ -36,6 +35,11 @@ public static partial class Renderer {
   }
   Text(g,"Balken = belegt / ausgelastet     ·     — = kein aktueller Messwert",24,438,13,Muted);
   return b;
+ }
+ static void CpuGpuTopStats(Graphics g,double? temperature,double? watts,float x,float y,float width){
+  float column=(width-12)/2;
+  Text(g,"TEMPERATUR",x,y,11,Muted,false,column);Text(g,"LEISTUNG",x+column+12,y,11,Muted,false,column);
+  Text(g,N(temperature," °C"),x,y+24,23,White,true,column);Text(g,N(watts," W","0.0"),x+column+12,y+24,23,White,true,column);
  }
  static string ShortFanName(string name)=>name.Contains("NVIDIA",StringComparison.OrdinalIgnoreCase)?name.Contains("1&2")?"GPU 1 & 2":"GPU 3":name=="Gehäuse Fans unten"?"Gehäuse unten":name=="AIO Fans"?"AIO-Lüfter":name=="AIO Pumpe"?"AIO-Pumpe":name;
  static void DrawFans(Graphics g,FanReading[] fans,float x,float width,Color accent){
@@ -53,7 +57,7 @@ public static partial class Renderer {
  static void ThreadGrid(Graphics g,double?[] loads,float x,float y,float width,int height,Color accent,bool numbers){
   const int gap=6;int columns=Math.Min(8,loads.Length),rows=(loads.Length+columns-1)/columns;
   int cellWidth=(int)Math.Floor((width-(columns-1)*gap)/columns);
-  int innerHeight=Math.Min(20,(height-(rows-1)*gap)/rows-2),cellHeight=innerHeight+2;
+  int innerHeight=Math.Max(1,(height-(rows-1)*gap)/rows-2),cellHeight=innerHeight+2;
   var smoothing=g.SmoothingMode;g.SmoothingMode=SmoothingMode.None;
   using var border=new Pen(Color.FromArgb(65,85,103));using var background=new SolidBrush(Color.FromArgb(28,41,55));using var missing=new Pen(Muted);
   for(int i=0;i<loads.Length;i++){

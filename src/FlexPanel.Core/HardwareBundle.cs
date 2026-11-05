@@ -10,6 +10,7 @@ public sealed class HardwareBundle {
  public Snapshot Select(string source,string gpu){
   var table=source=="MSIAfterburner"?Afterburner:Libre;
   var selected=table.TryGetValue(gpu,out var exact)?exact:table.Values.OrderByDescending(s=>s.VramTotal??0).FirstOrDefault()??new Snapshot{SourceName=source};
+  if(source!="MSIAfterburner")selected=GpuDetails.Apply(selected,gpu);
   return selected with{Fps=Fps,FrameMs=FrameMs,FrameApp=FrameApp,FrameStatus=FrameStatus};
  }
  public static HardwareBundle Parse(string json){
