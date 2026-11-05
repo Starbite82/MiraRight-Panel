@@ -38,7 +38,7 @@ static class DocumentationScreenshots
                   new("gpu1","GPU 1 & 2",1450,"LibreHardwareMonitor",72,"","","",""),
                   new("gpu2","GPU 3",1480,"LibreHardwareMonitor",72,"","","","")]
         };
-        using var thermal = UnifiedEngine.RenderThermalright(sample, settings.Thermalright);
+        using var thermal = UnifiedEngine.RenderThermalright(sample with { At=DateTime.UtcNow }, settings.Thermalright);
         using var classic = Renderer.Draw(sample, settings.MiraBox.MiraBox);
         var panoramaConfig = new PanelConfig { Design="Thermalright", ThreadNumbers=true }.Normalize();
         using var panorama = Renderer.Draw(sample, panoramaConfig);

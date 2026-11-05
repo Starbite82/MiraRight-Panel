@@ -76,7 +76,7 @@ MiraBox bekommt ein eigenes Profil, unabhängig von einem gleichzeitig betrieben
 
 ## Download
 
-Lade das **Windows-x64-Programmpaket** der [aktuellen öffentlichen Vorschau](https://github.com/Starbite82/MiraRight-Panel/releases/tag/v2.0.0-preview.6)
+Lade das **Windows-x64-Programmpaket** der [aktuellen öffentlichen Vorschau](https://github.com/Starbite82/MiraRight-Panel/releases/tag/v2.0.0-preview.7)
 herunter und entpacke das ZIP vollständig. .NET-Laufzeit, Sensorbibliothek und PresentMon sind enthalten.
 Die GitHub-Schaltfläche „Code → Download ZIP“ liefert den Quellcode für Entwickler.
 

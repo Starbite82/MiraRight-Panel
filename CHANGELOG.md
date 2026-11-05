@@ -1,6 +1,6 @@
 # Änderungen
 
-## 2.0.0-preview.7 — Thermalright-Dashboard (noch kein GitHub-Release)
+## 2.0.0-preview.7 — Thermalright-Dashboard
 
 - CPU-/GPU-Leistungsaufnahme rechts neben der jeweiligen Temperatur auf dem 320×320-Dashboard.
 - FPS der aktiven Anwendung rechts neben der GPU-Prozentlast, aus der gemeinsamen PresentMon-Erfassung.
