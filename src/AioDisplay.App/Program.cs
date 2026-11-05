@@ -15,8 +15,8 @@ using System.Runtime.InteropServices;
 public static class Program
 {
     static bool previewMode;
-    static string ShowSignal => previewMode ? "Local\\BLUBNativePreviewShow" : "Local\\BLUBDisplayShow";
-    static string StopSignal => previewMode ? "Local\\BLUBNativePreviewStop" : "Local\\BLUBDisplayStop";
+    static string ShowSignal => previewMode ? "Local\\AioUnifiedPreviewShow" : "Local\\AioUnifiedShow";
+    static string StopSignal => previewMode ? "Local\\AioUnifiedPreviewStop" : "Local\\AioUnifiedStop";
     static void Signal(string name) { try { using (var e = EventWaitHandle.OpenExisting(name)) e.Set(); } catch (WaitHandleCannotBeOpenedException) { } }
     [STAThread]
     public static void Main(string[] args)
@@ -46,13 +46,13 @@ public static class Program
                 using (var usb = new UsbDisplay()) { usb.Open(); var response = usb.Handshake(); Log.Write("PROBE PM=" + usb.Pm + " SUB=" + usb.Sub + " " + BitConverter.ToString(response)); }
                 return;
             }
-            bool first; using (var mutex = new Mutex(true, previewMode ? "Local\\BLUBNativePreview" : "Local\\BLUBStandaloneDisplay", out first))
+            bool first; using (var mutex = new Mutex(true, previewMode ? "Local\\AioUnifiedPreview" : "Local\\AioUnified", out first))
             {
                 if (!first) { if (!args.Contains("--minimized")) Signal(ShowSignal); return; }
                 AppSettings.Save();
                 Application.EnableVisualStyles(); Application.SetCompatibleTextRenderingDefault(false);
                 using (var show = new EventWaitHandle(false, EventResetMode.AutoReset, ShowSignal)) using (var stop = new EventWaitHandle(false, EventResetMode.AutoReset, StopSignal))
-                using (var form = new PanelWindow(args.Contains("--preview"), args.Contains("--minimized")))
+                using (var form = new UnifiedWindow(args.Contains("--preview"), args.Contains("--minimized"), args.Contains("--verify")))
                 {
                     var openWait = ThreadPool.RegisterWaitForSingleObject(show, (o, t) => form.PostOpen(), null, -1, false);
                     var stopWait = ThreadPool.RegisterWaitForSingleObject(stop, (o, t) => form.PostExit(), null, -1, false);

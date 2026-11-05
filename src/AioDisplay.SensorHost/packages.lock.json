@@ -152,11 +152,6 @@
         "resolved": "10.0.3",
         "contentHash": "L1gcOL5kcfeeujKQbqJmpeTLsT0c6DeaJ9w6PY9oZ+/WESyya+Zj7StKguXR5j93o3o86FjcN05yufpoCz7R2g=="
       },
-      "System.CodeDom": {
-        "type": "Transitive",
-        "resolved": "10.0.2",
-        "contentHash": "eih1MnL4tnSjHUhzae0dmpu50Sm0s54faHZc8yhzYfmubAubkBIIulYYN28fasD1m41mhl6Cenhs9/F0aLv3FA=="
-      },
       "System.IO.FileSystem.AccessControl": {
         "type": "Transitive",
         "resolved": "5.0.0",
@@ -173,13 +168,17 @@
       "System.Management": {
         "type": "Transitive",
         "resolved": "10.0.2",
-        "contentHash": "eFftuy3i844lVKCb4lJvvjKfcvPVcW8KrAdSaIOcRL42/Fisj46hwUs8Bky+4avzMe5Snm5t7aSayOI1mybYXg==",
-        "dependencies": {
-          "System.CodeDom": "10.0.2"
-        }
+        "contentHash": "eFftuy3i844lVKCb4lJvvjKfcvPVcW8KrAdSaIOcRL42/Fisj46hwUs8Bky+4avzMe5Snm5t7aSayOI1mybYXg=="
       },
       "aiodisplay.contracts": {
         "type": "Project"
+      },
+      "flexpanel.core": {
+        "type": "Project",
+        "dependencies": {
+          "HidSharp": "[2.6.4, )",
+          "LibreHardwareMonitorLib": "[0.9.6, )"
+        }
       }
     },
     "net10.0-windows7.0/win-x64": {
@@ -299,10 +298,7 @@
       "System.Management": {
         "type": "Transitive",
         "resolved": "10.0.2",
-        "contentHash": "eFftuy3i844lVKCb4lJvvjKfcvPVcW8KrAdSaIOcRL42/Fisj46hwUs8Bky+4avzMe5Snm5t7aSayOI1mybYXg==",
-        "dependencies": {
-          "System.CodeDom": "10.0.2"
-        }
+        "contentHash": "eFftuy3i844lVKCb4lJvvjKfcvPVcW8KrAdSaIOcRL42/Fisj46hwUs8Bky+4avzMe5Snm5t7aSayOI1mybYXg=="
       }
     }
   }

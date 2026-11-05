@@ -6,7 +6,7 @@ $runner=Join-Path $PSScriptRoot 'AioDisplay.Tests/bin/Release/net10.0-windows/Ai
 & $runner --unit (Join-Path $root 'work/tests')
 if($LASTEXITCODE -ne 0){throw 'Regression tests failed'}
 if($Integration){
- $hostPath=Join-Path $root 'src/AioDisplay.SensorHost/bin/Release/net10.0-windows/AioDisplay.SensorHost.exe'
+ $hostPath=Join-Path $root 'src/AioDisplay.SensorHost/bin/Release/net10.0-windows/MiraRightPanel.SensorHost.exe'
  $fake=Join-Path $PSScriptRoot 'FakeSensorHost/bin/Release/net10.0-windows/FakeSensorHost.exe'
  & $runner --lifecycle (Join-Path $root 'work/lifecycle') $hostPath $fake
  if($LASTEXITCODE -ne 0){throw 'Lifecycle tests failed'}

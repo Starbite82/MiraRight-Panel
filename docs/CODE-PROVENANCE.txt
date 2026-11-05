@@ -24,3 +24,7 @@ Current own preferred source and build scripts are provided in sources/.
 MPL libraries are unmodified NuGet binaries at the commits in the source manifest.
 Their additional embedded-component notices, especially PawnIO.Modules LGPL 2.1,
 are reproduced alongside the corresponding sources.
+
+Unified integration: AIO baseline 9360fda; FlexPanel baseline 2ae5279.
+The imported MIT subset is under src/FlexPanel.Core with its original LICENSE.
+Display adapters and unified UI remain part of the GPL AIO application.

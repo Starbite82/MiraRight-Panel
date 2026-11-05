@@ -22,6 +22,9 @@ public sealed class SensorProcessClient : IDisposable
     private readonly bool elevated;
     private bool elevationAttempted;
     private ElevatedSensorTransport transport;
+    private bool scheduledOnly;
+    private DateTime nextDebug, nextRetry;
+    private int invalidFrames, failures;
 
     public SensorProcessClient(string path, Action<string> logger, bool elevated = false)
     {
@@ -43,6 +46,7 @@ public sealed class SensorProcessClient : IDisposable
     }
 
     public SensorSnapshot Latest => Volatile.Read(ref latest);
+    public int? ExitCode { get { lock(sync) { try { return child != null && child.HasExited ? child.ExitCode : null; } catch(InvalidOperationException) { return null; } catch(System.ComponentModel.Win32Exception) { return null; } } } }
 
     public void EnsureRunning(SensorOptions options)
     {
@@ -54,15 +58,22 @@ public sealed class SensorProcessClient : IDisposable
             if (elevated && elevationAttempted && signature != configuration) { StopLocked(); elevationAttempted = false; attempted = DateTime.MinValue; }
             if (transport?.Starting == true && signature == configuration) return;
             DateTime now = DateTime.UtcNow;
+            if(now>=nextDebug){nextDebug=now.AddSeconds(30);Log.Debug("sensor.heartbeat",new { Pid=ProcessId, Elevated=elevated, Scheduled=transport?.Scheduled, Starting=transport?.Starting, Sequence=sequence, AgeMs=healthy==DateTime.MinValue?(double?)null:(now-healthy).TotalMilliseconds, InvalidFrames=invalidFrames, RetryBlocked=elevated&&elevationAttempted, NextRetry=nextRetry });}
+            bool recoverable=elevated&&elevationAttempted&&transport?.Scheduled==true&&transport.Starting==false;
+            if(recoverable&&child!=null&&child.HasExited){Log.Debug("sensor.exited",new { Pid=child.Id, ExitCode=ExitCode });StopLocked();scheduledOnly=true;elevationAttempted=false;nextRetry=now.AddSeconds(Math.Min(60,3*Math.Pow(2,Math.Min(failures++,4))));}
             if (child != null && !child.HasExited)
             {
                 bool unchanged = configuration == signature;
                 bool starting = healthy == DateTime.MinValue && now - attempted < TimeSpan.FromSeconds(20);
                 if (unchanged && (starting || now - healthy < TimeSpan.FromSeconds(5))) return;
                 log("Sensor host restart: " + (unchanged ? "no valid snapshots" : "configuration changed"));
+                Log.Debug("sensor.watchdog",new { Pid=child.Id, Reason=unchanged?"no valid snapshots":"configuration changed", AgeMs=healthy==DateTime.MinValue?(double?)null:(now-healthy).TotalMilliseconds, Sequence=sequence });
+                bool retryWithoutUac=transport?.Scheduled==true;
                 StopLocked();
+                if(retryWithoutUac){scheduledOnly=true;elevationAttempted=false;nextRetry=now.AddSeconds(Math.Min(60,3*Math.Pow(2,Math.Min(failures++,4))));}
                 attempted = DateTime.MinValue;
             }
+            if(now<nextRetry)return;
             if (now - attempted < TimeSpan.FromSeconds(3)) return;
             // Never repeat UAC prompts automatically after cancellation or worker failure.
             if (elevated && elevationAttempted) return;
@@ -77,7 +88,7 @@ public sealed class SensorProcessClient : IDisposable
                     if (options.ParentId <= 0) throw new InvalidDataException("Admin-Sensorprozess benötigt einen übergeordneten Prozess.");
                     elevationAttempted = true; signature = configuration; sequence = 0; healthy = DateTime.MinValue;
                     var currentTransport = new ElevatedSensorTransport(); transport = currentTransport;
-                    currentTransport.Start(executable, options, configuration, process => { lock (sync) { if (disposed || transport != currentTransport) { process.Dispose(); return; } child = process; attempted = DateTime.UtcNow; log("Admin sensor host started: pid=" + process.Id); } }, Receive, log);
+                    currentTransport.Start(executable, options, configuration, process => { lock (sync) { if (disposed || transport != currentTransport) { process.Dispose(); return; } child = process; attempted = DateTime.UtcNow; log("Admin sensor host started: pid=" + process.Id); } }, Receive, log, scheduledOnly);
                     return;
                 }
                 var process = new Process
@@ -123,12 +134,13 @@ public sealed class SensorProcessClient : IDisposable
 
     private void Receive(Process process, string line)
     {
-        if (!SnapshotProtocol.TryRead(line, out var snapshot)) return;
+        if (!SnapshotProtocol.TryRead(line, out var snapshot)) { if(!string.IsNullOrEmpty(line))Interlocked.Increment(ref invalidFrames); return; }
         lock (sync)
         {
             // Ignore callbacks queued by a previous child after a restart.
             if (disposed || child != process || snapshot.SampleSequence <= sequence) return;
-            sequence = snapshot.SampleSequence;
+            if(sequence==0)Log.Debug("sensor.first-snapshot",new { Pid=process.Id, snapshot.SampleSequence, Bytes=line.Length, snapshot.Status });
+            sequence = snapshot.SampleSequence; failures=0;
             Volatile.Write(ref latest, snapshot);
             // Unavailable sensors are a valid answer; only a silent/malformed producer needs restarting.
             healthy = DateTime.UtcNow;
@@ -150,7 +162,7 @@ public sealed class SensorProcessClient : IDisposable
 
     private static SensorSnapshot Copy(SensorSnapshot s) => new()
     {
-        Entries = s.Entries, Fans = s.Fans, Gpus = s.Gpus,
+        UnifiedJson = s.UnifiedJson, Entries = s.Entries, Fans = s.Fans, Gpus = s.Gpus,
         Status = s.Status, Fresh = s.Fresh, VramTotalMb = s.VramTotalMb,
         Source = s.Source, CpuTemperatureSource = s.CpuTemperatureSource,
         GpuName = s.GpuName, Error = s.Error,

@@ -12,13 +12,19 @@ internal static class SensorHostProgram
     {
         Console.OutputEncoding = new System.Text.UTF8Encoding(false); using var stop = new CancellationTokenSource();
         Console.CancelKeyPress += (s, e) => { e.Cancel = true; stop.Cancel(); };
-        LibreHardwareSource lhm = null;
+        LibreHardwareSource lhm = null; UnifiedHardware unified = null;
         SensorPipeSession pipe = null;
+        EventWaitHandle stopSignal = null; RegisteredWaitHandle stopWait = null;
         try
         {
             if (args.Contains("--pipe")) pipe = new SensorPipeSession(args);
             var input = await Console.In.ReadLineAsync().WaitAsync(TimeSpan.FromSeconds(10)); if (input == null || input.Length > 32768) throw new InvalidDataException("Missing sensor configuration");
             var options = JsonSerializer.Deserialize<SensorOptions>(input, SnapshotProtocol.Json) ?? throw new InvalidDataException("Invalid sensor configuration"); options.Validate();
+            if(options.StopEvent!=""){
+                const string prefix="Local\\AioUnifiedSensorStop-";
+                if(!options.StopEvent.StartsWith(prefix)||!Guid.TryParseExact(options.StopEvent[prefix.Length..],"N",out _))throw new InvalidDataException("Invalid stop event");
+                stopSignal=EventWaitHandle.OpenExisting(options.StopEvent);stopWait=ThreadPool.RegisterWaitForSingleObject(stopSignal,(_,_)=>stop.Cancel(),null,-1,true);
+            }
             if (pipe != null) { if (options.ParentId != pipe.ParentId || options.ParentStartTicks != pipe.ParentStartTicks) throw new InvalidDataException("Pipe parent mismatch"); options.UseFanControl = false; options.FanControlPath = ""; }
             Process parent = null; if (options.ParentId > 0) { parent = Process.GetProcessById(options.ParentId); if (parent.StartTime.ToUniversalTime().Ticks != options.ParentStartTicks) throw new InvalidDataException("Parent identity changed"); }
             using (parent)
@@ -34,7 +40,7 @@ internal static class SensorHostProgram
                         var sample = options.UseFanControl ? source.Poll() : new FanSample();
                         string fanControlError = sample.Error;
                         bool fromFanControl = FanSelection.HasReadings(sample);
-                        if (!fromFanControl) sample = direct.Poll();
+                        if (!fromFanControl && !options.Unified) sample = direct.Poll();
                         Volatile.Write(ref fans, sample);
                         string state = (fromFanControl ? "Fan Control" : "Libre direkt") + ": " + sample.Fans.Count(f => f.Rpm.HasValue) + " RPM-Sensoren" + (sample.Error == "" ? "" : " (" + sample.Error + ")") + (fanControlError == "" ? "" : " | Fan Control: " + fanControlError);
                         if (state != lastState) { lastState = state; Console.Error.WriteLine(state); }
@@ -45,7 +51,8 @@ internal static class SensorHostProgram
                 while (!stop.IsCancellationRequested)
                 {
                     SensorSnapshot sample;
-                    if (options.Provider == 1) { sample = AfterburnerSource.Read(); sample.Source = "MSI Afterburner"; sample.CpuTemperatureSource = "MSI Afterburner"; }
+                    if(options.Unified){unified ??= new UnifiedHardware();sample=new SensorSnapshot{Fresh=true,UnifiedJson=unified.Sample(options.FanConfigPath),Status="GEMEINSAME SENSOREN"};}
+                    else if (options.Provider == 1) { sample = AfterburnerSource.Read(); sample.Source = "MSI Afterburner"; sample.CpuTemperatureSource = "MSI Afterburner"; }
                     else
                     {
                         try
@@ -70,6 +77,6 @@ internal static class SensorHostProgram
         catch (OperationCanceledException) { return 0; }
         catch (IOException) when (pipe != null) { return 0; }
         catch (Exception e) { Console.Error.WriteLine(e); return 1; }
-        finally { stop.Cancel(); lhm?.Dispose(); pipe?.Dispose(); }
+        finally { stop.Cancel(); lhm?.Dispose(); unified?.Dispose(); pipe?.Dispose(); stopWait?.Unregister(null); stopSignal?.Dispose(); }
     }
 }

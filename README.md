@@ -1,67 +1,188 @@
-# AIO Display 1.1.3
+# MiraRight Panel — Hardware Monitor
 
-Windows application for the confirmed Thermalright 320 × 320 LCD (87AD:70DB / PM32 SUB1). The existing dashboard, detail view, colors, percentages, thread bars, fan labels and smoothing are retained.
+**Hardware-Monitoring für Thermalright FROZEN WARFRAME 360 LCD und MiraBox D92 9.2-inch Universal Screen for PC.**
 
-![Icon](assets/App-preview.png)
+[Vorschau](#vorschau) · [Download](#download) · [Anleitung](LIESMICH.txt) · [Unterstützte Modelle](#unterstützte-displays) · [Nutzung & Haftung](NUTZUNG-UND-HAFTUNG.txt) · [Datenschutz](DATENSCHUTZ.txt) · [Impressum](IMPRINT.txt)
 
-## Projects
+## Wofür ist das Programm?
 
-- **AioDisplay.App**: WinForms settings/tray, existing renderer, averaging and WinUSB output.
-- **AioDisplay.Contracts**: versioned JSON messages and shared sensor types; no hardware or UI dependencies.
-- **AioDisplay.SensorHost**: separate C# process with pinned LibreHardwareMonitor 0.9.6, optional read-only Fan Control IPC and Afterburner shared memory.
-- **AioDisplay.Tests / FakeSensorHost**: renderer/settings regression tests, protocol validation, crashes, stale streams and parent process exit.
+**MiraRight Panel zeigt PC-Messwerte auf kleinen USB-Hardwaredisplays an.**
+Dazu gehören CPU-/GPU-Auslastung und Temperaturen, RAM-/VRAM-Belegung, Lüfterdrehzahlen
+und auf dem MiraBox-Layout FPS/Frame Time der aktuell aktiven Anwendung. Verfügbare
+Leistungs- und Temperatursensoren lassen sich gezielt auswählen.
 
-No PowerShell is started by the application. Full snapshots travel through redirected stdout, configuration through stdin, diagnostics through stderr. File snapshots are no longer used for sensor transport. Fan Control polls independently of the fast LHM loop.
+Unterstützt werden das getestete **Thermalright FROZEN WARFRAME 360 mit dem unterstützten 320-×-320-LCD-Controller** und das
+**MiraBox D92 9.2-inch Universal Screen for PC mit 1920 × 462 Pixeln**. Du kannst eines der Geräte oder beide gleichzeitig
+verwenden. Jedes Display bekommt eigene Einstellungen. Das Programm ist kein allgemeiner
+Treiber für beliebige USB-Bildschirme und steuert weder Lüfter noch Übertaktung.
 
-The app restarts a silent or invalid producer and hides stale readings. A valid response with unavailable sensors keeps the process alive, avoiding restart loops. Child ownership is checked by process instance; the host also monitors parent PID and start time.
+Die Anzeige läuft ohne MiraBox Craft oder Thermalright TRCC. LibreHardwareMonitor ist
+enthalten; MSI Afterburner ist eine optionale alternative Sensorquelle. Die lokale
+Anwendung benötigt weder Anmeldung noch Cloudkonto und lädt keine Messwerte hoch.
 
-## Anleitung
+Unabhängiges Community-Projekt; kein offizielles Produkt von Thermalright oder MiraBox.
 
-Die vollständige deutsche [Anleitung](LIESMICH.txt) liegt auch direkt im Download-ZIP. Sie beschreibt ersten Start, Sensoren, Einstellungen, Autostart, Updates, Backup und Fehlerhilfe.
+## Messwerte beruhigen und Fehler prüfen
 
-## Build and test
+In jedem Display-Reiter lassen sich **alle Messwert-Zahlen separat von den Balken glätten**:
+Aus bis zwei Sekunden für Auslastung, Temperaturen, Wattwerte, Speicher, Lüfter, FPS und Frame Time.
+Die CPU- und GPU-Leistungsaufnahme ist in beiden MiraBox-Designs einheitlich dargestellt.
+Wattwerte stehen neben den Temperaturen; der frei gewordene Platz gehört dem größeren CPU-Thread-Raster.
+Die GPU-Kachel ergänzt GPU-Takt und Speichertemperatur sowie Balken für 3D, Video Decode und Video Encode,
+ebenfalls mit Glättung. Die Werte stammen von der ausgewählten Grafikkarte; fehlende Sensorwerte erscheinen als `—`.
+Eine RAM-Leistungsaufnahme wird nur angezeigt, wenn ein gültiger Wattwert vorliegt.
 
-Install the SDK specified in global.json.
+Der Sensorprozess läuft ohne eigenes Konsolenfenster. Mit eingerichteter Sensoraufgabe
+kann die Verbindung nach einem Ausfall automatisch ohne erneute UAC-Abfrage wiederhergestellt werden.
+**„Gemeinsame Sensoren & Start → Debug-Log öffnen“** öffnet das begrenzte lokale Diagnoseprotokoll.
+Es wird nicht automatisch übermittelt. Einrichtung und Fehlerhilfe stehen in der [Anleitung](LIESMICH.txt).
 
-    dotnet build AioDisplay.sln -c Release -p:RestoreLockedMode=true
-    ./tests/run.ps1
-    ./tests/run.ps1 -Integration -LiveSeconds 240
-    ./tools/package.ps1
+## Vorschau
 
-The PowerShell scripts above are development conveniences; the application and sensor process run directly as EXEs. Self-contained packages include their runtimes and the LHM library, so users do not need PowerShell, .NET or an installed LHM application. The app and sensor runtimes are published separately to avoid shared dependency collisions. Package restore uses committed lock files.
+Die Bilder zeigen die echte Windows-Oberfläche und die von der Anwendung gerenderten
+Display-Layouts. Es sind Software-Vorschauen, keine Fotos der Geräte. Die abgebildeten
+Messwerte sind feste Beispieldaten für die Dokumentation; verfügbare Sensoren, Werte,
+Lüfter und Schriftplatz hängen von deiner Hardware und deinen Einstellungen ab.
+`—` bedeutet, dass kein aktueller Messwert vorliegt. Bilder anklicken, um sie in voller Größe zu sehen.
 
-## Running and preview
+### Thermalright FROZEN WARFRAME 360
 
-Use **AIO-Display-Vorschau.cmd** in the native package. This opens a live preview without USB access. Preview has separate single-instance/show/stop signals and disables autostart changes.
+Dashboard mit CPU-Gesamtlast, einzelnen CPU-Threads, Temperaturen, Speicher und Lüftern
+auf dem unterstützten 320-×-320-Controller. Die Software-Vorschau bleibt bei gedrehter LCD-Ausgabe aufrecht.
 
-The native version has been deployed with minimized autostart. The previous application remains available as a separate local backup. The native default launch shares the production single-instance name and therefore opens an existing production instance instead of competing for the LCD.
+![Thermalright FROZEN WARFRAME 360: Dashboard in nativer Auflösung](docs/images/miraright-panel-thermalright-dashboard.png)
 
-The package must be extracted into a writable directory. settings.ini remains compatible with the existing layout and rate settings; obsolete PowerShell/LHM-library paths are ignored. Copy settings.ini manually only after exiting the target application.
+Eigene Einstellungen für Ansicht, Drehung, Displayrate, Messwertübernahme,
+Balkenglättung, Sensorquelle und einzelne Hardware-Sensoren:
 
-## Sensors and compatibility
+![MiraRight Panel: Einstellungen für Thermalright FROZEN WARFRAME 360](docs/images/miraright-panel-einstellungen-thermalright.png)
 
-CPU/GPU/RAM values come from bundled LHM. Under **Hardware & Sensoren**, optional elevated sensors read CPU temperature and supported motherboard/controller RPM directly without FanControl. Only the worker is elevated through UAC; the UI remains unelevated. Its local pipe is restricted to the current user and verifies both endpoint processes. No service or scheduled task is installed; each worker start may require UAC confirmation. Cancelled elevation is not retried automatically.
+### MiraBox D92 9.2-inch Universal Screen for PC
 
-**Lüfter benennen** stores independent channel labels in `fan-names.json`, including optional migration from existing FanControl labels. Fan Control remains an optional non-elevated source through its installed FanControl.IPC.dll (not redistributed; tested v284). Portable folder overrides are under **Erweitert**. Afterburner remains optional and must provide MAHM shared memory.
+**Klassisches Dashboard**, 1920 × 462 Pixel, mit CPU-Threads, GPU, RAM/VRAM,
+FPS/Frame Time und Lüftern. Bereiche und Reihenfolge sind einstellbar.
 
-The existing LCD model/protocol restriction and WinUSB driver requirement remain. No drivers or fan curves are installed or changed. More hardware support still requires physical testing.
+![MiraBox D92 9.2-inch Universal Screen for PC: klassisches Dashboard](docs/images/miraright-panel-mirabox-classic.png)
 
-A clean Windows install, other vendors, suspend/resume and physical USB disconnects need separate device testing. Updates are installed into a separate directory with the existing settings; keep the previous directory as a backup.
+**Thermalright-Panorama-Design** als alternative Ansicht auf demselben MiraBox-Display:
 
-## Validation and history
+![MiraBox D92 9.2-inch Universal Screen for PC: Panorama-Design](docs/images/miraright-panel-mirabox-panorama.png)
 
-42 deterministic images were generated from the stable v1.0.0 renderer and compared byte-for-byte with the native build; all matched. References are recorded in tests/golden-reference.sha256.json. Existing hardware-count, fixed-percent, smoothing and rotation regressions remain.
+MiraBox bekommt ein eigenes Profil, unabhängig von einem gleichzeitig betriebenen Thermalright-LCD:
 
-See [migration](docs/NATIVE-MIGRATION.md), [previous stability test](docs/STABILITY-2026-10-30.md) and [previous hardware adaptation](docs/HARDWARE-2026-10-30.md). Historical source/binaries in Archiv-* are retained as archives and are neither built nor packaged.
+![MiraRight Panel: Einstellungen für MiraBox D92 9.2-inch Universal Screen for PC](docs/images/miraright-panel-einstellungen-mirabox.png)
 
-Bundled third-party metadata, original license texts and runtime notices are included under licenses/. Matching MPL/LGPL sources and the current project sources/build scripts are included under sources/, with pinned upstream versions and SHA256 checksums.
+## Download
 
-Final migration test evidence: [NATIVE-VALIDATION-2026-10-30.md](docs/NATIVE-VALIDATION-2026-10-30.md).
+Lade das **Windows-x64-Programmpaket** der [aktuellen öffentlichen Vorschau](https://github.com/Starbite82/MiraRight-Panel/releases/tag/v2.0.0-preview.6)
+herunter und entpacke das ZIP vollständig. .NET-Laufzeit, Sensorbibliothek und PresentMon sind enthalten.
+Die GitHub-Schaltfläche „Code → Download ZIP“ liefert den Quellcode für Entwickler.
 
-## Lizenzen
+## Schnellstart für Nutzer
 
-Die Windows-App steht unter **GPL-3.0-only**. Der eigenständige Sensorprozess und der gemeinsame Datenvertrag stehen für ihren eigenen Code unter **MIT**. Vollständige Texte und Geltungsbereiche: [LICENSE-MAP.txt](LICENSE-MAP.txt), [GPL 3](LICENSE), [MIT](project-licenses/MIT.txt). Drittanbieter behalten ihre ursprünglichen Lizenzen.
+1. Das passende Windows-x64-Programmpaket vollständig in einen beschreibbaren Ordner entpacken.
+2. Andere Programme beenden, die auf dasselbe LCD zugreifen, insbesondere MiraBox Craft oder Thermalright TRCC.
+3. **`Start-MiraRight-Panel.cmd`** öffnen. Die .NET-Laufzeit und Sensorbibliotheken sind enthalten.
+4. Im Reiter **Thermalright** bzw. **MiraBox D92** die angeschlossenen Displays aktivieren;
+   den Reiter eines nicht vorhandenen Geräts deaktivieren.
+5. Design, Drehung, Sensorquelle und gewünschte Raten pro Gerät einstellen. Änderungen werden gespeichert.
 
-Das Download-Paket enthält die passenden Projekt- und MPL-/LGPL-Quellen, Buildskripte, Herkunftsnachweise und .NET-Drittanbieterhinweise. Fan Control und MSI Afterburner werden nicht mitgeliefert; deren eigene Bedingungen bleiben gültig. Die GPL-Behandlung der USB-Referenz wird in [CODE-PROVENANCE.txt](docs/CODE-PROVENANCE.txt) dokumentiert.
+Für einen Blick auf die Oberfläche ohne USB-Ausgabe **`MiraRight-Panel-Vorschau.cmd`** verwenden.
+Diese Vorschau fordert keine Administratorrechte an. Fehlende Sensorwerte erscheinen als `—`.
 
-Das Impressum mit freigegebenen Anbieterangaben ist ein gesonderter, noch ausstehender Schritt. Diese Paketbereinigung ersetzt keine umfassende juristische Prüfung anderer Sachverhalte.
+Die ausführliche [deutsche Anleitung](LIESMICH.txt) erklärt Einrichtung, Sensorrechte,
+Autostart, Updates, Backups und Fehlerhilfe.
+
+Der optionale [Sensor-Autostart ohne wiederholte UAC-Abfrage](docs/sensor-autostart.md)
+kann einmalig als Administrator eingerichtet werden. Die Oberfläche läuft weiterhin
+mit normalen Rechten; UAC bleibt eingeschaltet.
+
+## Gemeinsam und getrennt
+
+Ein eigener Sensorprozess liest Hardware bis zu 10-mal pro Sekunde und betreibt eine gemeinsame PresentMon-FPS-Erfassung.
+Beide Anzeigen wählen daraus unabhängig Sensorquelle, GPU und einzelne Sensoren. Jede Anzeige hat eigene
+Messwertübernahme, Displayrate, Glättung, Design und Ausrichtung. Ein fehlendes oder blockiertes Gerät
+unterbricht die andere Anzeige nicht. Vorschauen bleiben aufrecht.
+
+Für Thermalright stehen sieben Ansichten und eine Drehung um 0/90/180/270° zur Wahl.
+Für MiraBox sind klassisches/Panorama-Design, Bereiche/Reihenfolge, Helligkeit und 0/180°-Drehung einstellbar.
+RAM/VRAM zeigen benutzt/gesamt; die Lastfarben und stabilen Prozentzeichen bleiben erhalten.
+
+## Unterstützte Displays
+
+| Display | Auflösung | Unterstützter Controller |
+| --- | --- | --- |
+| Thermalright FROZEN WARFRAME 360 · unterstützte LCD-Variante | 320 × 320 Pixel | USB `87AD:70DB`, Handshake PM32/SUB1 |
+| MiraBox D92 9.2-inch Universal Screen for PC | 1920 × 462 Pixel | USB `5548:1011` |
+
+**Thermalright FROZEN WARFRAME 360:** Innerhalb der Frozen-Warframe-Reihe gibt es unterschiedliche
+LCD-Controller und Auflösungen. Prüfe deshalb die USB-Kennung im Windows-Geräte-Manager.
+Ein gleicher Kühlername allein bestätigt die Kompatibilität nicht. Der hier getestete Thermalright-
+Controller ist oben angegeben; andere Warframe-/SE-/Pro-Varianten sind nicht pauschal unterstützt.
+
+Das D92 wird direkt über Windows HID angesprochen. Für das Thermalright-LCD wird der bereits
+vorhandene passende WinUSB-Treiber benötigt. Die Anwendung installiert keine Treiber.
+Eines der unterstützten Displays genügt; zwei gleichzeitig sind optional.
+
+## Messwerte und Rechte
+
+Die Produktbezeichnungen entsprechen der [Thermalright-Modellseite](https://www.thermalright.com/product/frozen-warframe-360-black-x/) und der [MiraBox-D92-Modellseite](https://mirabox.net/products/mirabox-9-2-inch-universal-screen). Die Modellreihe ersetzt nicht die oben genannte Controllerprüfung.
+
+Fehlende Werte erscheinen als `—`; nicht jede Hardware liefert alle Temperaturen oder Wattwerte.
+Nur der separate Sensorprozess benötigt optional eine Windows-Administratorbestätigung.
+Die Oberfläche läuft normal. Der Vorschaumodus fordert keine Administratorrechte an.
+Die ausführliche Anleitung erklärt die Einstellung und die möglichen UAC-Abfragen beim Start.
+
+## Updates und Einstellungen
+
+Einstellungen werden in `displays.json` gespeichert. Für ein Update die Anwendung vollständig
+im Tray beenden, den bisherigen Ordner sichern und die Konfiguration in den neuen Ordner übernehmen.
+Einrichtung, Autostart und die optionale Übernahme älterer Konfigurationen stehen in der Anleitung.
+
+## Nutzung, Gewährleistung und Haftung
+
+Kostenloses Open-Source-Hobbyprojekt, bereitgestellt im vorhandenen Zustand.
+Eine Garantie für Fehlerfreiheit, Messgenauigkeit oder Kompatibilität wird nicht übernommen.
+Gewährleistung und Haftung sind nach der jeweiligen Lizenz im gesetzlich zulässigen
+Umfang ausgeschlossen oder beschränkt. Zwingende gesetzliche Haftung bleibt bestehen,
+insbesondere bei Vorsatz, grober Fahrlässigkeit und schuldhaft verursachten Personenschäden.
+Die vollständigen [Nutzungs- und Haftungshinweise](NUTZUNG-UND-HAFTUNG.txt) liegen auch
+jedem Programmpaket bei und sind unter **Info & Impressum → Nutzung & Haftung** lesbar.
+Die unveränderten Lizenztexte bleiben maßgeblich; zusätzliche Nutzungseinschränkungen gibt es nicht.
+
+## Hilfe und Mitarbeit
+
+Für Fehlerberichte bitte Programmversion, vollständigen Display-Modellnamen, USB-Kennung,
+Sensorquelle und Schritte zum Nachstellen angeben. Anleitung: [CONTRIBUTING.md](CONTRIBUTING.md).
+Sicherheitslücken bitte vertraulich über den in [SECURITY.md](SECURITY.md) beschriebenen Weg melden.
+Support und Weiterentwicklung erfolgen nach Verfügbarkeit.
+Die [Datenschutzhinweise](DATENSCHUTZ.txt) erklären den lokalen Betrieb sowie E-Mail-Support
+über IONOS und öffentliche Beiträge auf GitHub. Sie liegen auch dem Download bei.
+
+## Bauen und testen
+
+Windows x64, Git und SDK aus `global.json`:
+
+```powershell
+./tests/run.ps1
+./tests/run.ps1 -Integration -LiveSeconds 30
+./tools/package.ps1 -OutputDirectory ./artifacts
+```
+
+Tests prüfen bestehende AIO-Ansichten, Rotation, Einstellungen, IPC und Prozessausfälle sowie getrennte
+Profile, gemeinsame GPU-/FPS-Daten, unabhängige Takte und Fehler-/Blockade-Isolation der beiden USB-Ausgaben.
+42 Referenzbilder der bisherigen AIO-Ansichten bleiben bytegleich.
+
+Eigener App-/UI-Code GPL-3.0-only; SensorHost, Contracts und FlexPanel.Core MIT.
+Die ursprünglichen MIT-Hinweise des FlexPanel-Moduls bleiben erhalten. Vollständiger Umfang: `LICENSE-MAP.txt`.
+Der Build enthält Drittanbieterhinweise, passende offene Quellen und Prüfsummen.
+
+Bestätigte Geräte: Thermalright `87AD:70DB`, Handshake PM32/SUB1, und MiraBox D92 `5548:1011`.
+Weitere Geräte/Firmware sind nicht pauschal bestätigt. USB-Bilder/s sind Übertragungsraten,
+keine zugesicherte physische LCD-Bildwiederholrate. Die App ist nicht codesigniert.
+
+Details für Entwickler und bisherige Hardwareprüfungen stehen unter `docs/`.
+
+Die Dokumentationsbilder lassen sich unter Windows mit `./tools/screenshots.ps1`
+neu erzeugen. Das Werkzeug verwendet die echte Oberfläche und die echten Renderer
+mit Beispieldaten; es liest keine Hardware aus und schreibt nicht auf USB-Displays.

@@ -1,0 +1,19 @@
+VORLAGE — NICHT ALS VOLLSTÄNDIGES IMPRESSUM VERWENDEN
+
+Impressum — FlexPanel
+
+Anbieter / Projektverantwortlicher
+[Vollständiger Vor- und Nachname]
+[Straße und Hausnummer]
+[PLZ und Ort]
+[Land]
+
+Kontakt
+E-Mail: [freigegebene Kontaktadresse]
+
+Projekt
+https://github.com/Starbite82/MiraRight-Panel
+
+Diese Vorlage ist für einen Anbieter als natürliche Person vorgesehen.
+Geschäftliche, registerpflichtige oder erlaubnispflichtige Angebote können
+weitere Angaben erfordern. Ein Github-Benutzername ersetzt keine Anbieterangaben.

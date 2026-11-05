@@ -1,7 +1,7 @@
-AIO DISPLAY — PROJECT LICENSES
+MIRARIGHT PANEL — PROJECT LICENSES
 
-App / BLUB-Display.exe: GPL-3.0-only.
-Separate AioDisplay.SensorHost.exe: MIT, for its own code.
+App / MiraRightPanel.exe: GPL-3.0-only.
+Separate MiraRightPanel.SensorHost.exe: MIT, for its own code.
 AioDisplay.Contracts: MIT, for its own code.
 License choice expressly approved by the project owner on 2026-10-30.
 
@@ -15,4 +15,7 @@ are supplied in sources/. The app's GPL source is offered under the GPL,
 including the rights to use, modify and redistribute it under those terms.
 
 This license implementation does not establish all possible patent, trademark
-or provider-law requirements. Personal imprint data is intentionally deferred.
+or provider-law requirements. Provider identification is supplied in IMPRINT.txt.
+
+Unified preview: src/FlexPanel.Core is an independently imported MIT component.
+Its original FlexPanel MIT grant is preserved; the AIO app remains GPL-3.0-only.

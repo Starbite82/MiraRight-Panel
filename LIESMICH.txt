@@ -1,131 +1,176 @@
-AIO Display 1.1.3 – Anleitung
+MIRARIGHT PANEL — HARDWARE MONITOR
+ANLEITUNG
 
-1. VORAUSSETZUNGEN
-Windows x64 mit Unterstützung für die mitgelieferte .NET-10-Laufzeit.
-Bestätigtes Thermalright-LCD: 320 x 320, USB 87AD:70DB, PM32 / SUB1.
-Der vorhandene WinUSB-Treiber muss eingerichtet sein. Andere Display-
-protokolle werden derzeit nicht unterstützt.
-PowerShell, eine separate .NET-Installation und eine LHM-Installation sind
-für dieses ZIP nicht erforderlich. Laufzeiten und Sensorbibliothek liegen bei.
+ZWECK
+Das Programm zeigt PC-Messwerte auf unterstützten kleinen USB-Displays an:
+CPU/GPU-Auslastung und Temperatur, RAM/VRAM benutzt/gesamt, CPU-Threadlasten,
+Lüfterdrehzahlen sowie verfügbare Leistungs-/Temperaturwerte. Auf dem MiraBox-
+Layout werden außerdem FPS und Frame Time der Vordergrundanwendung angezeigt.
+Die Anwendung liest Werte; sie verändert keine Lüfterkurven, Taktwerte oder Spannungen.
 
-2. ERSTER START
-Das ZIP vollständig in einen beschreibbaren, dauerhaften Ordner entpacken.
-TRCC und eine eventuell laufende ältere AIO-Display-Version vollständig
-beenden. BLUB-Display.exe doppelklicken.
-Nach kurzer Initialisierung erscheinen Livewerte. Ein weiterer Doppelklick
-öffnet die Einstellungen der bereits laufenden Instanz.
-Die Datei im Unterordner sensors ist der eigene Sensorprozess. Diesen
-Unterordner und die mitgelieferten DLLs nicht entfernen.
+UNTERSTÜTZTE HARDWARE
+Windows x64 und eines oder beide dieser getesteten Geräte:
+- Thermalright FROZEN WARFRAME 360, unterstützte LCD-Variante mit 320 x 320 Pixeln, USB 87AD:70DB, Handshake PM32/SUB1.
+  Der vorhandene passende WinUSB-Treiber muss eingerichtet sein.
+- MiraBox D92 9.2-inch Universal Screen for PC, 1920 x 462 Pixel, USB 5548:1011. Windows-HID-Treiber.
+  2100:0006 ist zusätzlich als D92-Protokollvariante berücksichtigt, hier nicht physisch bestätigt.
+Thermalright FROZEN WARFRAME 360: In dieser AIO-Baureihe kommen unterschiedliche
+LCD-Controller vor. Prüfe die USB-Kennung im Geräte-Manager; der Modellname allein
+genügt nicht. Unterstützt ist der oben angegebene 320-x-320-Controller.
+Andere Modellnamen, Controller und Firmware sind nicht pauschal kompatibel.
+Das Programm installiert oder ersetzt keine USB-Treiber und schreibt keine Firmware/Bootlogos.
 
-3. SENSOREN EINRICHTEN
-CPU, GPU und RAM: mitgelieferte LibreHardwareMonitor-Bibliothek.
-Die GPU mit dem größten gemeldeten Grafikspeicher wird automatisch gewählt.
-Unter Hardware & Pfade kann eine andere erkannte GPU ausgewählt werden.
-Fehlt die ausgewählte GPU später, greift wieder die automatische Auswahl.
+DOWNLOAD UND ERSTER START
+Verwende das fertige Windows-x64-ZIP der gemeinsamen Version aus dem zugehörigen Release.
+„Code / Download ZIP“ auf GitHub ist nur der Quellcode, kein fertiges Programm.
 
-Fan Control ist optional. Es liefert seine Lüfter-RPM, deren Namen aus der
-aktiven Konfiguration und bei fehlender direkter Messung einen CPU-
-Temperatur-Ersatzwert. Dafür muss Fan Control laufen; getestet mit v284.
-Fan Control wird nicht mitgeliefert. Portable Installationen lassen sich
-unter Hardware & Pfade auswählen. Leeres Ordnerfeld = automatische Suche.
-Die Suche berücksichtigt laufende Programme, registrierte Installationen
-und übliche Programmordner. „Automatisch suchen“ zeigt die gefundenen
-Pfade für FanControl, MSI Afterburner und eine optionale Libre-Oberfläche.
-Eine separate Libre-Oberfläche ist nicht nötig; die Sensorbibliothek ist
-unter sensors\LibreHardwareMonitorLib.dll bereits enthalten.
-Ohne gültige FanControl-RPM versucht die App, Mainboard-/Controller-Lüfter
-direkt über Libre auszulesen. Das hängt vom Board, Treiber und den
-Zugriffsrechten ab; unter Umständen sind erhöhte Rechte erforderlich.
-Ohne verfügbare Board-RPM bleibt nur der direkt erkannte GPU-Lüfter sichtbar.
-FanControl wird automatisch erneut abgefragt, auch wenn es später startet.
-Die manuelle Ordnerauswahl befindet sich unter „Erweitert“.
-Unter Hardware & Sensoren kann „Direkte Sensoren mit Adminrechten“ aktiviert
-werden. Nur der Sensorprozess wird nach Windows-Bestätigung erhöht gestartet.
-Die Oberfläche bleibt normal gestartet. Dieser Modus liest ohne FanControl;
-er installiert keinen Dienst und keine geplante Aufgabe. Beim Programmstart
-und nach einem erneuten Sensorstart kann deshalb eine UAC-Abfrage erscheinen.
-Nach Ablehnen erfolgt kein automatischer neuer Versuch. Erneut versuchen:
-Hardware & Sensoren öffnen und „Übernehmen“ anklicken.
-Unter „Lüfter benennen“ können eigene Namen vergeben werden, auch für
-stehende Lüfter. Leer lassen setzt den ursprünglichen Sensornamen wieder ein.
-Die Zuordnung liegt in fan-names.json im Programmordner. Beim Wechsel aus
-dem FanControl-Modus werden die aktuell verfügbaren Namen übernommen;
-bestehende eigene Namen werden dabei nicht überschrieben.
-Lüfterkurven und Treiber werden von AIO Display nicht verändert.
+1. ZIP vollständig in einen dauerhaften, beschreibbaren Ordner entpacken.
+2. Andere Programme mit Zugriff auf dasselbe Display vollständig beenden,
+   insbesondere MiraBox Craft und Thermalright TRCC.
+3. Start-MiraRight-Panel.cmd öffnen. Keine separate .NET-/LHM-Installation erforderlich.
+4. Pro Display dessen Reiter öffnen und „Display aktiv“ einschalten.
+   Nicht angeschlossene Geräte deaktivieren. Du kannst nur eines oder beide verwenden.
+5. Einstellungen werden sofort in displays.json gespeichert.
 
-MSI Afterburner bleibt eine alternative Sensorquelle. Sein Hardwaremonitor
-muss Shared Memory bereitstellen. Die ausdrückliche GPU-Auswahl gilt für LHM.
-Nach Änderungen unter Hardware & Pfade werden die Sensoren neu gestartet.
-Fehlende oder veraltete Messwerte erscheinen als --.
+VORSCHAU OHNE DISPLAYZUGRIFF
+MiraRight-Panel-Vorschau.cmd öffnet beide Vorschauen mit realen Sensorwerten,
+sendet aber keine USB-Bilder und fordert keine Administratorrechte an.
+Die Vorschau darf neben einer normalen Instanz laufen.
 
-4. ANZEIGE UND EINSTELLUNGEN
-Display-Drehung dreht nur das LCD im Uhrzeigersinn um 0°, 90°, 180°
-oder 270°. Die Vorschau bleibt aufrecht. Die Auswahl wird sofort gespeichert;
-0° erhält die bisherige Ausrichtung auf dem LCD.
-CPU/RAM links oben, GPU/VRAM rechts oben, Threadbalken links unten und
-Lüfterdrehzahlen rechts unten. Die Detailansicht und Varianten bleiben
-über Displayansicht auswählbar. Threadnummern sind optional.
-Mehr als 32 Threads bzw. acht Lüfter wechseln alle fünf Sekunden in Seiten.
-Lüfter mit fehlender Drehzahl oder 0 RPM können ausgeblendet werden.
-RAM und VRAM zeigen belegt / gesamt. Die Speicherbalken werden ab 80 Prozent
-gelb, ab 85 orange und ab 90 rot.
-Balkenglättung mittelt die Balken; Zahlen bleiben aktuelle Einzelwerte.
-Die Displayrate und die LHM-Messrate lassen sich getrennt einstellen.
-Standardprofil im ZIP: 30 USB-Übertragungen/s, 10-Hz-Sensorrate und
-500-ms-Balkenglättung. Fan-Control-Werte kommen ungefähr einmal pro Sekunde.
-Bis 60 USB-Übertragungen/s sind ein Zielwert; die physische LCD-Bildrate
-wurde nicht gemessen.
+EINSTELLUNGEN PRO DISPLAY
+Thermalright bietet sieben Ansichten und Drehung 0/90/180/270 Grad.
+MiraBox bietet klassisches Dashboard- oder Thermalright-Panorama-Design,
+Bereiche/Reihenfolge, Helligkeit und Drehung 0/180 Grad im nativen breiten Format.
+Die Vorschau bleibt aufrecht; nur die Ausgabe auf dem Gerät wird gedreht.
 
-5. AUTOSTART, MINIMIEREN UND BEENDEN
-Mit Windows starten (minimiert) aktiviert den Autostart für diesen Benutzer.
-In den Infobereich blendet das Fenster aus. Doppelklick auf das Symbol
-oder dessen Rechtsklick-Menü öffnet die Einstellungen wieder.
-Beim Schließen weiterlaufen lässt die Anzeige nach dem Fensterschließen
-aktiv. Zum vollständigen Beenden den Knopf bzw. Menüpunkt Beenden verwenden.
-Nach einem Ordnerwechsel den Autostart im neuen Ordner erneut aktivieren.
+Jedes Display hat eigene Quelle, GPU und auswählbare Sensoren. „Automatisch“ verwendet
+die eingebaute Erkennung. Ein explizit ausgewählter, fehlender Sensor zeigt —.
+Für die automatische GPU-Auswahl wird die größte gemeldete VRAM-Kapazität bevorzugt.
 
-6. UPDATE UND BACKUP
-Vor einem Update die bisherige Anwendung vollständig beenden.
-Den bisherigen Programmordner samt settings.ini als Backup behalten.
-Das neue ZIP in einen eigenen Ordner entpacken und die bisherige
-settings.ini hineinkopieren, bevor die neue EXE gestartet wird.
-Anzeige und Raten bleiben kompatibel. Alte PowerShell-/LHM-Pfade werden
-ignoriert. Bei Bedarf den Autostart aus der neuen Anwendung aktivieren.
-Rückkehr: neue Version beenden, Backup starten und dessen Autostart aktivieren.
+Messwerte übernehmen: 1 / 2 / 4 / 8 / 10 Hz pro Display.
+Die Hardware wird gemeinsam bis zu 10 Hz abgefragt; MSI hat zusätzlich seinen eigenen Messtakt.
+Displayrate: Ziel 1 / 2 / 4 / 8 / 10 / 30 / 60 USB-Bilder pro Sekunde.
+Erreichte USB-Raten stehen unter der Vorschau. Gerät, USB und Bildberechnung können limitieren.
+Die Übertragungsrate ist keine Messung oder Zusicherung der physischen LCD-Bildrate.
+Ein langsames oder fehlendes Gerät unterbricht die andere Anzeige nicht.
 
-7. VORSCHAU UND OPTIONALE AUFRUFE
-AIO-Display-Vorschau.cmd öffnet eine Live-Vorschau ohne LCD-Zugriff. Sie kann
-neben der normalen Anwendung laufen und ändert keinen Autostart.
-BLUB-Display.exe --minimized            Start im Infobereich
-BLUB-Display.exe --stop                 normale Anwendung beenden
-BLUB-Display.exe --preview --stop       Vorschau beenden
-BLUB-Display.exe --enable-autostart     minimierten Autostart aktivieren
-BLUB-Display.exe --disable-autostart    Autostart deaktivieren
+Balkenglättung: Aus / 0,25 / 0,5 / 1 / 2 Sekunden, unabhängig von den Zahlen.
+„Messwert-Zahlen glätten“ beruhigt pro Display Prozentzahlen, Temperaturen,
+Wattwerte, Speicherbelegung, Lüfterwerte sowie FPS und Frame Time. Auswahl:
+Aus / 0,25 / 0,5 / 1 / 2 Sekunden; standardmäßig 1 Sekunde. Fehlende Werte bleiben
+als fehlend erkennbar. Beim Wechsel der aktiven Anwendung wird die FPS-Mittelung
+zurückgesetzt. Wiederholt gezeichnete Sensor-Samples zählen nicht mehrfach.
+Farben warnen bei hoher Last; RAM/VRAM ab 80% Gelb, 85% Orange, 90% Rot.
+RAM/VRAM: benutzt / gesamt in GiB; fehlende Werte werden nicht geschätzt.
+RAM-Leistungsaufnahme erscheint nur bei einem vorhandenen gültigen Wattwert.
+Die Leistung des CPU-Speichercontrollers ist kein Ersatz für einen DIMM-Watt-Sensor.
 
-8. FEHLERHILFE
-Keine Displayverbindung: TRCC/alte Version beenden; Modell und vorhandenen
-WinUSB-Treiber prüfen.
-Keine Werte: Sensorquelle und Fan-Control-Ordner prüfen. Nach dem Start
-bis zu 20 Sekunden auf die erste Initialisierung warten.
-Fehlende Drehzahl/Temperatur: Fan Control starten und dort die Sensoren prüfen.
-Sensorprozess fehlt: das komplette ZIP einschließlich sensors entpacken.
-Laufzeitmeldungen, Verbindungsfehler und Sensorneustarts stehen in panel.log.
-Einstellungen und Logs liegen im entpackten Programmordner; dieser muss
-beschreibbar sein.
+MIRABOX-GPU-DETAILS
+CPU-/GPU-Wattwerte stehen neben den Temperaturen. Das CPU-Thread-Raster nutzt
+den freien Platz unten. Unter der GPU stehen Takt in MHz und Speichertemperatur
+sowie drei Balken für 3D, Video Decode und Video Encode. Die Messwertglättung
+gilt für diese Zahlen; die separate Balkenglättung gilt auch für die drei Balken.
+Es werden nur Sensoren der ausgewählten Grafikkarte verwendet. Mehrere Sensoren
+derselben Engine-Art werden mit ihrem höchsten Wert dargestellt, nicht addiert.
+Ein allgemeiner Video-Engine-Sensor ersetzt keine getrennten Decode-/Encode-Werte.
+Fehlende Werte erscheinen als —, ein gemessener stillstehender Bereich als 0 %.
+Verfügbarkeit und Bezeichnungen hängen von Grafikkarte, Treiber und Sensorquelle ab.
 
-9. GEPRÜFTER UMFANG
-Physisch geprüft: Ryzen 9 9950X3D, RX 9070 XT plus integrierte AMD-GPU,
-Fan Control v284 und das oben genannte LCD. Andere Hardware wird dynamisch
-erkannt, benötigt aber weitere physische Kompatibilitätstests.
-SHA256SUMS.txt enthält Dateiprüfsummen. Drittanbieterhinweise liegen in
-THIRD-PARTY-COMPONENTS.txt, licenses/ und den Runtime-Verzeichnissen.
+SENSORQUELLEN, LÜFTER UND FPS
+LibreHardwareMonitor ist enthalten. MSI Afterburner wird nicht mitgeliefert und muss
+für seine Datenquelle separat laufen und MAHM-Shared-Memory bereitstellen.
+Eine separate Libre-Oberfläche ist nicht nötig. FanControl-Konfigurationen liefern,
+soweit vorhanden, Namen, Gruppen und Referenzen. Keine Lüftersteuerung wird verändert.
 
-10. LIZENZEN UND QUELLEN
-Die App steht unter GPL-3.0-only, der eigenständige Sensorprozess und der
-gemeinsame Datenvertrag für ihren eigenen Code unter MIT. Vollständige
-Lizenztexte liegen in project-licenses/; die Abgrenzung steht in LICENSE-MAP.txt.
-Die GPL-App darf genutzt, verändert und weitergegeben werden. Bei Weitergabe
-sind die GPL-Bedingungen einschließlich Zugang zum zugehörigen Quellcode
-zu beachten. Passende Projekt-/Bibliotheksquellen und Buildskripte liegen
-im Ordner sources/. Drittanbieter behalten ihre ursprünglichen Lizenzen.
-Das Impressum mit persönlichen Anbieterangaben wird gesondert ergänzt.
+FPS/Frame Time stammen gemeinsam aus Intel PresentMon und folgen der Vordergrundanwendung.
+Sie sind unabhängig von der USB-Displayrate. Normale Fenster ohne aktuelle Present-
+Ereignisse zeigen —. Es werden keine FPS einer vorher aktiven Anwendung weiter angezeigt.
+Die Messung ist kein eigener Zähler für vom Grafiktreiber erzeugte Zwischenbilder.
+
+SENSORRECHTE
+Die Oberfläche startet normal. Manche CPU-/RAM-/Mainboard-Sensoren und die FPS-Erfassung
+benötigen erhöhte Rechte. Unter „Gemeinsame Sensoren & Start“ lässt sich das ausdrücklich
+aktivieren. Danach fragt Windows für den separaten Sensorprozess per UAC nach.
+Ohne eingerichtete Sensoraufgabe ist auch beim nächsten normalen Start eine UAC-Abfrage möglich.
+Eine abgelehnte Abfrage wird nicht automatisch wiederholt. Die Vorschau fordert nie Rechte an.
+Mit eingerichteter Sensoraufgabe kann sich die Verbindung nach einem Abbruch oder
+ausbleibenden Daten automatisch wieder aufbauen. Diese Wiederverbindung fordert
+keine erneute UAC-Bestätigung an. Der Sensorprozess hat kein eigenes Konsolenfenster.
+
+DEBUG-LOG BEI FEHLENDEN WERTEN
+Unter „Gemeinsame Sensoren & Start“ auf „Debug-Log öffnen“ klicken.
+debug.log im Programmordner erfasst lokal Starts, Verbindungsfehler, Datenalter,
+Sensorprozess-ID und verfügbare Lüfterwerte. Dazu kommen bis zu drei rotierende
+Sicherungen debug.log.1 bis debug.log.3 (je etwa 1 MiB). Zeitangaben sind in UTC.
+Protokolle werden nicht automatisch hochgeladen. Vor einer freiwilligen Weitergabe
+auf persönliche Dateipfade und andere Angaben prüfen. Die USB-Verbindung kann
+weiter aktiv sein, obwohl der Sensorprozess gerade keine aktuellen Daten liefert.
+
+TRAY UND AUTOSTART
+Minimieren oder Fenster-X blendet das Fenster aus; die Anzeigen laufen weiter.
+Doppelklick auf das Tray-Symbol öffnet die Einstellungen. „Beenden“ stoppt beide Ausgaben,
+den gemeinsamen Sensorprozess und die eigene PresentMon-Sitzung.
+
+Der gemeinsame Autostart ist eine eigene Option unter „Gemeinsame Sensoren & Start“.
+Vor dem dauerhaften Wechsel die alten Einzelprogramm-Autostarts deaktivieren, damit
+sie die Geräte nicht bei der nächsten Anmeldung erneut belegen. Die gemeinsame Option
+setzt den Benutzereintrag „MiraRight Panel“ im Windows-Autostart.
+
+OPTIONAL: SENSOREN OHNE WIEDERHOLTE UAC-ABFRAGE
+Panel über „Beenden“ im Infobereich schließen. Aus dem vollständig entpackten Paket
+Install-SensorAutostart.ps1 einmal mit dem eigenen Windows-Administratorkonto als
+Administrator ausführen. Beispielsweise im Paketordner ein Administrator-PowerShell-
+Fenster öffnen und .\Install-SensorAutostart.ps1 ausführen. Danach das Panel neu starten.
+Die feste Windows-Aufgabe startet dann den getrennten Sensorprozess automatisch mit
+dem Panel. UAC bleibt aktiviert; die Oberfläche läuft mit normalen Rechten. Es werden
+keine Kennwörter gespeichert. Einzelheiten und Entfernung: SENSOR-AUTOSTART.md.
+Für Windows-Standardkonten ist diese optionale Einrichtung nicht vorgesehen.
+
+UPDATE, ÜBERNAHME UND BACKUP
+Altes Programm vollständig beenden. Alten Ordner mit Einstellungen als Backup behalten.
+Neues ZIP in einen neuen Ordner entpacken. Eine vorhandene eigene displays.json übernehmen.
+Beim Ordnerwechsel einen gewünschten gemeinsamen Autostart aus dem neuen Ordner neu einrichten.
+Ist die Sensoraufgabe eingerichtet, nach einem Sensor-Update zusätzlich
+Install-SensorAutostart.ps1 aus dem neuen Paket erneut als Administrator ausführen.
+Die bisherige geschützte Sensorinstallation bleibt dabei als Backup erhalten.
+
+Erstübernahme aus Einzelprogrammen, solange noch keine displays.json vorhanden ist:
+- bisherige AIO-settings.ini als settings.ini in den neuen Ordner legen;
+- bisherige FlexPanel-panel.json als legacy-flexpanel.json danebenlegen.
+Beim ersten normalen Start werden zwei Profile erzeugt. Die Originaldateien bleiben unverändert.
+Vorhandene displays.json hat Vorrang. Anzeigename/Format der Dateien sind Beispiele;
+gemeint sind deine jeweiligen alten settings.ini bzw. panel.json.
+
+FEHLERHILFE
+„Warte / nicht gefunden“: USB-Verbindung, kompatible Gerätekennung, passenden vorhandenen
+Treiber und deaktivierte konkurrierende Programme prüfen. Nur das betroffene Display pausiert.
+„Einzelversion läuft noch“: Diese im Tray beenden, nicht nur das Fenster schließen.
+Fehlende Messwerte: Quelle prüfen; bei MSI dessen Hardwaremonitor starten; bei Bedarf
+Sensorrechte ausdrücklich aktivieren. Nicht jede Hardware stellt alle Temperaturen/Watt bereit.
+Niedrige Rate: Statuswert ist die erreichte USB-Rate, kein Spiel-FPS-Wert.
+
+Die App ist nicht codesigniert. Windows kann nach ihrer Herkunft fragen.
+Für ein GitHub-Issue genügen Fehlerbeschreibung, Gerätetyp und bereinigte Logauszüge;
+keine vollständigen privaten Sensor-/Konfigurationsdateien ungeprüft veröffentlichen.
+
+IMPRESSUM, LIZENZEN UND QUELLEN
+Anbieter und Kontakt: IMPRINT.txt; auch in README und unter „Info & Impressum“ verlinkt.
+Projektlizenzen: LICENSE / LICENSE-MAP.txt. Fremde Lizenztexte und passende offene Quellen
+liegen im Paket. SHA256SUMS.txt enthält Datei-Prüfsummen; neben dem ZIP liegt dessen Prüfsumme.
+
+NUTZUNG, GEWÄHRLEISTUNG UND HAFTUNG
+Kostenloses Open-Source-Hobbyprojekt, bereitgestellt im vorhandenen Zustand.
+Keine Garantie für Fehlerfreiheit, Messgenauigkeit oder Kompatibilität.
+Gewährleistung und Haftung sind nach der jeweiligen Lizenz im gesetzlich zulässigen
+Umfang ausgeschlossen oder beschränkt. Zwingende gesetzliche Haftung bleibt bestehen,
+insbesondere bei Vorsatz, grober Fahrlässigkeit und schuldhaft verursachten Personenschäden.
+Der vollständige Hinweis steht in NUTZUNG-UND-HAFTUNG.txt und im Programm unter
+„Info & Impressum → Nutzung & Haftung“. Die unveränderten Lizenztexte sind maßgeblich.
+Die Hinweise schaffen keine zusätzlichen Einschränkungen der Open-Source-Rechte.
+
+DATENSCHUTZ
+Die Anwendung übermittelt keine Hardwarewerte oder Prozessnamen an den Anbieter.
+Einstellungen und Diagnosedaten bleiben lokal. Wenn du per E-Mail oder über GitHub
+Kontakt aufnimmst, werden die von dir übermittelten Angaben zur Bearbeitung genutzt.
+DATENSCHUTZ.txt erklärt Zwecke, Dienstleister, Speicherregeln und deine Rechte.
+Die Datei ist auch unter „Info & Impressum → Datenschutz“ erreichbar.

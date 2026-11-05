@@ -4,6 +4,7 @@ fan-rpm.tsv*
 sensors.txt
 status.txt
 panel.log
+debug.log*
 error.txt
 live-preview.png
 work/
@@ -20,3 +21,10 @@ hardware-catalog.tsv*
 artifacts/
 runtime/
 .vs/
+
+displays.json
+dual-state.json
+legacy-flexpanel.json
+Unified-*.png
+*-preview.png
+runtime-flexpanel/

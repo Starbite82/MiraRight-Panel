@@ -16,6 +16,7 @@ public sealed class GpuDevice { public string Id { get; set; } = ""; public stri
 public sealed class SensorSnapshot
 {
     public const int CurrentProtocol = 1;
+    public string UnifiedJson { get; set; } = "";
     public int Protocol { get; set; } = CurrentProtocol;
     public List<Reading> Entries { get; set; } = new(); public List<FanReading> Fans { get; set; } = new(); public List<GpuDevice> Gpus { get; set; } = new();
     public string Status { get; set; } = "SENSOREN NICHT BEREIT"; public bool Fresh { get; set; }
@@ -36,5 +37,8 @@ public sealed class SensorOptions
     public string FanControlPath { get; set; } = ""; public string GpuIdentifier { get; set; } = ""; public int ParentId { get; set; }
     public long ParentStartTicks { get; set; }
     public bool UseFanControl { get; set; } = true;
+    public bool Unified { get; set; }
+    public string FanConfigPath { get; set; } = "";
+    public string StopEvent { get; set; } = "";
     public void Validate() { if (Protocol != SensorSnapshot.CurrentProtocol) throw new InvalidDataException("Unsupported sensor protocol"); if (Provider != 0 && Provider != 1) throw new InvalidDataException("Unknown provider"); if (!new[] { 100, 125, 250, 500, 1000 }.Contains(IntervalMs)) throw new InvalidDataException("Unsupported sensor interval"); }
 }

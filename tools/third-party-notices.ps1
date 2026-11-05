@@ -4,6 +4,8 @@ $root=Split-Path $PSScriptRoot
 $cache=if($env:NUGET_PACKAGES){$env:NUGET_PACKAGES}else{Join-Path $env:USERPROFILE '.nuget/packages'}
 $notice=Join-Path $PackageDirectory 'licenses'
 New-Item -ItemType Directory -Force $notice|Out-Null
+Copy-Item (Join-Path $root 'src/FlexPanel.Core/LICENSE') (Join-Path $notice 'FlexPanel.Core-MIT.txt')
+Copy-Item -Path (Join-Path $root 'docs/licenses/flexpanel/*') -Destination $notice
 $entries=[Collections.Generic.List[string]]::new()
 $entries.Add('Third-party components. Fan Control binaries are not redistributed.')
 $entries.Add('Metadata can include platform variants that are not shipped in this Windows package.')

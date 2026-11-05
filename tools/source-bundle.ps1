@@ -33,20 +33,20 @@ Push-Location $root
 try{
  if(@(git status --porcelain).Count){throw 'Commit the source tree before packaging so binary and corresponding source match.'}
  $revision=git rev-parse HEAD
- $target=Join-Path $source 'AIO-Display-source.zip'
+ $target=Join-Path $source 'MiraRight-Panel-source.zip'
  $zip=[IO.Compression.ZipFile]::Open($target,[IO.Compression.ZipArchiveMode]::Create)
  try{
   foreach($relative in @(git ls-files)){
    if($relative -match '^Archiv-' -or $relative -match '\.(exe|dll|sys)$'){continue}
-   [IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip,(Join-Path $root $relative),('AIO-Display/'+$relative),[IO.Compression.CompressionLevel]::Optimal)|Out-Null
+   [IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip,(Join-Path $root $relative),('MiraRight-Panel/'+$relative),[IO.Compression.CompressionLevel]::Optimal)|Out-Null
   }
  }finally{$zip.Dispose()}
- $records.Add([ordered]@{Component='AIO Display';Commit=$revision;IncludedSourceArchive='AIO-Display-source.zip';IncludedSha256=(Get-FileHash -LiteralPath $target).Hash})
+ $records.Add([ordered]@{Component='MiraRight Panel';Commit=$revision;IncludedSourceArchive='MiraRight-Panel-source.zip';IncludedSha256=(Get-FileHash -LiteralPath $target).Hash})
 }finally{Pop-Location}
 $records|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $source 'SOURCE-MANIFEST.json') -Encoding utf8
 @'
 CORRESPONDING SOURCES
-AIO-Display-source.zip contains the current application, contracts, sensor host, tests,
+MiraRight-Panel-source.zip contains the current application, contracts, sensor host, tests,
 assets, dependency lockfiles and build/packaging scripts at SOURCE-MANIFEST.json's revision.
 Build it with the .NET SDK in global.json: dotnet build AioDisplay.sln -c Release.
 The system SDK and NuGet packages can be restored normally; licenses remain in licenses/.
