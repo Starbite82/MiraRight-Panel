@@ -10,7 +10,7 @@ internal sealed class UnifiedHardware : IDisposable {
   var config=new FlexPanel.PanelConfig().Normalize();if(!string.IsNullOrWhiteSpace(fanConfig))config.FanControlConfigPath=fanConfig;
   var first=sensors.Read(config);var ids=first.Sensors.Where(s=>s.Type.StartsWith("Gpu")).Select(s=>s.HardwareId).Distinct().Take(32).ToArray();if(ids.Length==0)ids=[""];
   var bundle=new FlexPanel.HardwareBundle();FlexPanel.Afterburner.Data data=null;string error="";
-  try{data=FlexPanel.Afterburner.ReadMemory();}catch(Exception e)when(e is IOException or UnauthorizedAccessException or ArgumentException){error=e.Message;}
+  try{data=FlexPanel.Afterburner.ReadMemory();}catch(Exception e)when(e is InvalidDataException or IOException or UnauthorizedAccessException or ArgumentException){error=e.Message;}
   foreach(string id in ids){
    config.GpuId=id;var libre=id==""?first:sensors.Read(config,false);
    var ab=data==null?new FlexPanel.Snapshot{SourceName="MSI Afterburner",SensorStatus=error}:FlexPanel.Afterburner.Build(data,libre);

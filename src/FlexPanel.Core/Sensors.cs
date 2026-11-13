@@ -4,7 +4,8 @@ using System.Security.Principal;
 namespace FlexPanel;
 
 public sealed class Sensors : IDisposable {
- readonly Computer computer=new(){IsCpuEnabled=true,IsGpuEnabled=true,IsMemoryEnabled=true,IsStorageEnabled=true,IsMotherboardEnabled=true};
+ // The DIMM probe can block indefinitely on the SMBus mutex. Read RAM capacity and usage from Windows.
+ readonly Computer computer=new(){IsCpuEnabled=true,IsGpuEnabled=true,IsStorageEnabled=true,IsMotherboardEnabled=true};
  string error="";
  public static bool IsAdmin => new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
  public Sensors(){try{computer.Open();}catch(Exception e){error=e.Message;}}

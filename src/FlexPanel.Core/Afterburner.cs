@@ -35,7 +35,7 @@ public static class Afterburner {
   return Parse(bytes,DateTime.UtcNow);
  }
  public static Snapshot Read(Snapshot baseline){
-  try{return Build(ReadMemory(),baseline);}catch(Exception e)when(e is IOException or UnauthorizedAccessException or ArgumentException){return new Snapshot{SourceName="MSI Afterburner",SensorStatus="MSI Afterburner nicht verfügbar: "+e.Message};}
+  try{return Build(ReadMemory(),baseline);}catch(Exception e)when(e is InvalidDataException or IOException or UnauthorizedAccessException or ArgumentException){return new Snapshot{SourceName="MSI Afterburner",SensorStatus="MSI Afterburner nicht verfügbar: "+e.Message};}
  }
  static string Normalize(string s)=>string.Concat(s.Where(char.IsLetterOrDigit)).ToUpperInvariant();
  public static Snapshot Build(Data data,Snapshot baseline){
