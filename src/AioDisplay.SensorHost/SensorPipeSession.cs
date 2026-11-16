@@ -32,6 +32,12 @@ internal sealed class SensorPipeSession : IDisposable
         output = TextWriter.Synchronized(new StreamWriter(pipe, new System.Text.UTF8Encoding(false), 4096, true) { AutoFlush = true });
         Console.SetIn(input); Console.SetOut(output); Console.SetError(new PipeLogWriter(output));
     }
+    public async Task WaitForDisconnectAsync(CancellationToken token)
+    {
+        // Configuration is the only message sent by the panel. EOF or further data ends the session.
+        await input.ReadAsync(new char[1].AsMemory(), token);
+    }
+
     public void Dispose() { try { output?.Dispose(); } catch (IOException) { } finally { pipe.Dispose(); input?.Dispose(); } }
     sealed class PipeLogWriter(TextWriter output) : TextWriter
     {

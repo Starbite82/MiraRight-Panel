@@ -20,6 +20,7 @@ internal sealed class ElevatedSensorTransport : IDisposable
     {
         _ = Task.Run(async () =>
         {
+            Action stopScheduled = null;
             try
             {
                 stop.Token.ThrowIfCancellationRequested();
@@ -39,7 +40,7 @@ internal sealed class ElevatedSensorTransport : IDisposable
                 if(scheduledOnly&&!scheduled)throw new IOException("Sensoraufgabe nicht verfügbar; automatischer Neustart löst keine UAC-Abfrage aus.");
                 Scheduled=scheduled;
                 Log.Debug("sensor.launch",new { Mode=scheduled?"scheduled":"uac", options.ParentId });
-                if (scheduled) { ScheduledSensorTask.Run(name, options); log("Sensorstart über Windows-Aufgabe (ohne UAC)."); }
+                if (scheduled) { timeout.CancelAfter(TimeSpan.FromSeconds(15)); stopScheduled = ScheduledSensorTask.Run(name, options); log("Sensorstart über Windows-Aufgabe (ohne UAC)."); }
                 else { process = Process.Start(info) ?? throw new IOException("Sensorprozess wurde nicht gestartet."); started(process); }
                 await pipe.WaitForConnectionAsync(timeout.Token);
                 if (!GetNamedPipeClientProcessId(pipe.SafePipeHandle.DangerousGetHandle(), out uint pid)) throw new IOException("Sensorprozess am Datenkanal unbekannt.");
@@ -58,9 +59,23 @@ internal sealed class ElevatedSensorTransport : IDisposable
                     else receive(process, line);
                 }
             }
-            catch (OperationCanceledException) { }
+            catch (OperationCanceledException)
+            {
+                if (!stop.IsCancellationRequested)
+                    Log.Debug("sensor.pipe.timeout", new { Scheduled });
+            }
             catch (Exception e) { if (!stop.IsCancellationRequested) { log("Admin-Sensorprozess: " + e.Message); Log.Debug("sensor.pipe.error",new { Type=e.GetType().FullName, e.Message, e.HResult, e.StackTrace }); } }
-            finally { Starting = false; pipe?.Dispose(); }
+            finally
+            {
+                pipe?.Dispose();
+                if (stopScheduled != null)
+                {
+                    // Stop the specific task instance, never every instance of the registered task.
+                    try { stopScheduled(); }
+                    catch (COMException e) { Log.Debug("sensor.task.stop", new { e.Message, e.HResult }); }
+                }
+                Starting = false;
+            }
         });
     }
     public void Dispose() { stop.Cancel(); pipe?.Dispose(); }

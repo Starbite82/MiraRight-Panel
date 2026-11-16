@@ -137,9 +137,25 @@ Die ausführliche Anleitung erklärt die Einstellung und die möglichen UAC-Abfr
 
 ## Updates und Einstellungen
 
-Einstellungen werden in `displays.json` gespeichert. Für ein Update die Anwendung vollständig
-im Tray beenden, den bisherigen Ordner sichern und die Konfiguration in den neuen Ordner übernehmen.
-Einrichtung, Autostart und die optionale Übernahme älterer Konfigurationen stehen in der Anleitung.
+Einstellungen werden in `displays.json` gespeichert. Installiere das vollständige Paket in einen
+festen lokalen Ordner, zum Beispiel `%LOCALAPPDATA%\Programs\MiraRight Panel`, und richte
+Verknüpfung und Autostart für diesen Pfad ein.
+
+Für ein Update das neue ZIP separat entpacken. Eine normale PowerShell im entpackten
+Paketordner öffnen und das Update-Skript mit dem unveränderten ZIP und dem SHA-256-Wert
+aus der zugehörigen `.zip.sha256`-Datei aufrufen:
+
+```powershell
+.\Update-MiraRightPanel.ps1 -Package 'C:\Downloads\MiraRight-Panel-windows-x64.zip' -Sha256 '<SHA-256>'
+```
+
+Bei einem anderen festen Installationsordner zusätzlich `-InstallDirectory 'C:\Pfad\MiraRight Panel'`
+angeben. Das Skript prüft das ZIP, alle Paketdateien und den gemeinsamen Build von Panel und
+Sensorprozess. Es übernimmt die Einstellungen und startet das Panel aus demselben Pfad.
+Bei einer eingerichteten Sensoraufgabe verlangt Windows die Bestätigung für den geschützten
+Sensorordner. Sobald fortlaufend neue Sensordaten eintreffen, ist der Wechsel abgeschlossen.
+Wenn der Start fehlschlägt, stellt das Skript die vorherige Installation wieder her.
+Die Anleitung beschreibt außerdem die Übernahme älterer Konfigurationen.
 
 ## Nutzung, Gewährleistung und Haftung
 

@@ -6,7 +6,7 @@ using System.Text.Json;
 public sealed class UnifiedEngine : IDisposable {
  readonly UnifiedSensorHub hub;readonly CancellationTokenSource stop=new();Task sensorTask;volatile FlexPanel.HardwareBundle latest=new();
  public DisplaySession Thermalright {get;}public DisplaySession MiraBox {get;}
- public FlexPanel.HardwareBundle Latest=>latest;public int? SensorProcessId=>hub.ProcessId;
+ public FlexPanel.HardwareBundle Latest=>latest;public int? SensorProcessId=>hub.ProcessId;public string SensorError=>hub.Error;
  public UnifiedEngine(Func<DisplaySettings> settings,bool previewOnly){
   hub=new(settings(),!previewOnly);
   Log.Debug("panel.start",new { Version=System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(System.Reflection.AssemblyInformationalVersionAttribute),false).Cast<System.Reflection.AssemblyInformationalVersionAttribute>().FirstOrDefault()?.InformationalVersion, Preview=previewOnly, settings().AdminSensors });
@@ -23,7 +23,7 @@ public sealed class UnifiedEngine : IDisposable {
   Thermalright.Start();MiraBox.Start();
  }
  public void SaveState(){
-  var state=new{At=DateTime.UtcNow,ProcessId=Environment.ProcessId,SensorProcessId,SharedSensorProcesses=SensorProcessId.HasValue?1:0,Thermalright=new{Thermalright.Status,Thermalright.Frames,Thermalright.ActualFps,Thermalright.FansWithRpm},MiraBox=new{MiraBox.Status,MiraBox.Frames,MiraBox.ActualFps,MiraBox.FansWithRpm}};
+  var state=new{At=DateTime.UtcNow,ProcessId=Environment.ProcessId,SensorProcessId,SensorSampleTicks=hub.FreshSampleTicks,SharedSensorProcesses=SensorProcessId.HasValue?1:0,Thermalright=new{Thermalright.Status,Thermalright.Frames,Thermalright.ActualFps,Thermalright.FansWithRpm},MiraBox=new{MiraBox.Status,MiraBox.Frames,MiraBox.ActualFps,MiraBox.FansWithRpm}};
   string file=Path.Combine(Log.Root,"dual-state.json");File.WriteAllText(file+".tmp",JsonSerializer.Serialize(state,new JsonSerializerOptions{WriteIndented=true}));File.Move(file+".tmp",file,true);
  }
  public void Dispose(){stop.Cancel();Thermalright.Cancel();MiraBox.Cancel();if(sensorTask!=null&&!sensorTask.Wait(10000))throw new TimeoutException("Sensorzugriff wird noch beendet");Thermalright.Dispose();MiraBox.Dispose();hub.Dispose();stop.Dispose();}

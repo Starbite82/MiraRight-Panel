@@ -30,6 +30,8 @@ Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'MiraRight-Panel-Vorschau.cmd') 
 & (Join-Path $PSScriptRoot 'source-bundle.ps1') -PackageDirectory $package
 $forbidden=@(Get-ChildItem -LiteralPath $package -Recurse -File|Where-Object {$_.Name -match '^(FanControl(\.IPC)?|MSIAfterburner|Afterburner|USBLCDNEW|TRCC)\.(dll|exe)$'})
 if($forbidden.Count){throw 'Proprietary vendor binary in package'}
+Copy-Item (Join-Path $PSScriptRoot 'Test-MiraRightPackage.ps1') $package
+Copy-Item (Join-Path $PSScriptRoot 'Update-MiraRightPanel.ps1') $package
 $hashes=foreach($file in Get-ChildItem -LiteralPath $package -Recurse -File){
  $hash=Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256
  '{0}  {1}' -f $hash.Hash.ToLowerInvariant(),$file.FullName.Substring($package.Length+1)

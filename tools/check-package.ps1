@@ -33,13 +33,7 @@ foreach($record in $records){
 }
 $files=@(Get-ChildItem -LiteralPath $PackageDirectory -Recurse -File)
 if(@($files|Where-Object {$_.Name -match '^(FanControl(\.IPC)?|MSIAfterburner|Afterburner|TRCC|USBLCDNEW)\.(dll|exe)$'}).Count){throw 'Vendor binary redistributed unexpectedly'}
-$entries=0
-foreach($line in Get-Content -LiteralPath (Join-Path $PackageDirectory 'SHA256SUMS.txt')){
- if($line -notmatch '^([a-f0-9]{64})  (.+)$'){throw 'Malformed manifest'}
- $hash=$Matches[1];$path=Join-Path $PackageDirectory $Matches[2]
- if((Get-FileHash -LiteralPath $path).Hash -ne $hash){throw ('File checksum mismatch: '+$path)}
- $entries++
-}
+$entries=& (Join-Path $PSScriptRoot 'Test-MiraRightPackage.ps1') -PackageDirectory $PackageDirectory
 $profile=Get-Content -LiteralPath (Join-Path $PackageDirectory 'LICENSE-PROFILE.txt') -Raw
 $licensePending=$profile -match 'DECISION PENDING'
 if($licensePending -or $profile -notmatch 'GPL-3.0-only' -or $profile -notmatch 'MIT'){throw 'Project license grant/scope missing'}

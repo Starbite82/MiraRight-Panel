@@ -130,12 +130,15 @@ keine Kennwörter gespeichert. Einzelheiten und Entfernung: SENSOR-AUTOSTART.md.
 Für Windows-Standardkonten ist diese optionale Einrichtung nicht vorgesehen.
 
 UPDATE, ÜBERNAHME UND BACKUP
-Altes Programm vollständig beenden. Alten Ordner mit Einstellungen als Backup behalten.
-Neues ZIP in einen neuen Ordner entpacken. Eine vorhandene eigene displays.json übernehmen.
-Beim Ordnerwechsel einen gewünschten gemeinsamen Autostart aus dem neuen Ordner neu einrichten.
-Ist die Sensoraufgabe eingerichtet, nach einem Sensor-Update zusätzlich
-Install-SensorAutostart.ps1 aus dem neuen Paket erneut als Administrator ausführen.
-Die bisherige geschützte Sensorinstallation bleibt dabei als Backup erhalten.
+Für eine feste lokale Installation das neue ZIP separat entpacken und eine normale
+PowerShell im entpackten Paketordner öffnen. Dem Skript das unveränderte ZIP und den
+SHA-256-Wert aus dessen .zip.sha256-Datei übergeben:
+  .\Update-MiraRightPanel.ps1 -Package 'C:\Downloads\MiraRight-Panel-windows-x64.zip' -Sha256 '<SHA-256>'
+Standardziel: %LOCALAPPDATA%\Programs\MiraRight Panel. Für andere bestehende Installationen
+-InstallDirectory mit dem bisherigen Ordner angeben. Das Skript prüft die Paketdateien,
+übernimmt die Einstellungen und prüft nach dem Neustart, ob fortlaufend Sensordaten
+eintreffen. Bei einer eingerichteten Sensoraufgabe erscheint eine Administratorabfrage.
+Wenn der Start fehlschlägt, wird die bisherige Installation wiederhergestellt.
 
 Erstübernahme aus Einzelprogrammen, solange noch keine displays.json vorhanden ist:
 - bisherige AIO-settings.ini als settings.ini in den neuen Ordner legen;

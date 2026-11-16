@@ -12,6 +12,7 @@ internal static class SensorHostProgram
     {
         Console.OutputEncoding = new System.Text.UTF8Encoding(false); using var stop = new CancellationTokenSource();
         Console.CancelKeyPress += (s, e) => { e.Cancel = true; stop.Cancel(); };
+        using var watchdog = new SensorWatchdog(stop.Token);
         LibreHardwareSource lhm = null; UnifiedHardware unified = null;
         SensorPipeSession pipe = null;
         EventWaitHandle stopSignal = null; RegisteredWaitHandle stopWait = null;
@@ -30,6 +31,7 @@ internal static class SensorHostProgram
             using (parent)
             {
                 _ = Task.Run(async () => { while (!stop.IsCancellationRequested) { if (parent != null) { try { if (parent.HasExited) { stop.Cancel(); return; } } catch { stop.Cancel(); return; } } await Task.Delay(250, stop.Token); } }, stop.Token);
+                if (pipe != null) _ = StopOnPipeClose(pipe, stop);
                 var fanTask = Task.Run(async () =>
                 {
                     var source = new FanControlSource(options.FanControlPath);
@@ -68,6 +70,7 @@ internal static class SensorHostProgram
                     if (options.Provider == 0) sample.SampleTicks = DateTime.UtcNow.Ticks;
                     else if (sample.SampleTicks <= 0) sample.SampleTicks = DateTime.UtcNow.Ticks;
                     await Console.Out.WriteLineAsync(SnapshotProtocol.Serialize(sample)); await Console.Out.FlushAsync();
+                    watchdog.SnapshotWritten();
                     if (args.Contains("--once")) break;
                     due += options.IntervalMs; var delay = due - clock.Elapsed.TotalMilliseconds; if (delay > 0) await Task.Delay(TimeSpan.FromMilliseconds(delay), stop.Token); else if (delay < -options.IntervalMs) due = clock.Elapsed.TotalMilliseconds;
                 }
@@ -78,5 +81,14 @@ internal static class SensorHostProgram
         catch (IOException) when (pipe != null) { return 0; }
         catch (Exception e) { Console.Error.WriteLine(e); return 1; }
         finally { stop.Cancel(); lhm?.Dispose(); unified?.Dispose(); pipe?.Dispose(); stopWait?.Unregister(null); stopSignal?.Dispose(); }
+    }
+
+    static async Task StopOnPipeClose(SensorPipeSession pipe, CancellationTokenSource stop)
+    {
+        try { await pipe.WaitForDisconnectAsync(stop.Token); }
+        catch (OperationCanceledException) when (stop.IsCancellationRequested) { return; }
+        catch (IOException) { }
+        catch (ObjectDisposedException) { return; }
+        stop.Cancel();
     }
 }

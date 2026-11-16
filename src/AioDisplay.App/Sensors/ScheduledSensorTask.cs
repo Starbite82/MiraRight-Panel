@@ -24,13 +24,14 @@ public static class ScheduledSensorTask
         PrincipalSid((string)definition.Principal.UserId) == WindowsIdentity.GetCurrent().User.Value &&
         (int)definition.Principal.RunLevel == 1 && (int)definition.Principal.LogonType == 3;
     static string PrincipalSid(string user) => user.StartsWith("S-1-", StringComparison.Ordinal) ? new SecurityIdentifier(user).Value : ((SecurityIdentifier)new NTAccount(user).Translate(typeof(SecurityIdentifier))).Value;
-    public static void Run(string pipe, SensorOptions options)
+    internal static Action Run(string pipe, SensorOptions options)
     {
         if (!pipe.StartsWith("AioDisplay-", StringComparison.Ordinal) || !Guid.TryParseExact(pipe[11..], "N", out _) || options.ParentId != Environment.ProcessId || options.ParentStartTicks <= 0)
             throw new InvalidDataException("Ungültige Sensor-Sitzung.");
         dynamic task = Service().GetFolder("\\").GetTask(Name);
         if (!task.Enabled || !Valid(task.Definition)) throw new InvalidDataException("Sensoraufgabe bitte neu einrichten.");
-        task.Run(new string[] { pipe, options.ParentId.ToString(System.Globalization.CultureInfo.InvariantCulture), options.ParentStartTicks.ToString(System.Globalization.CultureInfo.InvariantCulture) });
+        dynamic instance = task.Run(new string[] { pipe, options.ParentId.ToString(System.Globalization.CultureInfo.InvariantCulture), options.ParentStartTicks.ToString(System.Globalization.CultureInfo.InvariantCulture) });
+        return () => instance.Stop();
     }
     internal static Process ConnectedProcess(uint pid)
     {

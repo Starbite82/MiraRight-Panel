@@ -86,6 +86,7 @@ public sealed class UnifiedWindow : Form {
   if(closing)return;
   try{foreach(string kind in new[]{"Thermalright","MiraBox"}){var display=kind=="Thermalright"?engine.Thermalright:engine.MiraBox;var p=Profile(kind);if(Visible){var image=display.Preview();if(image!=null){var old=pictures[kind].Image;pictures[kind].Image=image;old?.Dispose();}UpdateChoices(kind);}labels[kind].Text=$"{display.Status}\n{display.ActualFps:0.0} USB-Bilder/s · Ziel {p.Fps} · Werte {1000d/p.SensorMs:0.#} Hz\n{p.Source}";}
    shared.Text=(previewOnly?"Vorschau · beide USB-Ausgaben aus":"Gemeinsames Panel · beide Displays unabhängig")+" · "+(previewOnly?"ohne Rechteanforderung":settings.AdminSensors?"Sensorrechte aktiviert":"Standard-Sensorrechte");
+   if(engine.SensorError.Length>0) shared.Text=engine.SensorError;
    if((DateTime.UtcNow-lastReport).TotalSeconds>=3){lastReport=DateTime.UtcNow;engine.SaveState();}
   }catch(Exception e){shared.Text=e.Message;}
  }

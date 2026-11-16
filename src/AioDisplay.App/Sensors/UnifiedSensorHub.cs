@@ -12,6 +12,13 @@ public sealed class UnifiedSensorHub : IDisposable {
   using var parent=Process.GetCurrentProcess();options=new(){Unified=true,IntervalMs=100,Provider=0,UseFanControl=false,FanConfigPath=settings.FanConfigPath,ParentId=parent.Id,ParentStartTicks=parent.StartTime.ToUniversalTime().Ticks,StopEvent=stopName};
  }
  public int? ProcessId=>client.ProcessId;
+ public string Error=>client.Read().Error;
+ public long FreshSampleTicks {
+  get {
+   var sample=client.Latest;
+   return SnapshotProtocol.IsFresh(sample,DateTime.UtcNow)&&sample.UnifiedJson.Length>0?sample.SampleTicks:0;
+  }
+ }
  public int? LastExitCode {get;private set;}
  public FlexPanel.HardwareBundle Read(){
   client.EnsureRunning(options);var snapshot=client.Read();
